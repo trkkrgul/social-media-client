@@ -7,6 +7,7 @@ const initialState = {
   walletAddress: false,
   isProfileCreated: false,
   token: false,
+  user: false,
 };
 
 export const authSlice = createSlice({
@@ -31,10 +32,14 @@ export const authSlice = createSlice({
     setToken(state, action) {
       state.token = action.payload;
     },
+    setUser(state, action) {
+      state.user = action.payload;
+    },
   },
 });
 
 export const {
+  setUser,
   setTheme,
   setNonce,
   setIsProfileCreated,

@@ -24,7 +24,7 @@ export default function Home() {
   useEffect(() => {
     const init = async () => {
       await axios
-        .get("http://192.168.1.37:5001/api/post/feed")
+        .get("http://localhost:5001/api/post/feed")
         .then((res) => {
           if (res.status === 200) {
             dispatch(setFeedPosts(res.data));

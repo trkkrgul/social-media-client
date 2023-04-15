@@ -2,6 +2,7 @@ import {
   setNonce,
   setSignature,
   setToken,
+  setUser,
   setWalletAddress,
 } from "@/state/slices/auth";
 import { Box, ButtonGroup, Text } from "@chakra-ui/react";
@@ -14,11 +15,14 @@ import {
 } from "@saas-ui/react";
 import axios from "axios";
 import { ConnectKitButton } from "connectkit";
+import { useRouter } from "next/router";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useAccount, useSignMessage } from "wagmi";
+import { useAccount, useSignMessage, useSigner } from "wagmi";
+import CreateProfileModal from "../modals/createProfile";
 
 const LoginStepper = () => {
+  const { data: signer } = useSigner();
   const [step, setStep] = React.useState(0);
   const modals = useModals();
 
@@ -37,58 +41,60 @@ const LoginStepper = () => {
   const isAuth = useSelector((state) => state.auth.isAuth);
   const signature = useSelector((state) => state.auth.signature);
   const dispatch = useDispatch();
+  const router = useRouter();
   const { address, connector, isReconnected, isConnected } = useAccount({
+    onDisconnect() {
+      console.log("Disconnected");
+      dispatch(setWalletAddress(false));
+    },
     onConnect({ address, connector, isReconnected }) {
       console.log("Connected", { address, connector, isReconnected });
       dispatch(setWalletAddress(address));
     },
   });
-  const { data, isError, isLoading, isSuccess, signMessage } = useSignMessage({
-    nonce: Number(nonce),
-    message: String(nonce),
-    onSuccess: (data) => {
-      dispatch(setSignature(data));
-      console.log("Signed message", data);
-    },
-    onError: (error) => {
-      console.log("Error signing message", error);
-    },
-  });
-
   const authenticateUser = async () => {
     try {
       await axios
-        .post("http://192.168.1.37:5001/api/auth/nonce", {
+        .post("http://localhost:5001/api/auth/nonce", {
           walletAddress: walletAddress,
         })
-        .then((res) => {
+        .then(async (res) => {
           if (res.status === 200) {
             console.log(res.data);
             dispatch(setNonce(res.data.nonce));
+            signer.signMessage(`${res.data.nonce}`).then(async (_signature) => {
+              console.log(_signature);
+              dispatch(setSignature(_signature));
+              await axios
+                .post("http://localhost:5001/api/auth/checkSignature", {
+                  signature: _signature,
+                  walletAddress: walletAddress,
+                })
+                .then(async (res) => {
+                  if (res.status === 200) {
+                    console.log(res.data);
+                    dispatch(setToken(res.data.token));
+                    await axios
+                      .get("http://localhost:5001/api/auth/profile", {
+                        headers: {
+                          "Content-Type": "application/json",
+                          Authorization: `Bearer ${res.data.token}`,
+                        },
+                      })
+                      .then((res) => {
+                        if (res.status === 200) {
+                          console.log(res.data);
+                          dispatch(setUser(res.data));
+                        }
+                      });
+                  }
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            });
           }
-        })
-        .catch((err) => {
-          console.log(err);
         });
-
-      signMessage();
-
-      if (signature) {
-        await axios
-          .post("http://192.168.1.37:5001/api/auth/checkSignature", {
-            signature: signature,
-            walletAddress: walletAddress,
-          })
-          .then((res) => {
-            if (res.status === 200) {
-              console.log(res.data);
-              dispatch(setToken(res.data.token));
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
     } catch (err) {
       console.log(err);
     }
@@ -160,9 +166,15 @@ const LoginStepper = () => {
       title: "Third step",
       children: (
         <>
-          <Box py="4">Now you are ready to use app.</Box>
+          <CreateProfileModal />
           <ButtonGroup>
-            <Button label="Launch App" onClick={next} isDisabled={step >= 3} />
+            <Button
+              label="Create Profile"
+              onClick={() => {
+                router.push("/profile/create");
+              }}
+              isDisabled={step >= 3}
+            />
             <Button
               label="Back"
               onClick={back}
@@ -177,16 +189,6 @@ const LoginStepper = () => {
 
   return (
     <>
-      <Button
-        onClick={() =>
-          modals.open({
-            title: "Login",
-            body: null,
-          })
-        }
-      >
-        Open modal
-      </Button>
       <Stepper step={step} mb="2" orientation="vertical">
         {steps.map((args, i) => (
           <StepperStep key={i} {...args} />

@@ -66,7 +66,7 @@ const PostWidget = ({ post }) => {
   const handleLike = async () => {
     try {
       await axios
-        .post("http://192.168.1.37:5001/api/like/like", {
+        .post("http://localhost:5001/api/like/like", {
           postId: post._id,
           userId: "642963ee836af5c9205395f4",
         })
@@ -92,7 +92,7 @@ const PostWidget = ({ post }) => {
   const handleDislike = async () => {
     try {
       await axios
-        .post("http://192.168.1.37:5001/api/like/dislike", {
+        .post("http://localhost:5001/api/like/dislike", {
           postId: post._id,
           userId: "642963ee836af5c9205395f4",
         })

@@ -24,6 +24,7 @@
     "emoji-picker-react": "^4.4.8",
     "ethers": "5.7.2",
     "firebase": "^9.19.1",
+    "formik": "^2.2.9",
     "framer-motion": "^6.5.1",
     "moment": "^2.29.4",
     "next": "^13.3.0",

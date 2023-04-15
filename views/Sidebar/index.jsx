@@ -16,7 +16,13 @@ import {
   useDisclosure,
   useTheme,
 } from "@chakra-ui/react";
-import { AppShell, Card, MenuItem, PersonaAvatar } from "@saas-ui/react";
+import {
+  AppShell,
+  Card,
+  MenuItem,
+  PersonaAvatar,
+  useModals,
+} from "@saas-ui/react";
 import { useMediaQuery } from "@chakra-ui/react";
 import React from "react";
 import {
@@ -42,17 +48,37 @@ import {
 
 import ConnectButton from "@/components/auth/ConnectButton";
 import { useDispatch, useSelector } from "react-redux";
+import {
+  setNonce,
+  setSignature,
+  setToken,
+  setUser,
+  setWalletAddress,
+} from "@/state/slices/auth";
+import LoginStepper from "@/components/auth/LoginStepper";
+import { useRouter } from "next/router";
 const SidebarWidget = ({ children }) => {
   const dispatch = useDispatch();
   const isAuth = useSelector((state) => state.auth.isAuth);
   const walletAddress = useSelector((state) => state.auth.walletAddress);
-
+  const token = useSelector((state) => state.auth.token);
+  const signature = useSelector((state) => state.auth.signature);
+  const nonce = useSelector((state) => state.auth.nonce);
+  const handleSignout = () => {
+    dispatch(setWalletAddress(false));
+    dispatch(setToken(false));
+    dispatch(setSignature(false));
+    dispatch(setNonce(false));
+    dispatch(setUser(false));
+  };
+  const modals = useModals();
   const theme = useTheme();
   const [isLargerThan800] = useMediaQuery("(min-width: 1000px)", {
     ssr: true,
     fallback: false, // return false on the server, and re-evaluate on the client side
   });
   const { colorMode, toggleColorMode } = useColorMode();
+  const router = useRouter();
   return (
     <>
       <Divider />
@@ -79,19 +105,43 @@ const SidebarWidget = ({ children }) => {
                   variant="ghost"
                 />
                 <MenuList>
-                  <MenuItem>Sign out</MenuItem>
-                  <Flex margin={"3"}>
-                    <ConnectButton />
-                  </Flex>
+                  <MenuItem
+                    onClick={() => {
+                      modals.open({
+                        title: "Login",
+                        body: <LoginStepper />,
+                        footer: null,
+                      });
+                    }}
+                  >
+                    Login
+                  </MenuItem>
+                  <MenuItem onClick={handleSignout}>Sign out</MenuItem>
                 </MenuList>
               </Menu>
             </SidebarSection>
             <SidebarSection aria-label="Main">
               <NavGroup>
-                <NavItem icon={<FaHome />} isActive>
+                <NavItem
+                  href={null}
+                  onClick={() => {
+                    router.push("/");
+                  }}
+                  icon={<FaHome />}
+                  isActive={router.pathname === "/"}
+                >
                   Home
                 </NavItem>
-                <NavItem icon={<FaUsers />}>Users</NavItem>
+                <NavItem
+                  href={null}
+                  icon={<FaUsers />}
+                  onClick={() => {
+                    router.push("/profile");
+                  }}
+                  isActive={router.pathname === "/profile"}
+                >
+                  Profile
+                </NavItem>
                 <NavItem icon={<FaKey />}>Settings</NavItem>
               </NavGroup>
 

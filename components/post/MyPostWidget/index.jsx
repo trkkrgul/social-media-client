@@ -53,7 +53,11 @@ import { RxEnterFullScreen } from "react-icons/rx";
 import { v4 } from "uuid";
 
 const MyPostWidget = () => {
+  const user = useSelector((state) => state.auth.user);
   const walletAddress = useSelector((state) => state.auth.walletAddress);
+  const isProfileCreated = useSelector(
+    (state) => state.auth.user?.isProfileCreated
+  );
   const token = useSelector((state) => state.auth.token);
   const [readyToShare, setReadyToShare] = React.useState(true);
   const uploadedImagesRef = React.useRef(null);
@@ -99,7 +103,7 @@ const MyPostWidget = () => {
       const images = await handleUploadImage();
       await axios
         .post(
-          "http://l192.168.1.37/api/post/create",
+          "http://localhost:5001/api/post/create",
           {
             content: content,
             tags: ["test"],
@@ -131,7 +135,8 @@ const MyPostWidget = () => {
     }
   };
   return (
-    token && (
+    token &&
+    isProfileCreated && (
       <Card
         borderRadius={isLargerThan800 ? "lg" : "none"}
         marginY={isLargerThan800 ? "2" : "0"}
@@ -146,7 +151,8 @@ const MyPostWidget = () => {
         <CardBody>
           <Flex gap={1} alignItems={"start"}>
             <Persona
-              name="Eelco Wiersma"
+              name={user?.username}
+              src={user?.profilePicturePath}
               secondaryLabel="Founder"
               presence="online"
               hideDetails
