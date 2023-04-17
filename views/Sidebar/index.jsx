@@ -46,10 +46,10 @@ import {
   FaUsers,
 } from "react-icons/fa";
 
-import ConnectButton from "@/components/auth/ConnectButton";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setNonce,
+  setSignOut,
   setSignature,
   setToken,
   setUser,
@@ -59,17 +59,13 @@ import LoginStepper from "@/components/auth/LoginStepper";
 import { useRouter } from "next/router";
 const SidebarWidget = ({ children }) => {
   const dispatch = useDispatch();
-  const isAuth = useSelector((state) => state.auth.isAuth);
   const walletAddress = useSelector((state) => state.auth.walletAddress);
   const token = useSelector((state) => state.auth.token);
   const signature = useSelector((state) => state.auth.signature);
   const nonce = useSelector((state) => state.auth.nonce);
+  const user = useSelector((state) => state.auth.user);
   const handleSignout = () => {
-    dispatch(setWalletAddress(false));
-    dispatch(setToken(false));
-    dispatch(setSignature(false));
-    dispatch(setNonce(false));
-    dispatch(setUser(false));
+    dispatch(setSignOut());
   };
   const modals = useModals();
   const theme = useTheme();
@@ -99,24 +95,29 @@ const SidebarWidget = ({ children }) => {
                     <PersonaAvatar
                       presence="online"
                       size="xs"
-                      src="/showcase-avatar.jpg"
+                      src={user?.profilePicturePath}
                     />
                   }
                   variant="ghost"
                 />
                 <MenuList>
-                  <MenuItem
-                    onClick={() => {
-                      modals.open({
-                        title: "Login",
-                        body: <LoginStepper />,
-                        footer: null,
-                      });
-                    }}
-                  >
-                    Login
-                  </MenuItem>
-                  <MenuItem onClick={handleSignout}>Sign out</MenuItem>
+                  {!user && (
+                    <MenuItem
+                      onClick={() => {
+                        // modals.open({
+                        //   title: "Login",
+                        //   body: <LoginStepper />,
+                        //   footer: null,
+                        // });
+                        router.push("/login");
+                      }}
+                    >
+                      Login
+                    </MenuItem>
+                  )}
+                  {!!user && (
+                    <MenuItem onClick={handleSignout}>Sign out</MenuItem>
+                  )}
                 </MenuList>
               </Menu>
             </SidebarSection>

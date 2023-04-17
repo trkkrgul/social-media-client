@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import PostWidget from "@/components/post/PostWidget";
 import MyPostWidget from "@/components/post/MyPostWidget";
+import SessionEnd from "@/components/toasts/SessionEnd";
 export default function Home() {
   const dispatch = useDispatch();
   const feed = useSelector((state) => state.post.feed);
@@ -47,6 +48,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <MyPostWidget />
+
       {feed && feed.map((post) => <PostWidget key={post._id} post={post} />)}
     </>
   );

@@ -24,15 +24,15 @@ const PostHeader = ({ post }) => {
       <Flex alignItems={"center"} width={"100%"}>
         <Persona
           me="1"
-          src="https://sakaivault.io/512.png"
-          name={`@${post.user.username}`}
+          src={post.user?.profilePicturePath}
+          name={`@${post.user?.username}`}
           fontWeight={"bold"}
           size={"xs"}
         />
 
         <Web3Address
           color={colorMode === "dark" ? "whiteAlpha.600" : "blackAlpha.600"}
-          address={post.user.walletAddress}
+          address={post.user?.walletAddress}
         />
         <Spacer />
         <Menu orientation="horizontal">

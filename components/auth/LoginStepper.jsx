@@ -1,11 +1,23 @@
 import {
   setNonce,
+  setSessionEnd,
+  setSignOut,
   setSignature,
   setToken,
   setUser,
   setWalletAddress,
 } from "@/state/slices/auth";
-import { Box, ButtonGroup, Text } from "@chakra-ui/react";
+import {
+  Box,
+  ButtonGroup,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+  Text,
+  useColorMode,
+} from "@chakra-ui/react";
 import {
   Button,
   Stepper,
@@ -15,15 +27,15 @@ import {
 } from "@saas-ui/react";
 import axios from "axios";
 import { ConnectKitButton } from "connectkit";
-import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useAccount, useSignMessage, useSigner } from "wagmi";
+import { useAccount, useSigner } from "wagmi";
 import CreateProfileModal from "../modals/createProfile";
+import { useRouter } from "next/router";
 
 const LoginStepper = () => {
   const { data: signer } = useSigner();
-  const [step, setStep] = React.useState(0);
+  const [step, setStep] = useState(0);
   const modals = useModals();
 
   const back = () => {
@@ -33,22 +45,25 @@ const LoginStepper = () => {
   const next = () => {
     setStep(step + 1);
   };
-
+  const router = useRouter();
   const walletAddress = useSelector((state) => state.auth.walletAddress);
-  const isProfileCreated = useSelector((state) => state.auth.isProfileCreated);
   const token = useSelector((state) => state.auth.token);
   const nonce = useSelector((state) => state.auth.nonce);
-  const isAuth = useSelector((state) => state.auth.isAuth);
   const signature = useSelector((state) => state.auth.signature);
+  const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
-  const router = useRouter();
+  const { colorMode } = useColorMode();
   const { address, connector, isReconnected, isConnected } = useAccount({
     onDisconnect() {
       console.log("Disconnected");
       dispatch(setWalletAddress(false));
+      dispatch(setSignOut());
     },
     onConnect({ address, connector, isReconnected }) {
       console.log("Connected", { address, connector, isReconnected });
+      if (!isReconnected) {
+        dispatch(setToken(false));
+      }
       dispatch(setWalletAddress(address));
     },
   });
@@ -60,7 +75,6 @@ const LoginStepper = () => {
         })
         .then(async (res) => {
           if (res.status === 200) {
-            console.log(res.data);
             dispatch(setNonce(res.data.nonce));
             signer.signMessage(`${res.data.nonce}`).then(async (_signature) => {
               console.log(_signature);
@@ -72,8 +86,8 @@ const LoginStepper = () => {
                 })
                 .then(async (res) => {
                   if (res.status === 200) {
-                    console.log(res.data);
                     dispatch(setToken(res.data.token));
+                    dispatch(setSessionEnd(false));
                     await axios
                       .get("http://localhost:5001/api/auth/profile", {
                         headers: {
@@ -83,14 +97,23 @@ const LoginStepper = () => {
                       })
                       .then((res) => {
                         if (res.status === 200) {
-                          console.log(res.data);
                           dispatch(setUser(res.data));
+                        }
+                      })
+                      .catch((err) => {
+                        if (err.response.status === 403) {
+                          dispatch(setToken(false));
+                          dispatch(setSessionEnd(true));
                         }
                       });
                   }
                 })
                 .catch((err) => {
-                  console.log(err);
+                  if (err.response.status === 401) {
+                    dispatch(setSignOut());
+                    dispatch(setWalletAddress(false));
+                    setStep(0);
+                  }
                 });
             });
           }
@@ -100,102 +123,99 @@ const LoginStepper = () => {
     }
   };
 
-  const steps = [
-    {
-      name: "step 1",
-      title: "First step",
-      children: (
-        <>
-          <Box py="4">
-            <Text>Connect your wallet.</Text>
-            <ConnectKitButton mode="dark" />
-          </Box>
+  return (
+    <Box
+      border={"1px solid"}
+      borderColor={colorMode === "light" ? "gray.200" : "gray.700"}
+      borderRadius={"md"}
+      m={4}
+      p={4}
+    >
+      <Tabs
+        colorScheme="primary"
+        index={step}
+        onChange={(index) => {
+          setStep(index);
+        }}
+      >
+        <TabList>
+          <Tab>
+            <Text>Web3 Connection</Text>
+          </Tab>
+          <Tab isDisabled={step < 1}>Authenticate</Tab>
+          <Tab isDisabled={step < 2}>Create Profile</Tab>
+        </TabList>
 
-          {!!isConnected && !!address && walletAddress === address && (
-            <ButtonGroup>
-              <Button
-                label="Next"
-                onClick={next}
-                isDisabled={step >= 3}
-                colorScheme="primary"
-              />
-            </ButtonGroup>
-          )}
-        </>
-      ),
-    },
-    {
-      name: "step 2",
-      title: "Second step",
-      children: (
-        <>
-          <Box py="4"> Authenticate with your signature.</Box>
-          <ButtonGroup>
+        <TabPanels>
+          <TabPanel>
+            <>
+              <Box py="4">
+                <Text>Connect your wallet.</Text>
+                <ConnectKitButton mode="dark" />
+              </Box>
+
+              {!!isConnected && !!address && walletAddress === address && (
+                <ButtonGroup>
+                  <Button
+                    label="Next"
+                    onClick={next}
+                    isDisabled={step >= 3}
+                    colorScheme="primary"
+                  />
+                </ButtonGroup>
+              )}
+            </>
+          </TabPanel>
+          <TabPanel>
+            <>
+              <Box py="4"> Authenticate with your signature.</Box>
+              <ButtonGroup>
+                {!!isConnected &&
+                !!address &&
+                walletAddress === address &&
+                !!nonce &&
+                !!token &&
+                !!signature ? (
+                  <Button
+                    label="Next"
+                    onClick={() => setStep((prev) => prev + 1)}
+                    isDisabled={step >= 3}
+                    colorScheme="primary"
+                  />
+                ) : (
+                  <Button
+                    label="Authenticate"
+                    onClick={authenticateUser}
+                    isDisabled={step >= 3}
+                    colorScheme="primary"
+                  />
+                )}
+                <Button
+                  label="Back"
+                  onClick={() => setStep((prev) => prev - 1)}
+                  isDisabled={step === 0}
+                  variant="ghost"
+                />
+              </ButtonGroup>
+            </>
+          </TabPanel>
+          <TabPanel>
             {!!isConnected &&
-            !!address &&
-            walletAddress === address &&
             !!nonce &&
             !!token &&
-            !!signature ? (
-              <Button
-                label="Next"
-                onClick={next}
-                isDisabled={step >= 3}
-                colorScheme="primary"
-              />
+            !!signature &&
+            !user.isProfileCreated ? (
+              <CreateProfileModal />
             ) : (
-              <Button
-                label="Authenticate"
-                onClick={authenticateUser}
-                isDisabled={step >= 3}
-                colorScheme="primary"
-              />
+              <>
+                <Text>You are ready to use the app.</Text>
+                <Button onClick={() => router.push("/")}>Login</Button>
+              </>
             )}
-            <Button
-              label="Back"
-              onClick={back}
-              isDisabled={step === 0}
-              variant="ghost"
-            />
-          </ButtonGroup>
-        </>
-      ),
-    },
-    {
-      name: "step 3",
-      title: "Third step",
-      children: (
-        <>
-          <CreateProfileModal />
-          <ButtonGroup>
-            <Button
-              label="Create Profile"
-              onClick={() => {
-                router.push("/profile/create");
-              }}
-              isDisabled={step >= 3}
-            />
-            <Button
-              label="Back"
-              onClick={back}
-              isDisabled={step === 0}
-              variant="ghost"
-            />
-          </ButtonGroup>
-        </>
-      ),
-    },
-  ];
-
-  return (
-    <>
-      <Stepper step={step} mb="2" orientation="vertical">
-        {steps.map((args, i) => (
-          <StepperStep key={i} {...args} />
-        ))}
-        <StepperCompleted py="4">Completed</StepperCompleted>
-      </Stepper>
-    </>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+    </Box>
   );
 };
 

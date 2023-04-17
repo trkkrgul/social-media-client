@@ -37,20 +37,16 @@ import {
   IoFolderOutline,
   IoImagesOutline,
   IoMicOutline,
-  IoRemoveCircleOutline,
-  IoShareOutline,
-  IoTrashBin,
-  IoTrashBinOutline,
   IoTrashOutline,
-  IoVideocamOffOutline,
   IoVideocamOutline,
 } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { connectFirebase } from "@/utils/firebase";
 import { Image } from "antd";
+import { connectFirebase } from "@/utils/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { RxEnterFullScreen } from "react-icons/rx";
 import { v4 } from "uuid";
+import { RxEnterFullScreen } from "react-icons/rx";
+import { setSessionEnd } from "@/state/slices/auth";
 
 const MyPostWidget = () => {
   const user = useSelector((state) => state.auth.user);
@@ -99,6 +95,7 @@ const MyPostWidget = () => {
   };
   const handlePost = async () => {
     try {
+      if (content.length === 0) return;
       setReadyToShare(false);
       const images = await handleUploadImage();
       await axios
@@ -127,11 +124,13 @@ const MyPostWidget = () => {
             setReadyToShare(true);
           } else {
             setReadyToShare(true);
+            dispatch(setSessionEnd(true));
           }
         });
     } catch (e) {
       console.log(e);
       setReadyToShare(true);
+      dispatch(setSessionEnd(true));
     }
   };
   return (

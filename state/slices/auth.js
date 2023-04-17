@@ -4,10 +4,12 @@ const initialState = {
   theme: "dark",
   isAuth: false,
   signature: false,
+  nonce: false,
   walletAddress: false,
   isProfileCreated: false,
   token: false,
   user: false,
+  sessionEnd: false,
 };
 
 export const authSlice = createSlice({
@@ -35,6 +37,18 @@ export const authSlice = createSlice({
     setUser(state, action) {
       state.user = action.payload;
     },
+    setSessionEnd(state, action) {
+      state.sessionEnd = action.payload;
+    },
+    setSignOut(state, action) {
+      state.isAuth = false;
+      state.signature = false;
+      state.walletAddress = false;
+      state.isProfileCreated = false;
+      state.token = false;
+      state.user = false;
+      state.nonce = false;
+    },
   },
 });
 
@@ -43,8 +57,10 @@ export const {
   setTheme,
   setNonce,
   setIsProfileCreated,
+  setSessionEnd,
   setSignature,
   setWalletAddress,
+  setSignOut,
   setToken,
 } = authSlice.actions;
 
