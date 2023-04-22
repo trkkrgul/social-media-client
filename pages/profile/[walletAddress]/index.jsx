@@ -7,9 +7,8 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
-const UserProfile = () => {
+const UserProfile = ({ walletAddress }) => {
   const router = useRouter();
-  const { walletAddress } = router.query;
   const [userPosts, setUserPosts] = useState([]);
   const [user, setUser] = useState(null);
   console.log("user profile opened");
@@ -54,4 +53,25 @@ const UserProfile = () => {
     </>
   );
 };
+
+export async function getStaticPaths() {
+  return {
+    paths: [],
+    fallback: "blocking",
+  };
+}
+
+export async function getStaticProps({ params }) {
+  const walletAddress = params.walletAddress;
+
+  // Fetch data for the wallet address from an API or database
+
+  return {
+    props: {
+      walletAddress,
+    },
+    revalidate: 60, // regenerate the page every 60 seconds
+  };
+}
+
 export default UserProfile;
