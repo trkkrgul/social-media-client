@@ -63,7 +63,6 @@ const MyPostWidget = () => {
     if (uploadedImages.length === 0) return;
     let images = [];
     for (const image of uploadedImages) {
-      console.log(image);
       const storageRef = ref(
         firebaseStorage,
         `${image.type.split("/")[0]}s/${
@@ -73,8 +72,16 @@ const MyPostWidget = () => {
       await uploadBytes(storageRef, image).then(async (snapshot) => {
         console.log(snapshot);
         const url = await getDownloadURL(storageRef);
+        const fullpath = snapshot.metadata.name;
+        const name =
+          fullpath.slice(0, fullpath.lastIndexOf(".")) +
+          "_800x800" +
+          fullpath.slice(fullpath.lastIndexOf("."));
+
         images.push({
-          url: url,
+          url:
+            "https://storage.googleapis.com/sakaivault-images.appspot.com/images/thumb/" +
+            name,
           type: snapshot.metadata.contentType.split("/")[0],
         });
       });
