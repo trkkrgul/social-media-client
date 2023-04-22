@@ -78,7 +78,7 @@ const CreateProfileModal = () => {
           try {
             let testResult = true;
             await axios
-              .post("http://localhost:5001/api/auth/checkUsername", {
+              .post("https://api.defitalks.io/api/auth/checkUsername", {
                 username: value,
               })
               .then((res) => {
@@ -290,7 +290,7 @@ const CreateProfileModal = () => {
                 );
                 await axios
                   .post(
-                    "http://localhost:5001/api/user/createProfile",
+                    "https://api.defitalks.io/api/user/createProfile",
                     {
                       ...values,
                       profilePicturePath: profilePicturePath,
@@ -326,7 +326,7 @@ const CreateProfileModal = () => {
                 name="biography"
                 type="textarea"
                 label="Biography"
-                help="Minimum 50 characters."
+                help="Maximum 50 characters."
                 resize={"none"}
               />
               <Field name="telegramId" label="Telegram" type="text" />
@@ -334,8 +334,7 @@ const CreateProfileModal = () => {
                 <Field name="discordId" label="Discord" type="text" />
                 <Field name="twitterId" label="Twitter" type="text" />
               </FormLayout>
-
-              <SubmitButton>Create Profile</SubmitButton>
+              <SubmitButton disableIfInvalid>Create Profile</SubmitButton>
             </FormLayout>
           </Form>
         </CardBody>

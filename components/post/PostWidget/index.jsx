@@ -9,6 +9,7 @@ import {
   Flex,
   Grid,
   GridItem,
+  HStack,
   IconButton,
   Menu,
   MenuButton,
@@ -26,8 +27,13 @@ import {
   CardFooter,
   CardHeader,
   CardMedia,
+  Field,
+  Form,
+  FormLayout,
+  InputField,
   MenuItem,
   Persona,
+  SubmitButton,
 } from "@saas-ui/react";
 import React, { useState } from "react";
 import {
@@ -58,7 +64,7 @@ import { IoRemove, IoShareOutline } from "react-icons/io5";
 import { AiOutlineDelete } from "react-icons/ai";
 import moment from "moment";
 import PostHeader from "./PostHeader";
-import PostBody from "./PostBody.jsx";
+import PostBody from "./PostBody";
 const PostWidget = ({ post }) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const dispatch = useDispatch();
@@ -66,9 +72,9 @@ const PostWidget = ({ post }) => {
   const handleLike = async () => {
     try {
       await axios
-        .post("http://localhost:5001/api/like/like", {
+        .post("https://api.defitalks.io/api/like/like", {
           postId: post._id,
-          userId: "642963ee836af5c9205395f4",
+          userId: user._id,
         })
         .then((res) => {
           if (res.status === 200) {
@@ -92,9 +98,9 @@ const PostWidget = ({ post }) => {
   const handleDislike = async () => {
     try {
       await axios
-        .post("http://localhost:5001/api/like/dislike", {
+        .post("https://api.defitalks.io/api/like/dislike", {
           postId: post._id,
-          userId: "642963ee836af5c9205395f4",
+          userId: user._id,
         })
         .then((res) => {
           if (res.status === 200) {
@@ -115,8 +121,9 @@ const PostWidget = ({ post }) => {
       console.warn(err);
     }
   };
+  const token = useSelector((state) => state.auth.token);
   const [isCommentShown, toggleCommentShown] = useBoolean(false);
-
+  const user = useSelector((state) => state.auth.user);
   const [isRepliesShown, toggleRepliesShown] = useBoolean(false);
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)", {
     ssr: true,
@@ -180,6 +187,66 @@ const PostWidget = ({ post }) => {
 
       <Collapse in={isCommentShown} animateOpacity>
         <Flex flexDirection={"column"}>
+          {!!token && (
+            <Flex>
+              <Form
+                width={"100%"}
+                onSubmit={async (values) => {
+                  try {
+                    await axios
+                      .post("https://api.defitalks.io/api/comment/post", {
+                        ...values,
+                        postId: post._id,
+                        userId: user._id,
+                      })
+                      .then((res) => {
+                        if (res.status === 200) {
+                          console.log(res.data);
+                          dispatch(
+                            setFeedPosts(
+                              posts.map((post) => {
+                                if (post._id === res.data._id) {
+                                  return res.data;
+                                } else {
+                                  return post;
+                                }
+                              })
+                            )
+                          );
+                        }
+                      });
+                  } catch (err) {
+                    console.warn(err);
+                  }
+                }}
+              >
+                <HStack justifyContent={"space-between"} w={"100%"} p={2}>
+                  <HStack>
+                    <Image
+                      src={user.profilePicturePath}
+                      style={{
+                        minWidth: "24px",
+                        objectFit: "fill",
+                        height: "24px",
+                        width: "24px",
+                        borderRadius: "50%",
+                      }}
+                    />
+                    <Text fontSize={"md"} fontWeight={"600"}>
+                      @{user.username}
+                    </Text>
+                  </HStack>
+
+                  <HStack w={"100%"}>
+                    <FormLayout column={1} w={"100%"}>
+                      <Field isRequired name="content" type="text" />
+                    </FormLayout>
+                    <SubmitButton disableIfInvalid>Comment</SubmitButton>
+                  </HStack>
+                </HStack>
+              </Form>
+            </Flex>
+          )}
           {post.comments.map((comment) => (
             <>
               <Flex
@@ -196,9 +263,7 @@ const PostWidget = ({ post }) => {
                   flexBasis={"100%"}
                   alignItems={"center"}
                   flexWrap={"wrap"}
-                  bg={
-                    colorMode === "dark" ? "whiteAlpha.100" : "blackAlpha.200"
-                  }
+                  bg={colorMode === "dark" ? "blackAlpha.50" : "whiteAlpha.200"}
                   overflow={"hidden"}
                   borderRadius={"lg"}
                   border="1px"
@@ -215,7 +280,7 @@ const PostWidget = ({ post }) => {
                     <Persona
                       flexGrow={1}
                       me="1"
-                      src="https://sakaivault.io/512.png"
+                      src={`${comment.user.profilePicturePath}`}
                       name={`@${comment.user.username}`}
                       size={"xs"}
                     />
@@ -249,6 +314,75 @@ const PostWidget = ({ post }) => {
                       {comment.content}
                     </Text>
                   </Flex>
+                  {!!token && (
+                    <Flex w={"100%"}>
+                      <Form
+                        width={"100%"}
+                        onSubmit={async (values) => {
+                          try {
+                            await axios
+                              .post(
+                                "https://api.defitalks.io/api/comment/comment",
+                                {
+                                  ...values,
+                                  parentComment: comment._id,
+                                  postId: post._id,
+                                  userId: user._id,
+                                }
+                              )
+                              .then((res) => {
+                                if (res.status === 200) {
+                                  console.log(res.data);
+                                  dispatch(
+                                    setFeedPosts(
+                                      posts.map((post) => {
+                                        if (post._id === res.data._id) {
+                                          return res.data;
+                                        } else {
+                                          return post;
+                                        }
+                                      })
+                                    )
+                                  );
+                                  toggleRepliesShown.on();
+                                }
+                              });
+                          } catch (err) {
+                            console.warn(err);
+                          }
+                        }}
+                      >
+                        <HStack
+                          justifyContent={"space-between"}
+                          w={"100%"}
+                          p={2}
+                        >
+                          <HStack>
+                            <Image
+                              src={user.profilePicturePath}
+                              style={{
+                                minWidth: "24px",
+                                objectFit: "fill",
+                                height: "24px",
+                                width: "24px",
+                                borderRadius: "50%",
+                              }}
+                            />
+                            <Text fontSize={"md"} fontWeight={"600"}>
+                              @{user.username}
+                            </Text>
+                          </HStack>
+
+                          <HStack w={"100%"}>
+                            <FormLayout column={1} w={"100%"}>
+                              <Field isRequired name="content" type="text" />
+                            </FormLayout>
+                            <SubmitButton disableIfInvalid>Reply</SubmitButton>
+                          </HStack>
+                        </HStack>
+                      </Form>
+                    </Flex>
+                  )}
                 </Flex>
                 <Collapse
                   in={isRepliesShown}
@@ -298,7 +432,7 @@ const PostWidget = ({ post }) => {
                           <Persona
                             flexGrow={1}
                             me="1"
-                            src="https://sakaivault.io/512.png"
+                            src={reply.user.profilePicturePath}
                             name={`@${reply.user.username}`}
                             size={"xs"}
                           />

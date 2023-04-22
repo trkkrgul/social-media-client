@@ -57,7 +57,7 @@ import {
 } from "@/state/slices/auth";
 import LoginStepper from "@/components/auth/LoginStepper";
 import { useRouter } from "next/router";
-const SidebarWidget = ({ children }) => {
+const PageLayout = ({ children, title }) => {
   const dispatch = useDispatch();
   const walletAddress = useSelector((state) => state.auth.walletAddress);
   const token = useSelector((state) => state.auth.token);
@@ -69,10 +69,7 @@ const SidebarWidget = ({ children }) => {
   };
   const modals = useModals();
   const theme = useTheme();
-  const [isLargerThan800] = useMediaQuery("(min-width: 1000px)", {
-    ssr: true,
-    fallback: false, // return false on the server, and re-evaluate on the client side
-  });
+  const [isLargerThan800] = useMediaQuery("(min-width: 1000px)");
   const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
   return (
@@ -198,8 +195,8 @@ const SidebarWidget = ({ children }) => {
             }}
           >
             <Flex margin={"1rem"}>
-              <Text fontSize={"xl"} fontWeight={"black"}>
-                Homepage
+              <Text fontSize={"xl"} fontWeight={"bold"}>
+                {title}
               </Text>
             </Flex>
             <Divider />
@@ -211,4 +208,4 @@ const SidebarWidget = ({ children }) => {
   );
 };
 
-export default SidebarWidget;
+export default PageLayout;

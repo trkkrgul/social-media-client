@@ -17,9 +17,7 @@ const Providers = ({ store, children }) => {
         <WagmiConfig client={client}>
           <SaasProvider theme={theme}>
             <ConnectKitProvider debugMode>
-              <ModalsProvider>
-                <SidebarWidget>{children}</SidebarWidget>
-              </ModalsProvider>
+              <ModalsProvider>{children}</ModalsProvider>
             </ConnectKitProvider>
           </SaasProvider>
         </WagmiConfig>
