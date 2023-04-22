@@ -68,14 +68,23 @@ import PostBody from "./PostBody";
 const PostWidget = ({ post }) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
   const posts = useSelector((state) => state.post.feed);
   const handleLike = async () => {
     try {
       await axios
-        .post("https://api.defitalks.io/api/like/like", {
-          postId: post._id,
-          userId: user._id,
-        })
+        .post(
+          "https://api.defitalks.io/api/like/like",
+          {
+            postId: post._id,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         .then((res) => {
           if (res.status === 200) {
             dispatch(
@@ -98,10 +107,18 @@ const PostWidget = ({ post }) => {
   const handleDislike = async () => {
     try {
       await axios
-        .post("https://api.defitalks.io/api/like/dislike", {
-          postId: post._id,
-          userId: user._id,
-        })
+        .post(
+          "https://api.defitalks.io/api/like/dislike",
+          {
+            postId: post._id,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         .then((res) => {
           if (res.status === 200) {
             dispatch(
@@ -121,7 +138,6 @@ const PostWidget = ({ post }) => {
       console.warn(err);
     }
   };
-  const token = useSelector((state) => state.auth.token);
   const [isCommentShown, toggleCommentShown] = useBoolean(false);
   const user = useSelector((state) => state.auth.user);
   const [isRepliesShown, toggleRepliesShown] = useBoolean(false);
@@ -194,11 +210,19 @@ const PostWidget = ({ post }) => {
                 onSubmit={async (values) => {
                   try {
                     await axios
-                      .post("https://api.defitalks.io/api/comment/post", {
-                        ...values,
-                        postId: post._id,
-                        userId: user._id,
-                      })
+                      .post(
+                        "https://api.defitalks.io/api/comment/post",
+                        {
+                          ...values,
+                          postId: post._id,
+                        },
+                        {
+                          headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${token}`,
+                          },
+                        }
+                      )
                       .then((res) => {
                         if (res.status === 200) {
                           console.log(res.data);
@@ -327,7 +351,12 @@ const PostWidget = ({ post }) => {
                                   ...values,
                                   parentComment: comment._id,
                                   postId: post._id,
-                                  userId: user._id,
+                                },
+                                {
+                                  headers: {
+                                    "Content-Type": "application/json",
+                                    Authorization: `Bearer ${token}`,
+                                  },
                                 }
                               )
                               .then((res) => {
