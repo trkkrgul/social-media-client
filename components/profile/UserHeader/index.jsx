@@ -105,7 +105,6 @@ const UserHeader = ({ user, setUser }) => {
             )}
             {!isOwnProfile && (
               <Flex paddingBottom={isMobile ? "0" : imageSize / 4 + "px"}>
-                {" "}
                 <Button
                   size={"lg"}
                   variant={"solid"}
