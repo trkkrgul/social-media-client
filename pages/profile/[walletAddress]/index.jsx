@@ -33,7 +33,7 @@ const UserProfile = () => {
           console.log(err);
         });
     };
-    !!user && init();
+    init();
   }, []);
 
   return (
