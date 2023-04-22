@@ -37,7 +37,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
 
   return (
     <>
-      {!!user && (
+      {!!user && !!user.username && (
         <PageLayout title={user.username}>
           <UserHeader user={user} setUser={setUser} />
 
