@@ -12,7 +12,7 @@ const UserProfile = () => {
   const { walletAddress } = router.query;
   const [userPosts, setUserPosts] = useState([]);
   const [user, setUser] = useState(null);
-
+  console.log("user profile opened");
   useEffect(() => {
     const init = async () => {
       await axios
