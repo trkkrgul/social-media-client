@@ -70,6 +70,36 @@ const PostWidget = ({ post }) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const posts = useSelector((state) => state.post.feed);
+  const handleRemove = async () => {
+    try {
+      await axios
+        .post(
+          "https://api.defitalks.io/api/post/delete",
+          {
+            postId: post._id,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            dispatch(
+              setFeedPosts(
+                posts.filter((e) => {
+                  return post._id !== e._id;
+                })
+              )
+            );
+          }
+        });
+    } catch (err) {
+      console.warn(err);
+    }
+  };
   const handleLike = async () => {
     try {
       await axios
@@ -157,7 +187,7 @@ const PostWidget = ({ post }) => {
       variant={"outline"}
       overflow={"hidden"}
     >
-      <PostHeader post={post} />
+      <PostHeader post={post} handleRemove={handleRemove} />
       <Divider />
       <PostBody post={post} />
       <Divider />

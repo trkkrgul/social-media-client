@@ -70,7 +70,6 @@ const MyPostWidget = () => {
         }`
       );
       await uploadBytes(storageRef, image).then(async (snapshot) => {
-        console.log(snapshot);
         const url = await getDownloadURL(storageRef);
         const fullpath = snapshot.metadata.name;
         const name =
@@ -351,7 +350,6 @@ const MyPostWidget = () => {
                             hidden
                             onChange={(e) => {
                               if (readyToShare) {
-                                console.log(uploadedImages);
                                 setUploadedImages((prev) => [
                                   ...prev,
                                   ...e.target.files,
@@ -389,7 +387,6 @@ const MyPostWidget = () => {
 
                         <EmojiPicker
                           lazyLoadEmojis={true}
-                          emojiStyle="facebook"
                           searchPlaceHolder="Search emoji"
                           onEmojiClick={onEmojiClick}
                           previewConfig={{

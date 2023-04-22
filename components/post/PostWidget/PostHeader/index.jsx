@@ -17,14 +17,16 @@ import { BsBookmarkCheck } from "react-icons/bs";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { IoCopyOutline, IoShareOutline } from "react-icons/io5";
 import { MdReport } from "react-icons/md";
+import { useDispatch, useSelector } from "react-redux";
 
-const PostHeader = ({ post }) => {
+const PostHeader = ({ post, handleRemove }) => {
   const router = useRouter();
   const { colorMode, toggleColorMode } = useColorMode();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
   return (
     <CardHeader bg={colorMode === "dark" ? "blackAlpha.100" : "blackAlpha.50"}>
       <Flex alignItems={"center"} width={"100%"}>
-        {" "}
         <Flex
           alignItems={"center"}
           width={"100%"}
@@ -82,13 +84,16 @@ const PostHeader = ({ post }) => {
             >
               Report
             </MenuItem>
-            <MenuItem
-              icon={<AiOutlineDelete size={16} />}
-              bgColor={"#ff4444cc"}
-              _hover={{ bgColor: "#ff3333cc" }}
-            >
-              Remove
-            </MenuItem>
+            {user && user._id === post.user._id && (
+              <MenuItem
+                icon={<AiOutlineDelete size={16} />}
+                bgColor={"#ff4444cc"}
+                _hover={{ bgColor: "#ff3333cc" }}
+                onClick={handleRemove}
+              >
+                Remove
+              </MenuItem>
+            )}
           </MenuList>
         </Menu>
       </Flex>

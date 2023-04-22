@@ -21,7 +21,6 @@ const firebaseConfig = {
 export const connectFirebase = async () => {
   try {
     const app = initializeApp(firebaseConfig);
-    console.log("Firebase connected");
     const firebaseStorage = getStorage(app);
     return firebaseStorage;
   } catch (err) {

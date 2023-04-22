@@ -77,7 +77,6 @@ const LoginStepper = () => {
           if (res.status === 200) {
             dispatch(setNonce(res.data.nonce));
             signer.signMessage(`${res.data.nonce}`).then(async (_signature) => {
-              console.log(_signature);
               dispatch(setSignature(_signature));
               await axios
                 .post("https://api.defitalks.io/api/auth/checkSignature", {

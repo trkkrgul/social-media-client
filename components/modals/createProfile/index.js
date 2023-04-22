@@ -147,8 +147,14 @@ const CreateProfileModal = () => {
         }`
       );
       await uploadBytes(storageRef, image).then(async (snapshot) => {
-        console.log(snapshot);
-        url = await getDownloadURL(storageRef);
+        const fullpath = snapshot.metadata.name;
+        const name =
+          fullpath.slice(0, fullpath.lastIndexOf(".")) +
+          "_800x800" +
+          fullpath.slice(fullpath.lastIndexOf("."));
+        url =
+          "https://storage.googleapis.com/sakaivault-images.appspot.com/images/thumb/" +
+          name;
       });
     } catch (e) {
       console.log(e);
@@ -276,9 +282,6 @@ const CreateProfileModal = () => {
 
           <Form
             defaultValues={{}}
-            onChange={(values) => {
-              console.log(values);
-            }}
             resolver={yupResolver(schema)}
             onSubmit={async (values, actions) => {
               try {

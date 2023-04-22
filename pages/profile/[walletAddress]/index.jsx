@@ -11,7 +11,6 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
   const router = useRouter();
   const [userPosts, setUserPosts] = useState(ssrPosts);
   const [user, setUser] = useState(ssrUser);
-  console.log("user profile opened");
   useEffect(() => {
     const init = async () => {
       await axios
