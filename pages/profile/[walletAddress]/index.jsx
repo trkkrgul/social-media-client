@@ -7,10 +7,10 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
-const UserProfile = ({ walletAddress }) => {
+const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
   const router = useRouter();
-  const [userPosts, setUserPosts] = useState([]);
-  const [user, setUser] = useState(null);
+  const [userPosts, setUserPosts] = useState(ssrPosts);
+  const [user, setUser] = useState(ssrUser);
   console.log("user profile opened");
   useEffect(() => {
     const init = async () => {
@@ -64,11 +64,26 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   const walletAddress = params.walletAddress;
 
+  const ssrUser = await axios
+    .get(`https://api.defitalks.io/api/post/wallet/${walletAddress}`)
+    .then((res) => res.data)
+    .catch((err) => {
+      console.log(err);
+    });
+
+  const ssrPosts = await axios
+    .get(`https://api.defitalks.io/api/post/wallet/${walletAddress}`)
+    .then((res) => res.data)
+    .catch((err) => {
+      console.log(err);
+    });
   // Fetch data for the wallet address from an API or database
 
   return {
     props: {
       walletAddress,
+      ssrUser,
+      ssrPosts,
     },
     revalidate: 60, // regenerate the page every 60 seconds
   };
