@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setFeedPosts } from "@/state/slices/post";
@@ -19,28 +19,15 @@ import PostWidget from "@/components/post/PostWidget";
 import MyPostWidget from "@/components/post/MyPostWidget";
 import SessionEnd from "@/components/toasts/SessionEnd";
 import PageLayout from "@/views/Sidebar";
-export default function Home() {
+export default function Home({ feedPosts }) {
   const dispatch = useDispatch();
+  const [ssgFeeds, setSsgFeeds] = useState([]);
+  useEffect(() => {
+    dispatch(setFeedPosts(feedPosts));
+  }, []);
+
   const feed = useSelector((state) => state.post.feed);
   const token = useSelector((state) => state.auth.token);
-
-  useEffect(() => {
-    const init = async () => {
-      await axios
-        .get("https://api.defitalks.io/api/post/feed")
-        .then((res) => {
-          if (res.status === 200) {
-            dispatch(setFeedPosts(res.data));
-          } else {
-            console.log("Error");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    init();
-  }, []);
 
   const handleRemove = async (postId) => {
     await axios
@@ -233,4 +220,22 @@ export default function Home() {
       </PageLayout>
     </>
   );
+}
+
+export async function getStaticProps() {
+  const feedPosts = await axios
+    .get("https://api.defitalks.io/api/post/feed")
+    .then((res) => res.data)
+    .catch((err) => {
+      console.log(err);
+    });
+
+  // Fetch data for the wallet address from an API or database
+
+  return {
+    props: {
+      feedPosts,
+    },
+    revalidate: 1,
+  };
 }
