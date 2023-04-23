@@ -15,13 +15,22 @@ import {
   Text,
   useColorMode,
 } from "@chakra-ui/react";
-import PostWidget from "@/components/post/PostWidget";
-import MyPostWidget from "@/components/post/MyPostWidget";
 import SessionEnd from "@/components/toasts/SessionEnd";
-import PageLayout from "@/views/Sidebar";
+import dynamic from "next/dynamic";
+import { Suspense } from "react";
+
+const PageLayout = dynamic(() => import("@/views/Sidebar"), {
+  ssr: false,
+});
+const MyPostWidget = dynamic(() => import("@/components/post/MyPostWidget"), {
+  ssr: false,
+});
+const PostWidget = dynamic(() => import("@/components/post/PostWidget"), {
+  ssr: false,
+});
+
 export default function Home({ feedPosts }) {
   const dispatch = useDispatch();
-  const [ssgFeeds, setSsgFeeds] = useState([]);
   useEffect(() => {
     dispatch(setFeedPosts(feedPosts));
   }, []);
@@ -205,18 +214,20 @@ export default function Home({ feedPosts }) {
       </Head>
       <PageLayout title={"Homepage"}>
         <MyPostWidget />
-        {feed &&
-          feed.map((post) => (
-            <PostWidget
-              key={post._id}
-              post={post}
-              handleRemove={handleRemove}
-              handleLike={handleLike}
-              handleDislike={handleDislike}
-              handleComment={handleComment}
-              handleReply={handleReply}
-            />
-          ))}
+        <Suspense fallback={<div>Loading...</div>}>
+          {feed &&
+            feed.map((post) => (
+              <PostWidget
+                key={post._id}
+                post={post}
+                handleRemove={handleRemove}
+                handleLike={handleLike}
+                handleDislike={handleDislike}
+                handleComment={handleComment}
+                handleReply={handleReply}
+              />
+            ))}
+        </Suspense>
       </PageLayout>
     </>
   );
