@@ -135,12 +135,10 @@ const MyPostWidget = () => {
             dispatch(setSessionEnd(true));
           }
         });
-      router.reload();
     } catch (e) {
       console.log(e);
       setReadyToShare(true);
       dispatch(setSessionEnd(true));
-      router.reload(router.asPath);
     }
   };
   return (

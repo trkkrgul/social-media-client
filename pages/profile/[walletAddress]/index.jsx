@@ -6,11 +6,174 @@ import { Box, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
   const router = useRouter();
   const [userPosts, setUserPosts] = useState(ssrPosts);
   const [user, setUser] = useState(ssrUser);
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.auth.token);
+
+  const handleRemove = async (postId) => {
+    await axios
+      .post(
+        "https://api.defitalks.io/api/post/delete",
+        {
+          postId: postId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("Post deleted");
+          setUserPosts(userPosts.filter((post) => post._id !== postId));
+        } else {
+          console.log("Error");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleLike = async (postId) => {
+    await axios
+      .post(
+        "https://api.defitalks.io/api/like/like",
+        {
+          postId: postId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("Post liked");
+          setUserPosts(
+            userPosts.map((post) => {
+              if (post._id === postId) {
+                return res.data;
+              }
+              return post;
+            })
+          );
+        } else {
+          console.log("Error");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleDislike = async (postId) => {
+    await axios
+      .post(
+        "https://api.defitalks.io/api/like/dislike",
+        { postId: postId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("Post disliked");
+          setUserPosts(
+            userPosts.map((post) => {
+              if (post._id === postId) {
+                return res.data;
+              }
+              return post;
+            })
+          );
+        } else {
+          console.log("Error");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleComment = async (postId, values) => {
+    try {
+      await axios
+        .post(
+          "https://api.defitalks.io/api/comment/post",
+          {
+            ...values,
+            postId: postId,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.data);
+            setUserPosts(
+              userPosts.map((post) => {
+                if (post._id === res.data._id) {
+                  return res.data;
+                } else {
+                  return post;
+                }
+              })
+            );
+          }
+        });
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+  const handleReply = async (postId, values) => {
+    try {
+      await axios
+        .post(
+          "https://api.defitalks.io/api/comment/comment",
+          {
+            ...values,
+            postId: postId,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.data);
+            setUserPosts(
+              userPosts.map((post) => {
+                if (post._id === res.data._id) {
+                  return res.data;
+                } else {
+                  return post;
+                }
+              })
+            );
+          }
+        });
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
   useEffect(() => {
     const init = async () => {
       await axios
@@ -41,7 +204,15 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
           <UserHeader user={user} setUser={setUser} />
 
           {userPosts.length > 0 ? (
-            userPosts.map((post) => <PostWidget post={post} />)
+            userPosts.map((post) => (
+              <PostWidget
+                handleComment={handleComment}
+                handleReply={handleReply}
+                handleLike={handleLike}
+                handleDislike={handleDislike}
+                post={post}
+              />
+            ))
           ) : (
             <Box>
               <Text>No posts yet</Text>

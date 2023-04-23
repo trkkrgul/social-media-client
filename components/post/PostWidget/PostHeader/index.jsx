@@ -89,7 +89,7 @@ const PostHeader = ({ post, handleRemove }) => {
                 icon={<AiOutlineDelete size={16} />}
                 bgColor={"#ff4444cc"}
                 _hover={{ bgColor: "#ff3333cc" }}
-                onClick={handleRemove}
+                onClick={() => handleRemove(post._id)}
               >
                 Remove
               </MenuItem>

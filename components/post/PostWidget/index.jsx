@@ -108,31 +108,48 @@ const PostWidget = ({
           flexBasis={"100%"}
           justifyContent={"space-between"}
         >
-          <Flex alignItems={"center"}>
-            {post.likers.length !== 0 && <Badge title={post.likers.length} />}
-            <FaHeart
-              onClick={() => handleLike(post._id)}
-              size={"24px"}
-              color={post.likers.length !== 0 ? "#ff4444cc" : "#55aaaa50"}
-            />
-            <Text mx={1}>{post.likers.length}</Text>
-            <Divider orientation="vertical" height={"10px"} mx={3} />
-            <BsFillHandThumbsDownFill
-              onClick={() => handleDislike(post._id)}
-              size={"24px"}
-              color={post.dislikers.length !== 0 ? "#ff4444cc" : "#55aaaa50"}
-            />
-            <Text mx={1}>{post.dislikers.length}</Text>
-            <Divider orientation="vertical" height={"10px"} mx={3} />
-            <FaComment
-              onClick={toggleCommentShown.toggle}
-              size={"24px"}
-              color={"#55aaaa50"}
-            />
-            <Text mx={1}>{post.comments.length}</Text>
+          {!!token && !!post.likers && !!post.dislikers && (
+            <Flex alignItems={"center"}>
+              {post.likers.length !== 0 && <Badge title={post.likers.length} />}
+              <FaHeart
+                onClick={() => handleLike(post._id)}
+                size={"24px"}
+                color={
+                  post.likers.filter((e) => e.user._id === user._id).length !==
+                  0
+                    ? "#ff4444cc"
+                    : "#55aaaa50"
+                }
+              />
+              <Text mx={1}>{post.likers.length}</Text>
+              <Divider orientation="vertical" height={"10px"} mx={3} />
+              <BsFillHandThumbsDownFill
+                onClick={() => handleDislike(post._id)}
+                size={"24px"}
+                color={
+                  post.dislikers.filter((e) => e.user._id === user._id)
+                    .length !== 0
+                    ? "#ff4444cc"
+                    : "#55aaaa50"
+                }
+              />
+              <Text mx={1}>{post.dislikers.length}</Text>
+              <Divider orientation="vertical" height={"10px"} mx={3} />
+              <FaComment
+                onClick={toggleCommentShown.toggle}
+                size={"24px"}
+                color={
+                  post.comments.filter((e) => e.user._id === user._id)
+                    .length !== 0
+                    ? "#ff4444cc"
+                    : "#55aaaa50"
+                }
+              />
+              <Text mx={1}>{post.comments.length}</Text>
 
-            <Spacer />
-          </Flex>
+              <Spacer />
+            </Flex>
+          )}
           <Text as="ins" fontSize={"xs"} color={"gray.500"}>
             {moment(post.createdAt).fromNow()}
           </Text>
@@ -287,6 +304,7 @@ const PostWidget = ({
                               ...values,
                               parentComment: comment._id,
                             });
+                            toggleRepliesShown.on();
                           } catch (err) {
                             console.warn(err);
                           }
