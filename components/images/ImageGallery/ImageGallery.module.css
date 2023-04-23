@@ -1,0 +1,47 @@
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.thumbnail {
+  cursor: pointer;
+}
+
+.previewBackdrop {
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview {
+  position: relative;
+  background-color: white;
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.previewControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.downloadButton {
+  background-color: transparent;
+  border: none;
+  z-index: 120;
+  cursor: pointer;
+}
+
+.previewThumbnail {
+  cursor: pointer;
+}
