@@ -44,8 +44,8 @@ export default function Home({ feedPosts }) {
 
   const loadMore = useCallback(() => {
     return setTimeout(() => {
-      setCount((prev) => prev + 1);
-    }, 10000);
+      setCount((prev) => prev + 2);
+    }, 1000);
   }, [setCount]);
   const dispatch = useDispatch();
   useEffect(() => {
