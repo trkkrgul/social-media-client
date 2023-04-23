@@ -39,7 +39,6 @@ const FollowingPosts = () => {
   const [count, setCount] = useState(5);
   const [tab, setTab] = useState("feed");
   const user = useSelector((state) => state.auth.user);
-  const [userPosts, setUserPosts] = useState([]);
   const loadMore = useCallback(() => {
     return setTimeout(() => {
       setCount((prev) => prev + 2);
@@ -92,7 +91,9 @@ const FollowingPosts = () => {
         if (res.status === 200) {
           console.log("Post deleted");
           dispatch(
-            setFollowingPosts(userPosts.filter((post) => post._id !== postId))
+            setFollowingPosts(
+              followingPosts.filter((post) => post._id !== postId)
+            )
           );
         } else {
           console.log("Error");
@@ -121,7 +122,7 @@ const FollowingPosts = () => {
           console.log("Post liked");
           dispatch(
             setFollowingPosts(
-              userPosts.map((post) => {
+              followingPosts.map((post) => {
                 if (post._id === postId) {
                   return res.data;
                 }
@@ -154,7 +155,7 @@ const FollowingPosts = () => {
           console.log("Post disliked");
           dispatch(
             setFollowingPosts(
-              userPosts.map((post) => {
+              followingPosts.map((post) => {
                 if (post._id === postId) {
                   return res.data;
                 }
@@ -191,7 +192,7 @@ const FollowingPosts = () => {
             console.log("Post disliked");
             dispatch(
               setFollowingPosts(
-                userPosts.map((post) => {
+                followingPosts.map((post) => {
                   if (post._id === postId) {
                     return res.data;
                   }
@@ -231,7 +232,7 @@ const FollowingPosts = () => {
           if (res.status === 200) {
             dispatch(
               setFollowingPosts(
-                userPosts.map((post) => {
+                followingPosts.map((post) => {
                   if (post._id === postId) {
                     return res.data;
                   }

@@ -238,7 +238,7 @@ export default function Home({ feedPosts }) {
         <Suspense fallback={<div>Loading...</div>}>
           <Flex
             width={"100%"}
-            height={"60px"}
+            height={"36px"}
             alignItems={"center"}
             cursor={"pointer"}
           >
