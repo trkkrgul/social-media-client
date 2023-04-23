@@ -47,6 +47,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import { RxEnterFullScreen } from "react-icons/rx";
 import { setSessionEnd } from "@/state/slices/auth";
+import { useRouter } from "next/router";
 
 const MyPostWidget = () => {
   const user = useSelector((state) => state.auth.user);
@@ -55,6 +56,7 @@ const MyPostWidget = () => {
     (state) => state.auth.user?.isProfileCreated
   );
   const token = useSelector((state) => state.auth.token);
+  const router = useRouter();
   const [readyToShare, setReadyToShare] = React.useState(true);
   const uploadedImagesRef = React.useRef(null);
   const [uploadedImages, setUploadedImages] = React.useState([]);
@@ -133,10 +135,12 @@ const MyPostWidget = () => {
             dispatch(setSessionEnd(true));
           }
         });
+      router.reload();
     } catch (e) {
       console.log(e);
       setReadyToShare(true);
       dispatch(setSessionEnd(true));
+      router.reload(router.asPath);
     }
   };
   return (

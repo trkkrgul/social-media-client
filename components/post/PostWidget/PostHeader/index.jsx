@@ -84,7 +84,7 @@ const PostHeader = ({ post, handleRemove }) => {
             >
               Report
             </MenuItem>
-            {user && user._id === post.user._id && (
+            {user.walletAddress === post.user?.walletAddress && !!user && (
               <MenuItem
                 icon={<AiOutlineDelete size={16} />}
                 bgColor={"#ff4444cc"}

@@ -29,6 +29,7 @@ const PostBody = ({ post }) => {
               .filter((media) => media.type === "image")
               .map((media, i) => (
                 <Image
+                  onError={(e) => (e.target.src = media.url)}
                   preview={{
                     mask: (
                       <Box textAlign={"center"}>

@@ -65,109 +65,18 @@ import { AiOutlineDelete } from "react-icons/ai";
 import moment from "moment";
 import PostHeader from "./PostHeader";
 import PostBody from "./PostBody";
-const PostWidget = ({ post }) => {
+const PostWidget = ({
+  post,
+  handleLike,
+  handleDislike,
+  handleRemove,
+  handleComment,
+  handleReply,
+}) => {
   const { colorMode, toggleColorMode } = useColorMode();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const posts = useSelector((state) => state.post.feed);
-  const handleRemove = async () => {
-    try {
-      await axios
-        .post(
-          "https://api.defitalks.io/api/post/delete",
-          {
-            postId: post._id,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            dispatch(
-              setFeedPosts(
-                posts.filter((e) => {
-                  return post._id !== e._id;
-                })
-              )
-            );
-          }
-        });
-    } catch (err) {
-      console.warn(err);
-    }
-  };
-  const handleLike = async () => {
-    try {
-      await axios
-        .post(
-          "https://api.defitalks.io/api/like/like",
-          {
-            postId: post._id,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            dispatch(
-              setFeedPosts(
-                posts.map((post) => {
-                  if (post._id === res.data[0]._id) {
-                    return res.data[0];
-                  } else {
-                    return post;
-                  }
-                })
-              )
-            );
-          }
-        });
-    } catch (err) {
-      console.warn(err);
-    }
-  };
-  const handleDislike = async () => {
-    try {
-      await axios
-        .post(
-          "https://api.defitalks.io/api/like/dislike",
-          {
-            postId: post._id,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            dispatch(
-              setFeedPosts(
-                posts.map((post) => {
-                  if (post._id === res.data[0]._id) {
-                    return res.data[0];
-                  } else {
-                    return post;
-                  }
-                })
-              )
-            );
-          }
-        });
-    } catch (err) {
-      console.warn(err);
-    }
-  };
   const [isCommentShown, toggleCommentShown] = useBoolean(false);
   const user = useSelector((state) => state.auth.user);
   const [isRepliesShown, toggleRepliesShown] = useBoolean(false);
@@ -202,14 +111,14 @@ const PostWidget = ({ post }) => {
           <Flex alignItems={"center"}>
             {post.likers.length !== 0 && <Badge title={post.likers.length} />}
             <FaHeart
-              onClick={handleLike}
+              onClick={() => handleLike(post._id)}
               size={"24px"}
               color={post.likers.length !== 0 ? "#ff4444cc" : "#55aaaa50"}
             />
             <Text mx={1}>{post.likers.length}</Text>
             <Divider orientation="vertical" height={"10px"} mx={3} />
             <BsFillHandThumbsDownFill
-              onClick={handleDislike}
+              onClick={() => handleDislike(post._id)}
               size={"24px"}
               color={post.dislikers.length !== 0 ? "#ff4444cc" : "#55aaaa50"}
             />
@@ -374,38 +283,10 @@ const PostWidget = ({ post }) => {
                         width={"100%"}
                         onSubmit={async (values) => {
                           try {
-                            await axios
-                              .post(
-                                "https://api.defitalks.io/api/comment/comment",
-                                {
-                                  ...values,
-                                  parentComment: comment._id,
-                                  postId: post._id,
-                                },
-                                {
-                                  headers: {
-                                    "Content-Type": "application/json",
-                                    Authorization: `Bearer ${token}`,
-                                  },
-                                }
-                              )
-                              .then((res) => {
-                                if (res.status === 200) {
-                                  console.log(res.data);
-                                  dispatch(
-                                    setFeedPosts(
-                                      posts.map((post) => {
-                                        if (post._id === res.data._id) {
-                                          return res.data;
-                                        } else {
-                                          return post;
-                                        }
-                                      })
-                                    )
-                                  );
-                                  toggleRepliesShown.on();
-                                }
-                              });
+                            handleReply(post._id, {
+                              ...values,
+                              parentComment: comment._id,
+                            });
                           } catch (err) {
                             console.warn(err);
                           }

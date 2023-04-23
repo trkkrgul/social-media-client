@@ -22,6 +22,7 @@ import PageLayout from "@/views/Sidebar";
 export default function Home() {
   const dispatch = useDispatch();
   const feed = useSelector((state) => state.post.feed);
+  const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
     const init = async () => {
@@ -40,6 +41,173 @@ export default function Home() {
     };
     init();
   }, []);
+
+  const handleRemove = async (postId) => {
+    await axios
+      .post(
+        "https://api.defitalks.io/api/post/delete",
+        {
+          postId: postId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("Post deleted");
+          dispatch(setFeedPosts(feed.filter((post) => post._id !== postId)));
+        } else {
+          console.log("Error");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleLike = async (postId) => {
+    await axios
+      .post(
+        "https://api.defitalks.io/api/like/like",
+        {
+          postId: postId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("Post liked");
+          dispatch(
+            setFeedPosts(
+              feed.map((post) => {
+                if (post._id === postId) {
+                  return res.data;
+                }
+                return post;
+              })
+            )
+          );
+        } else {
+          console.log("Error");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleDislike = async (postId) => {
+    await axios
+      .post(
+        "https://api.defitalks.io/api/like/dislike",
+        { postId: postId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("Post disliked");
+          dispatch(
+            setFeedPosts(
+              feed.map((post) => {
+                if (post._id === postId) {
+                  return res.data;
+                }
+                return post;
+              })
+            )
+          );
+        } else {
+          console.log("Error");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  const handleComment = async (postId, values) => {
+    try {
+      await axios
+        .post(
+          "https://api.defitalks.io/api/comment/post",
+          {
+            ...values,
+            postId: postId,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.data);
+            dispatch(
+              setFeedPosts(
+                feed.map((post) => {
+                  if (post._id === res.data._id) {
+                    return res.data;
+                  } else {
+                    return post;
+                  }
+                })
+              )
+            );
+          }
+        });
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+  const handleReply = async (postId, values) => {
+    try {
+      await axios
+        .post(
+          "https://api.defitalks.io/api/comment/comment",
+          {
+            ...values,
+            postId: postId,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res.data);
+            dispatch(
+              setFeedPosts(
+                feed.map((post) => {
+                  if (post._id === res.data._id) {
+                    return res.data;
+                  } else {
+                    return post;
+                  }
+                })
+              )
+            );
+          }
+        });
+    } catch (err) {
+      console.warn(err);
+    }
+  };
   return (
     <>
       <Head>
@@ -50,7 +218,18 @@ export default function Home() {
       </Head>
       <PageLayout title={"Homepage"}>
         <MyPostWidget />
-        {feed && feed.map((post) => <PostWidget key={post._id} post={post} />)}
+        {feed &&
+          feed.map((post) => (
+            <PostWidget
+              key={post._id}
+              post={post}
+              handleRemove={handleRemove}
+              handleLike={handleLike}
+              handleDislike={handleDislike}
+              handleComment={handleComment}
+              handleReply={handleReply}
+            />
+          ))}
       </PageLayout>
     </>
   );
