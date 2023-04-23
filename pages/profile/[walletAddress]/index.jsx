@@ -10,8 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
   const router = useRouter();
-  const [userPosts, setUserPosts] = useState(ssrPosts);
-  const [user, setUser] = useState(ssrUser);
+  const [userPosts, setUserPosts] = useState(null);
+  const [user, setUser] = useState(null);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
 
@@ -175,31 +175,13 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
   };
 
   useEffect(() => {
-    const init = async () => {
-      await axios
-        .get(`https://api.defitalks.io/api/post/wallet/${walletAddress}`)
-        .then((res) => {
-          setUserPosts(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-
-      await axios
-        .get(`https://api.defitalks.io/api/user/wallet/${walletAddress}`)
-        .then((res) => {
-          setUser(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    init();
-  }, []);
+    setUserPosts(ssrPosts);
+    setUser(ssrUser);
+  }, [ssrPosts, ssrUser]);
 
   return (
     <>
-      {!!user && !!user.username && (
+      {!!user && user.username && (
         <PageLayout title={user.username}>
           <UserHeader user={user} setUser={setUser} />
 
@@ -236,7 +218,7 @@ export async function getStaticProps({ params }) {
   const walletAddress = params.walletAddress;
 
   const ssrUser = await axios
-    .get(`https://api.defitalks.io/api/post/wallet/${walletAddress}`)
+    .get(`https://api.defitalks.io/api/user/wallet/${walletAddress}`)
     .then((res) => res.data)
     .catch((err) => {
       console.log(err);
