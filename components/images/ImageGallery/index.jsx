@@ -70,8 +70,8 @@ const ImageGallery = ({ images }) => {
             <Image
               onClick={() => openPreview(index)}
               src={src}
-              width={800}
-              height={800}
+              width={700}
+              height={700}
               alt="Post Image"
               style={{
                 objectFit: "cover",
