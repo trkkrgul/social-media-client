@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { setFeedPosts } from "@/state/slices/post";
@@ -17,7 +16,16 @@ import {
 } from "@chakra-ui/react";
 import SessionEnd from "@/components/toasts/SessionEnd";
 import dynamic from "next/dynamic";
-import { Suspense } from "react";
+import {
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+  useRef,
+  Suspense,
+} from "react";
+
+import { Virtuoso } from "react-virtuoso";
 
 const PageLayout = dynamic(() => import("@/views/Sidebar"), {
   ssr: false,
@@ -30,13 +38,21 @@ const PostWidget = dynamic(() => import("@/components/post/PostWidget"), {
 });
 
 export default function Home({ feedPosts }) {
+  const feed = useSelector((state) => state.post.feed);
+  const token = useSelector((state) => state.auth.token);
+  const [count, setCount] = useState(5);
+
+  const loadMore = useCallback(() => {
+    return setTimeout(() => {
+      setCount((prev) => prev + 5);
+    }, 200);
+  }, [setCount]);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setFeedPosts(feedPosts));
+    const timeout = loadMore();
+    return () => clearTimeout(timeout);
   }, []);
-
-  const feed = useSelector((state) => state.post.feed);
-  const token = useSelector((state) => state.auth.token);
 
   const handleRemove = async (postId) => {
     await axios
@@ -215,7 +231,35 @@ export default function Home({ feedPosts }) {
       <PageLayout title={"Homepage"}>
         <MyPostWidget />
         <Suspense fallback={<div>Loading...</div>}>
-          {feed &&
+          {!!feed && (
+            <Virtuoso
+              style={{
+                height: "auto",
+                position: "relative",
+                overflow: "inherit",
+              }}
+              useWindowScroll
+              data={feed.slice(0, count)}
+              endReached={loadMore}
+              overscan={200}
+              itemContent={(index, post) => {
+                return (
+                  <PostWidget
+                    key={post._id}
+                    post={post}
+                    handleRemove={handleRemove}
+                    handleLike={handleLike}
+                    handleDislike={handleDislike}
+                    handleComment={handleComment}
+                    handleReply={handleReply}
+                    components={<div>asdas</div>}
+                  />
+                );
+              }}
+            />
+          )}
+
+          {/* {feed &&
             feed.map((post) => (
               <PostWidget
                 key={post._id}
@@ -226,7 +270,7 @@ export default function Home({ feedPosts }) {
                 handleComment={handleComment}
                 handleReply={handleReply}
               />
-            ))}
+            ))} */}
         </Suspense>
       </PageLayout>
     </>
