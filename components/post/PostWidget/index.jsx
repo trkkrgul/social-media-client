@@ -203,6 +203,7 @@ const PostWidget = ({
                 <HStack justifyContent={"space-between"} w={"100%"} p={2}>
                   <HStack>
                     <Image
+                      alt="profile"
                       src={user.profilePicturePath}
                       style={{
                         minWidth: "24px",
@@ -317,6 +318,7 @@ const PostWidget = ({
                         >
                           <HStack>
                             <Image
+                              alt="cover"
                               src={user.profilePicturePath}
                               style={{
                                 minWidth: "24px",

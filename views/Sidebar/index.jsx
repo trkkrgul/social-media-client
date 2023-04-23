@@ -83,7 +83,11 @@ const PageLayout = ({ children, title }) => {
             breakpoints={{ base: true, lg: false }}
           >
             <SidebarSection direction="row">
-              <Image src="https://sakaivault.io/512.png" boxSize="7" />
+              <Image
+                src="https://sakaivault.io/512.png"
+                boxSize="7"
+                alt="logo"
+              />
               <Spacer />
               <Menu>
                 <MenuButton

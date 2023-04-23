@@ -64,7 +64,7 @@ const UserHeader = ({ user, setUser }) => {
           mb={!isMobile ? (2 * imageSize) / 3 + "px" : "0"}
         >
           <AspectRatio ratio={3 / 1} width={"100%"} maxW={"100%"}>
-            <ImageAntd src={user?.coverPicturePath} />
+            <ImageAntd src={user?.coverPicturePath} alt="img-cover" />
           </AspectRatio>
           <Flex
             position={"absolute"}
@@ -85,6 +85,7 @@ const UserHeader = ({ user, setUser }) => {
                 overflow={"hidden"}
               >
                 <ImageAntd
+                  alt="img-profile"
                   src={user?.profilePicturePath}
                   style={{
                     objectFit: "cover",

@@ -254,6 +254,7 @@ const MyPostWidget = () => {
                             />
                           </HStack>
                           <Image
+                            alt="post image"
                             width={"100%"}
                             preview={{
                               mask: (

@@ -251,6 +251,7 @@ const CreateProfileModal = () => {
                     : "https://sakaivault.io/512.png"
                 }
                 preview={false}
+                alt="img"
               />
               <Input
                 type="file"
