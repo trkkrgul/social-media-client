@@ -74,7 +74,6 @@ const PageLayout = ({ children, title }) => {
   const router = useRouter();
   return (
     <>
-      <Divider />
       <div style={{ display: "flex", maxWidth: "1300px", margin: "0 auto" }}>
         {isLargerThan800 && (
           <Sidebar
@@ -168,7 +167,6 @@ const PageLayout = ({ children, title }) => {
         )}
         <Box
           maxW={"1100px"}
-          minH={"100vh"}
           width="100%"
           borderRight={"1px"}
           borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}

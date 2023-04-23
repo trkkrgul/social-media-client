@@ -233,15 +233,11 @@ export default function Home({ feedPosts }) {
         <Suspense fallback={<div>Loading...</div>}>
           {!!feed && (
             <Virtuoso
-              style={{
-                margin: "0 auto",
-                padding: "0",
-                position: "relative",
-              }}
               useWindowScroll
               data={feed.slice(0, count)}
               endReached={loadMore}
               overscan={200}
+              components={<div>asdas</div>}
               itemContent={(index, post) => {
                 return (
                   <PostWidget
@@ -252,7 +248,6 @@ export default function Home({ feedPosts }) {
                     handleDislike={handleDislike}
                     handleComment={handleComment}
                     handleReply={handleReply}
-                    components={<div>asdas</div>}
                   />
                 );
               }}
