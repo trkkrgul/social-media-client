@@ -26,7 +26,6 @@ import {
 } from "react";
 
 import { Virtuoso } from "react-virtuoso";
-import FollowingPosts from "@/components/FollowingPosts";
 
 const PageLayout = dynamic(() => import("@/views/Sidebar"), {
   ssr: false,
@@ -35,6 +34,9 @@ const MyPostWidget = dynamic(() => import("@/components/post/MyPostWidget"), {
   ssr: false,
 });
 const PostWidget = dynamic(() => import("@/components/post/PostWidget"), {
+  ssr: false,
+});
+const FollowingPosts = dynamic(() => import("@/components/FollowingPosts"), {
   ssr: false,
 });
 
@@ -53,23 +55,6 @@ export default function Home({ feedPosts }) {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setFeedPosts(feedPosts));
-    if (user && token && user.followings.length > 0) {
-      const followingsPosts = axios
-        .post(
-          "https://api.defitalks.io/api/post/followingPosts",
-          {
-            followings: user.followings,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((res) => setFollowingsPosts(res.data))
-        .catch((err) => console.log(err));
-    }
   }, []);
   useEffect(() => {
     const timeout = loadMore();
@@ -188,7 +173,6 @@ export default function Home({ feedPosts }) {
         )
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
             dispatch(
               setFeedPosts(
                 feed.map((post) => {
@@ -224,7 +208,6 @@ export default function Home({ feedPosts }) {
         )
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
             dispatch(
               setFeedPosts(
                 feed.map((post) => {
@@ -253,13 +236,18 @@ export default function Home({ feedPosts }) {
       <PageLayout title={"Homepage"}>
         <MyPostWidget />
         <Suspense fallback={<div>Loading...</div>}>
-          <Flex width={"100%"} height={"60px"} alignItems={"center"}>
+          <Flex
+            width={"100%"}
+            height={"60px"}
+            alignItems={"center"}
+            cursor={"pointer"}
+          >
             <Flex
               onClick={() => setTab("feed")}
               flexBasis={"50%"}
               justifyContent={"center"}
               alignItems={"center"}
-              fontSize={"xl"}
+              fontSize={"md"}
               fontWeight={"bold"}
               height={"100%"}
               bg={tab === "feed" ? "primary.500" : "transparent"}
@@ -272,7 +260,7 @@ export default function Home({ feedPosts }) {
               justifyContent={"center"}
               flexBasis={"50%"}
               onClick={() => setTab("followings")}
-              fontSize={"xl"}
+              fontSize={"md"}
               fontWeight={"bold"}
               bg={tab !== "feed" ? "primary.500" : "transparent"}
             >
@@ -340,6 +328,6 @@ export async function getStaticProps() {
     props: {
       feedPosts,
     },
-    revalidate: 1,
+    revalidate: 30,
   };
 }

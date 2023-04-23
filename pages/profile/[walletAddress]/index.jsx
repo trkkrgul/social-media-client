@@ -7,7 +7,6 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
   const router = useRouter();
   const [userPosts, setUserPosts] = useState(null);
@@ -123,7 +122,6 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
         )
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
             setUserPosts(
               userPosts.map((post) => {
                 if (post._id === res.data._id) {
@@ -157,7 +155,6 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
         )
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
             setUserPosts(
               userPosts.map((post) => {
                 if (post._id === res.data._id) {

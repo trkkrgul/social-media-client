@@ -122,7 +122,6 @@ const UserHeader = ({ user, setUser }) => {
                         }
                       )
                       .then((res) => {
-                        console.log(res);
                         const updatedLoggedUser = res.data.user;
                         dispatch(setLoggedUser({ ...updatedLoggedUser }));
                         setUser(res.data.targetUser);

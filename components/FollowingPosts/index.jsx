@@ -63,6 +63,10 @@ const FollowingPosts = () => {
         )
         .then((res) => dispatch(setFollowingPosts(res.data)))
         .catch((err) => console.log(err));
+    } else {
+      console.log("No user");
+
+      dispatch(setFollowingPosts([]));
     }
   }, []);
   useEffect(() => {
@@ -225,7 +229,6 @@ const FollowingPosts = () => {
         )
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
             dispatch(
               setFollowingPosts(
                 userPosts.map((post) => {

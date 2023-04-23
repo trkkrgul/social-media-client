@@ -110,9 +110,10 @@ const ImageGallery = ({ images }) => {
           >
             <Card
               onClick={(event) => event.stopPropagation()}
-              bg={"whiteAlpha.200"}
+              bg={colorMode === "dark" ? "gray.800" : "whiteAlpha.800"}
               border={"1px solid"}
               borderColor={"whiteAlpha.300"}
+              w={"90%"}
             >
               <CardHeader>
                 <HStack w={"100%"}>
@@ -126,7 +127,11 @@ const ImageGallery = ({ images }) => {
                 </HStack>
               </CardHeader>
               <CardBody>
-                <HStack justifyContent={"space-between"}>
+                <HStack
+                  justifyContent={"space-between"}
+                  margin={"auto"}
+                  height={"50vh"}
+                >
                   <Icon
                     fontSize={"24"}
                     as={BsArrowLeftCircle}
@@ -143,7 +148,13 @@ const ImageGallery = ({ images }) => {
                     onMouseDown={handleMouseDown}
                     onMouseUp={handleMouseUp}
                     onMouseLeave={() => setDragStartX(null)}
-                    style={{ borderRadius: "10px", maxWidth: "50vw" }}
+                    style={{
+                      borderRadius: "10px",
+                      maxHeight: "100%",
+                      maxWidth: "100%",
+                      objectFit: "contain",
+                      flexGrow: "1",
+                    }}
                     src={images[previewIndex]}
                     width={600}
                     height={450}

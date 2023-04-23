@@ -38,8 +38,8 @@ body {
   position: -webkit-sticky !important;
   position: sticky !important;
   overscroll-behavior: auto;
-  top: 0px;
-  height: calc(100vh - 64px);
+  top: 0 !important;
+  height: calc(100vh);
   padding-right: var(--chakra-space-4);
   padding-left: var(--chakra-space-2);
 }

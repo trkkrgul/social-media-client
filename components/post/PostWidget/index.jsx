@@ -200,207 +200,14 @@ const PostWidget = ({
             </Flex>
           )}
           {post.comments.map((comment) => (
-            <>
-              <Flex
-                key={comment._id}
-                flexBasis={"100%"}
-                alignItems={"center"}
-                flexWrap={"wrap"}
-                overflow={"hidden"}
-                my={1}
-              >
-                <Flex
-                  ms={2}
-                  me={1}
-                  flexBasis={"100%"}
-                  alignItems={"center"}
-                  flexWrap={"wrap"}
-                  bg={colorMode === "dark" ? "blackAlpha.50" : "whiteAlpha.200"}
-                  overflow={"hidden"}
-                  borderRadius={"lg"}
-                  border="1px"
-                  borderColor={
-                    colorMode === "dark" ? "whiteAlpha.100" : "blackAlpha.300"
-                  }
-                >
-                  <Flex
-                    m={2}
-                    alignItems={"center"}
-                    width={"100%"}
-                    justifyContent={"space-between"}
-                  >
-                    <Persona
-                      flexGrow={1}
-                      me="1"
-                      src={`${comment.user.profilePicturePath}`}
-                      name={`@${comment.user.username}`}
-                      size={"xs"}
-                    />
-
-                    <Spacer />
-
-                    <Text as="ins" fontSize={"xs"} color={"gray.500"}>
-                      {moment(comment.createdAt).fromNow()}
-                    </Text>
-                    <Button ms={2} onClick={toggleRepliesShown.toggle}>
-                      View {comment.replies.length} replies
-                    </Button>
-                  </Flex>
-                  <Divider />
-                  <Flex
-                    m={2}
-                    alignItems={"center"}
-                    width={"100%"}
-                    justifyContent={"space-between"}
-                  >
-                    <Text
-                      fontSize={"sm"}
-                      whiteSpace={"pre-wrap"}
-                      linebreak={"anywhere"}
-                      color={
-                        colorMode === "dark"
-                          ? "whiteAlpha.700"
-                          : "blackAlpha.700"
-                      }
-                    >
-                      {comment.content}
-                    </Text>
-                  </Flex>
-                  {!!token && (
-                    <Flex w={"100%"}>
-                      <Form
-                        width={"100%"}
-                        onSubmit={async (values) => {
-                          try {
-                            handleReply(post._id, {
-                              ...values,
-                              parentComment: comment._id,
-                            });
-                            toggleRepliesShown.on();
-                          } catch (err) {
-                            console.warn(err);
-                          }
-                        }}
-                      >
-                        <HStack
-                          justifyContent={"space-between"}
-                          w={"100%"}
-                          p={2}
-                        >
-                          <HStack>
-                            <Image
-                              alt="cover"
-                              src={user.profilePicturePath}
-                              style={{
-                                minWidth: "24px",
-                                objectFit: "fill",
-                                height: "24px",
-                                width: "24px",
-                                borderRadius: "50%",
-                              }}
-                            />
-                            <Text fontSize={"md"} fontWeight={"600"}>
-                              @{user.username}
-                            </Text>
-                          </HStack>
-
-                          <HStack w={"100%"}>
-                            <FormLayout column={1} w={"100%"}>
-                              <Field isRequired name="content" type="text" />
-                            </FormLayout>
-                            <SubmitButton disableIfInvalid>Reply</SubmitButton>
-                          </HStack>
-                        </HStack>
-                      </Form>
-                    </Flex>
-                  )}
-                </Flex>
-                <Collapse
-                  in={isRepliesShown}
-                  animateOpacity
-                  style={{ flexGrow: "1" }}
-                >
-                  {comment.replies.map((reply) => (
-                    <Flex
-                      key={reply._id}
-                      flexGrow={1}
-                      flexBasis={"100%"}
-                      borderLeft={"1px"}
-                      my={1}
-                      ms={3}
-                      borderColor={
-                        colorMode === "light"
-                          ? "blackAlpha.300"
-                          : "whiteAlpha.200"
-                      }
-                    >
-                      <Flex
-                        ms={2}
-                        me={1}
-                        flexBasis={"100%"}
-                        alignItems={"center"}
-                        flexWrap={"wrap"}
-                        bg={
-                          colorMode === "dark"
-                            ? "blackAlpha.200"
-                            : "blackAlpha.100"
-                        }
-                        overflow={"hidden"}
-                        borderRadius={"lg"}
-                        border="1px"
-                        borderColor={
-                          colorMode === "dark"
-                            ? "whiteAlpha.100"
-                            : "blackAlpha.300"
-                        }
-                      >
-                        <Flex
-                          m={2}
-                          alignItems={"center"}
-                          width={"100%"}
-                          justifyContent={"space-between"}
-                        >
-                          <Persona
-                            flexGrow={1}
-                            me="1"
-                            src={reply.user.profilePicturePath}
-                            name={`@${reply.user.username}`}
-                            size={"xs"}
-                          />
-
-                          <Spacer />
-
-                          <Text as="ins" fontSize={"xs"} color={"gray.500"}>
-                            {moment(reply.createdAt).fromNow()}
-                          </Text>
-                        </Flex>
-                        <Divider />
-                        <Flex
-                          m={2}
-                          alignItems={"center"}
-                          width={"100%"}
-                          justifyContent={"space-between"}
-                        >
-                          <Text
-                            fontSize={"sm"}
-                            whiteSpace={"pre-wrap"}
-                            linebreak={"anywhere"}
-                            color={
-                              colorMode === "dark"
-                                ? "whiteAlpha.700"
-                                : "blackAlpha.700"
-                            }
-                          >
-                            {reply.content}
-                          </Text>
-                        </Flex>
-                      </Flex>
-                    </Flex>
-                  ))}
-                </Collapse>
-              </Flex>
-              <Divider my={1} />
-            </>
+            <CommentLayout
+              post={post}
+              key={comment._id}
+              user={user}
+              token={token}
+              comment={comment}
+              handleReply={handleReply}
+            />
           ))}
         </Flex>
       </Collapse>
@@ -409,3 +216,193 @@ const PostWidget = ({
 };
 
 export default PostWidget;
+
+const RepliesLayout = ({ reply }) => {
+  const { colorMode } = useColorMode();
+
+  return (
+    <Flex
+      key={reply._id}
+      flexGrow={1}
+      flexBasis={"100%"}
+      borderLeft={"1px"}
+      my={1}
+      ms={3}
+      borderColor={colorMode === "light" ? "blackAlpha.300" : "whiteAlpha.200"}
+    >
+      <Flex
+        ms={2}
+        me={1}
+        flexBasis={"100%"}
+        alignItems={"center"}
+        flexWrap={"wrap"}
+        bg={colorMode === "dark" ? "blackAlpha.200" : "blackAlpha.100"}
+        overflow={"hidden"}
+        borderRadius={"lg"}
+        border="1px"
+        borderColor={colorMode === "dark" ? "whiteAlpha.100" : "blackAlpha.300"}
+      >
+        <Flex
+          m={2}
+          alignItems={"center"}
+          width={"100%"}
+          justifyContent={"space-between"}
+        >
+          <Persona
+            flexGrow={1}
+            me="1"
+            src={reply.user.profilePicturePath}
+            name={`@${reply.user.username}`}
+            size={"xs"}
+          />
+
+          <Spacer />
+
+          <Text as="ins" fontSize={"xs"} color={"gray.500"}>
+            {moment(reply.createdAt).fromNow()}
+          </Text>
+        </Flex>
+        <Divider />
+        <Flex
+          m={2}
+          alignItems={"center"}
+          width={"100%"}
+          justifyContent={"space-between"}
+        >
+          <Text
+            fontSize={"sm"}
+            whiteSpace={"pre-wrap"}
+            linebreak={"anywhere"}
+            color={colorMode === "dark" ? "whiteAlpha.700" : "blackAlpha.700"}
+          >
+            {reply.content}
+          </Text>
+        </Flex>
+      </Flex>
+    </Flex>
+  );
+};
+
+const CommentLayout = ({ comment, handleReply, user, token, post }) => {
+  const { colorMode } = useColorMode();
+  const [isRepliesShown, toggleRepliesShown] = useBoolean(false);
+  return (
+    <>
+      <Flex
+        key={comment._id}
+        flexBasis={"100%"}
+        alignItems={"center"}
+        flexWrap={"wrap"}
+        overflow={"hidden"}
+        my={1}
+      >
+        <Flex
+          ms={2}
+          me={1}
+          flexBasis={"100%"}
+          alignItems={"center"}
+          flexWrap={"wrap"}
+          bg={colorMode === "dark" ? "blackAlpha.50" : "whiteAlpha.200"}
+          overflow={"hidden"}
+          borderRadius={"lg"}
+          border="1px"
+          borderColor={
+            colorMode === "dark" ? "whiteAlpha.100" : "blackAlpha.300"
+          }
+        >
+          <Flex
+            m={2}
+            alignItems={"center"}
+            width={"100%"}
+            justifyContent={"space-between"}
+          >
+            <Persona
+              flexGrow={1}
+              me="1"
+              src={`${comment.user.profilePicturePath}`}
+              name={`@${comment.user.username}`}
+              size={"xs"}
+            />
+
+            <Spacer />
+
+            <Text as="ins" fontSize={"xs"} color={"gray.500"}>
+              {moment(comment.createdAt).fromNow()}
+            </Text>
+            {!!comment.replies.length > 0 && (
+              <Button ms={2} onClick={toggleRepliesShown.toggle}>
+                View {comment.replies.length} replies
+              </Button>
+            )}
+          </Flex>
+          <Divider />
+          <Flex
+            m={2}
+            alignItems={"center"}
+            width={"100%"}
+            justifyContent={"space-between"}
+          >
+            <Text
+              fontSize={"sm"}
+              whiteSpace={"pre-wrap"}
+              linebreak={"anywhere"}
+              color={colorMode === "dark" ? "whiteAlpha.700" : "blackAlpha.700"}
+            >
+              {comment.content}
+            </Text>
+          </Flex>
+          {!!token && (
+            <Flex w={"100%"}>
+              <Form
+                width={"100%"}
+                onSubmit={async (values) => {
+                  try {
+                    handleReply(post._id, {
+                      ...values,
+                      parentComment: comment._id,
+                    });
+                    toggleRepliesShown.on();
+                  } catch (err) {
+                    console.warn(err);
+                  }
+                }}
+              >
+                <HStack justifyContent={"space-between"} w={"100%"} p={2}>
+                  <HStack>
+                    <Image
+                      alt="cover"
+                      src={user.profilePicturePath}
+                      style={{
+                        minWidth: "24px",
+                        objectFit: "fill",
+                        height: "24px",
+                        width: "24px",
+                        borderRadius: "50%",
+                      }}
+                    />
+                    <Text fontSize={"md"} fontWeight={"600"}>
+                      @{user.username}
+                    </Text>
+                  </HStack>
+
+                  <HStack w={"100%"}>
+                    <FormLayout column={1} w={"100%"}>
+                      <Field isRequired name="content" type="text" />
+                    </FormLayout>
+                    <SubmitButton disableIfInvalid>Reply</SubmitButton>
+                  </HStack>
+                </HStack>
+              </Form>
+            </Flex>
+          )}
+        </Flex>
+        <Collapse in={isRepliesShown} animateOpacity style={{ flexGrow: "1" }}>
+          {comment.replies.map((reply) => (
+            <RepliesLayout reply={reply} key={reply._id} />
+          ))}
+        </Collapse>
+      </Flex>
+      <Divider my={1} />
+    </>
+  );
+};
