@@ -44,8 +44,8 @@ export default function Home({ feedPosts }) {
 
   const loadMore = useCallback(() => {
     return setTimeout(() => {
-      setCount((prev) => prev + 5);
-    }, 200);
+      setCount((prev) => prev + 1);
+    }, 10000);
   }, [setCount]);
   const dispatch = useDispatch();
   useEffect(() => {
@@ -234,9 +234,9 @@ export default function Home({ feedPosts }) {
           {!!feed && (
             <Virtuoso
               style={{
-                height: "auto",
+                margin: "0 auto",
+                padding: "0",
                 position: "relative",
-                overflow: "inherit",
               }}
               useWindowScroll
               data={feed.slice(0, count)}
