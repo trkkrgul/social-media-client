@@ -1,7 +1,8 @@
+import React from "react";
 import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { setFeedPosts } from "@/state/slices/post";
+import { setFeedPosts, setFollowingPosts } from "@/state/slices/post";
 import { Button } from "@saas-ui/react";
 import {
   Avatar,
@@ -26,35 +27,28 @@ import {
 } from "react";
 
 import { Virtuoso } from "react-virtuoso";
-import FollowingPosts from "@/components/FollowingPosts";
 
-const PageLayout = dynamic(() => import("@/views/Sidebar"), {
-  ssr: false,
-});
-const MyPostWidget = dynamic(() => import("@/components/post/MyPostWidget"), {
-  ssr: false,
-});
 const PostWidget = dynamic(() => import("@/components/post/PostWidget"), {
   ssr: false,
 });
-
-export default function Home({ feedPosts }) {
+const FollowingPosts = () => {
+  const followingPosts = useSelector((state) => state.post.followingPosts);
+  const dispatch = useDispatch();
   const feed = useSelector((state) => state.post.feed);
   const token = useSelector((state) => state.auth.token);
   const [count, setCount] = useState(5);
   const [tab, setTab] = useState("feed");
   const user = useSelector((state) => state.auth.user);
-  const [followingsPosts, setFollowingsPosts] = useState([]);
+  const [userPosts, setUserPosts] = useState([]);
   const loadMore = useCallback(() => {
     return setTimeout(() => {
       setCount((prev) => prev + 2);
     }, 1000);
   }, [setCount]);
-  const dispatch = useDispatch();
+
   useEffect(() => {
-    dispatch(setFeedPosts(feedPosts));
     if (user && token && user.followings.length > 0) {
-      const followingsPosts = axios
+      axios
         .post(
           "https://api.defitalks.io/api/post/followingPosts",
           {
@@ -67,7 +61,7 @@ export default function Home({ feedPosts }) {
             },
           }
         )
-        .then((res) => setFollowingsPosts(res.data))
+        .then((res) => dispatch(setFollowingPosts(res.data)))
         .catch((err) => console.log(err));
     }
   }, []);
@@ -93,7 +87,9 @@ export default function Home({ feedPosts }) {
       .then((res) => {
         if (res.status === 200) {
           console.log("Post deleted");
-          dispatch(setFeedPosts(feed.filter((post) => post._id !== postId)));
+          dispatch(
+            setFollowingPosts(userPosts.filter((post) => post._id !== postId))
+          );
         } else {
           console.log("Error");
         }
@@ -120,8 +116,8 @@ export default function Home({ feedPosts }) {
         if (res.status === 200) {
           console.log("Post liked");
           dispatch(
-            setFeedPosts(
-              feed.map((post) => {
+            setFollowingPosts(
+              userPosts.map((post) => {
                 if (post._id === postId) {
                   return res.data;
                 }
@@ -153,8 +149,8 @@ export default function Home({ feedPosts }) {
         if (res.status === 200) {
           console.log("Post disliked");
           dispatch(
-            setFeedPosts(
-              feed.map((post) => {
+            setFollowingPosts(
+              userPosts.map((post) => {
                 if (post._id === postId) {
                   return res.data;
                 }
@@ -188,24 +184,29 @@ export default function Home({ feedPosts }) {
         )
         .then((res) => {
           if (res.status === 200) {
-            console.log(res.data);
+            console.log("Post disliked");
             dispatch(
-              setFeedPosts(
-                feed.map((post) => {
-                  if (post._id === res.data._id) {
+              setFollowingPosts(
+                userPosts.map((post) => {
+                  if (post._id === postId) {
                     return res.data;
-                  } else {
-                    return post;
                   }
+                  return post;
                 })
               )
             );
+          } else {
+            console.log("Error");
           }
+        })
+        .catch((err) => {
+          console.log(err);
         });
     } catch (err) {
       console.warn(err);
     }
   };
+
   const handleReply = async (postId, values) => {
     try {
       await axios
@@ -226,13 +227,12 @@ export default function Home({ feedPosts }) {
           if (res.status === 200) {
             console.log(res.data);
             dispatch(
-              setFeedPosts(
-                feed.map((post) => {
-                  if (post._id === res.data._id) {
+              setFollowingPosts(
+                userPosts.map((post) => {
+                  if (post._id === postId) {
                     return res.data;
-                  } else {
-                    return post;
                   }
+                  return post;
                 })
               )
             );
@@ -242,104 +242,31 @@ export default function Home({ feedPosts }) {
       console.warn(err);
     }
   };
+
   return (
-    <>
-      <Head>
-        <title>Defi Talks</title>
-        <meta name="description" content="Generated by create next app" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <PageLayout title={"Homepage"}>
-        <MyPostWidget />
-        <Suspense fallback={<div>Loading...</div>}>
-          <Flex width={"100%"} height={"60px"} alignItems={"center"}>
-            <Flex
-              onClick={() => setTab("feed")}
-              flexBasis={"50%"}
-              justifyContent={"center"}
-              alignItems={"center"}
-              fontSize={"xl"}
-              fontWeight={"bold"}
-              height={"100%"}
-              bg={tab === "feed" ? "primary.500" : "transparent"}
-            >
-              <Text>Recommended</Text>
-            </Flex>
-            <Flex
-              height={"100%"}
-              alignItems={"center"}
-              justifyContent={"center"}
-              flexBasis={"50%"}
-              onClick={() => setTab("followings")}
-              fontSize={"xl"}
-              fontWeight={"bold"}
-              bg={tab !== "feed" ? "primary.500" : "transparent"}
-            >
-              <Text>Followings</Text>
-            </Flex>
-          </Flex>
-          {!!feed && tab === "feed" ? (
-            <Virtuoso
-              useWindowScroll
-              data={
-                tab === "feed"
-                  ? feed.slice(0, count)
-                  : followingsPosts.slice(0, count)
-              }
-              endReached={loadMore}
-              overscan={200}
-              components={<div>asdas</div>}
-              itemContent={(index, post) => {
-                return (
-                  <PostWidget
-                    key={post._id}
-                    post={post}
-                    handleRemove={handleRemove}
-                    handleLike={handleLike}
-                    handleDislike={handleDislike}
-                    handleComment={handleComment}
-                    handleReply={handleReply}
-                  />
-                );
-              }}
+    !!followingPosts && (
+      <Virtuoso
+        useWindowScroll
+        data={followingPosts.slice(0, count)}
+        endReached={loadMore}
+        overscan={200}
+        components={<div>asdas</div>}
+        itemContent={(index, post) => {
+          return (
+            <PostWidget
+              key={post._id}
+              post={post}
+              handleRemove={handleRemove}
+              handleLike={handleLike}
+              handleDislike={handleDislike}
+              handleComment={handleComment}
+              handleReply={handleReply}
             />
-          ) : (
-            <FollowingPosts />
-          )}
-
-          {/* {feed &&
-            feed.map((post) => (
-              <PostWidget
-                key={post._id}
-                post={post}
-                handleRemove={handleRemove}
-                handleLike={handleLike}
-                handleDislike={handleDislike}
-                handleComment={handleComment}
-                handleReply={handleReply}
-              />
-            ))} */}
-        </Suspense>
-      </PageLayout>
-    </>
+          );
+        }}
+      />
+    )
   );
-}
+};
 
-export async function getStaticProps() {
-  const feedPosts = await axios
-    .get("https://api.defitalks.io/api/post/feed")
-    .then((res) => res.data)
-    .catch((err) => {
-      console.log(err);
-    });
-
-  // Fetch data for the wallet address from an API or database
-
-  return {
-    props: {
-      feedPosts,
-    },
-    revalidate: 1,
-  };
-}
+export default FollowingPosts;

@@ -165,36 +165,7 @@ const PostWidget = ({
                 width={"100%"}
                 onSubmit={async (values) => {
                   try {
-                    await axios
-                      .post(
-                        "https://api.defitalks.io/api/comment/post",
-                        {
-                          ...values,
-                          postId: post._id,
-                        },
-                        {
-                          headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${token}`,
-                          },
-                        }
-                      )
-                      .then((res) => {
-                        if (res.status === 200) {
-                          console.log(res.data);
-                          dispatch(
-                            setFeedPosts(
-                              posts.map((post) => {
-                                if (post._id === res.data._id) {
-                                  return res.data;
-                                } else {
-                                  return post;
-                                }
-                              })
-                            )
-                          );
-                        }
-                      });
+                    handleComment(post._id, values);
                   } catch (err) {
                     console.warn(err);
                   }
