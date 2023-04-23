@@ -210,6 +210,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
                 handleReply={handleReply}
                 handleLike={handleLike}
                 handleDislike={handleDislike}
+                handleRemove={handleRemove}
                 post={post}
               />
             ))
