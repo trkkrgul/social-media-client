@@ -392,9 +392,6 @@ const MyPostWidget = () => {
                         <PopoverArrow />
 
                         <EmojiPicker
-                          getEmojiUrl={(emoji) =>
-                            `/emojis/img-twitter-64/${emoji}.png`
-                          }
                           lazyLoadEmojis={true}
                           searchPlaceHolder="Search emoji"
                           onEmojiClick={onEmojiClick}
