@@ -28,8 +28,8 @@ const PostHeader = ({ post, handleRemove }) => {
   return (
     <CardHeader bg={colorMode === "dark" ? "blackAlpha.100" : "blackAlpha.50"}>
       <Flex alignItems={"center"} width={"100%"}>
-        <Link href={`/profile/${post.user?.walletAddress}`}>
-          <Flex alignItems={"center"} width={"100%"} cursor={"pointer"}>
+        <Flex alignItems={"center"} width={"100%"}>
+          <Link href={`/profile/${post.user?.walletAddress}`}>
             <Persona
               me="1"
               src={post.user?.profilePicturePath}
@@ -37,21 +37,23 @@ const PostHeader = ({ post, handleRemove }) => {
               fontWeight={"bold"}
               size={"xs"}
             />
-            <Flex alignItems={"center"}>
-              <Web3Address address={post.user.walletAddress} />
-              <IconButton
-                size={"sm"}
-                onClick={() => {
-                  navigator.clipboard.writeText(post.user.walletAddress);
-                }}
-                cursor={"pointer"}
-                variant={"ghost"}
-                as={IoCopyOutline}
-                p={1}
-              />{" "}
-            </Flex>
+          </Link>
+          <Flex alignItems={"center"}>
+            <Link href={`/profile/${post.user?.walletAddress}`}>
+              <Web3Address address={post.user.walletAddress} />{" "}
+            </Link>
+            <IconButton
+              size={"sm"}
+              onClick={() => {
+                navigator.clipboard.writeText(post.user.walletAddress);
+              }}
+              cursor={"pointer"}
+              variant={"ghost"}
+              as={IoCopyOutline}
+              p={1}
+            />
           </Flex>
-        </Link>
+        </Flex>
 
         <Spacer />
         <Menu orientation="horizontal">
