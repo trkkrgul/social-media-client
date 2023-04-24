@@ -10,6 +10,7 @@ import {
 import { Divider } from "@chakra-ui/react";
 import { CardHeader, MenuItem, Persona } from "@saas-ui/react";
 import { Web3Address } from "@saas-ui/web3";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -27,35 +28,31 @@ const PostHeader = ({ post, handleRemove }) => {
   return (
     <CardHeader bg={colorMode === "dark" ? "blackAlpha.100" : "blackAlpha.50"}>
       <Flex alignItems={"center"} width={"100%"}>
-        <Flex
-          alignItems={"center"}
-          width={"100%"}
-          onClick={() => {
-            router.push(`/profile/${post.user?.walletAddress}`);
-          }}
-          cursor={"pointer"}
-        >
-          <Persona
-            me="1"
-            src={post.user?.profilePicturePath}
-            name={`@${post.user?.username}`}
-            fontWeight={"bold"}
-            size={"xs"}
-          />
-          <Flex alignItems={"center"}>
-            <Web3Address address={post.user.walletAddress} />
-            <IconButton
-              size={"sm"}
-              onClick={() => {
-                navigator.clipboard.writeText(post.user.walletAddress);
-              }}
-              cursor={"pointer"}
-              variant={"ghost"}
-              as={IoCopyOutline}
-              p={1}
-            />{" "}
+        <Link href={`/profile/${post.user?.walletAddress}`}>
+          <Flex alignItems={"center"} width={"100%"} cursor={"pointer"}>
+            <Persona
+              me="1"
+              src={post.user?.profilePicturePath}
+              name={`@${post.user?.username}`}
+              fontWeight={"bold"}
+              size={"xs"}
+            />
+            <Flex alignItems={"center"}>
+              <Web3Address address={post.user.walletAddress} />
+              <IconButton
+                size={"sm"}
+                onClick={() => {
+                  navigator.clipboard.writeText(post.user.walletAddress);
+                }}
+                cursor={"pointer"}
+                variant={"ghost"}
+                as={IoCopyOutline}
+                p={1}
+              />{" "}
+            </Flex>
           </Flex>
-        </Flex>
+        </Link>
+
         <Spacer />
         <Menu orientation="horizontal">
           <MenuButton
