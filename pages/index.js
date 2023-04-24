@@ -27,7 +27,7 @@ import {
 
 import { Virtuoso } from "react-virtuoso";
 
-const PageLayout = dynamic(() => import("@/views/Sidebar"), {
+const PageLayout = dynamic(() => import("@/views/Layout"), {
   ssr: false,
 });
 const MyPostWidget = dynamic(() => import("@/components/post/MyPostWidget"), {

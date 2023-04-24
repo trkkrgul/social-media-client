@@ -30,7 +30,7 @@ import {
   Persona,
 } from "@saas-ui/react";
 import axios from "axios";
-import EmojiPicker from "emoji-picker-react";
+
 import React from "react";
 import { BsBookmarkCheck, BsEmojiHeartEyes } from "react-icons/bs";
 import {
@@ -48,6 +48,10 @@ import { v4 } from "uuid";
 import { RxEnterFullScreen } from "react-icons/rx";
 import { setSessionEnd } from "@/state/slices/auth";
 import { useRouter } from "next/router";
+import dynamic from "next/dynamic";
+const EmojiPicker = dynamic(() => import("emoji-picker-react"), {
+  ssr: false,
+});
 
 const MyPostWidget = () => {
   const user = useSelector((state) => state.auth.user);
@@ -388,6 +392,9 @@ const MyPostWidget = () => {
                         <PopoverArrow />
 
                         <EmojiPicker
+                          getEmojiUrl={(emoji) =>
+                            `/emojis/img-twitter-64/${emoji}.png`
+                          }
                           lazyLoadEmojis={true}
                           searchPlaceHolder="Search emoji"
                           onEmojiClick={onEmojiClick}

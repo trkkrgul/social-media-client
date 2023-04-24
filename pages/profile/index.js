@@ -2,7 +2,7 @@ import LoginStepper from "@/components/auth/LoginStepper";
 import PostWidget from "@/components/post/PostWidget";
 import UserHeader from "@/components/profile/UserHeader";
 import { addProfilePosts } from "@/state/slices/post";
-import PageLayout from "@/views/Sidebar";
+import PageLayout from "@/views/Layout";
 import { Box, Text } from "@chakra-ui/react";
 import { NavItem } from "@saas-ui/sidebar";
 import axios from "axios";

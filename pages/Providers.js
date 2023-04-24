@@ -8,7 +8,7 @@ import { theme } from "@/theme";
 import { CacheProvider } from "@emotion/react";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
-import SidebarWidget from "@/views/Sidebar";
+import SidebarWidget from "@/views/Layout";
 
 const Providers = ({ store, children }) => {
   return (

@@ -1,7 +1,7 @@
 import LoginStepper from "@/components/auth/LoginStepper";
 import PostWidget from "@/components/post/PostWidget";
 import UserHeader from "@/components/profile/UserHeader";
-import PageLayout from "@/views/Sidebar";
+import PageLayout from "@/views/Layout";
 import { Box, Text } from "@chakra-ui/react";
 import axios from "axios";
 import { useRouter } from "next/router";
