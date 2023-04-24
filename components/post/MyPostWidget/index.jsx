@@ -395,6 +395,7 @@ const MyPostWidget = () => {
                           lazyLoadEmojis={true}
                           searchPlaceHolder="Search emoji"
                           onEmojiClick={onEmojiClick}
+                          emojiStyle="twitter"
                           previewConfig={{
                             showPreview: false,
                             showVariants: false,

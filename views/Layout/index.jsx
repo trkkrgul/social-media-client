@@ -53,48 +53,56 @@ const PageLayout = ({ children, title }) => {
       <div style={{ display: "flex", maxWidth: "1300px", margin: "0 auto" }}>
         {true && (
           <Suspense>
-            <Flex
+            <Box
               borderRight={"1px"}
               borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
-              width={"300px"}
-              className="sticky-div"
-              flexDirection={"column"}
-              alignItems={"center"}
-              p={1}
             >
-              <Nav>
-                <NavItem
-                  isActive={path === "/"}
-                  icon={<FaHome />}
-                  href={null}
-                  onClick={() => router.push("/")}
-                >
-                  Home
-                </NavItem>
-                <Link href={"/profile"} prefetch={false}>
+              <Flex
+                borderColor={
+                  colorMode === "dark" ? "whiteAlpha.300" : "gray.200"
+                }
+                width={"300px"}
+                className="sticky-div"
+                flexDirection={"column"}
+                alignItems={"center"}
+                p={1}
+              >
+                <Nav>
                   <NavItem
-                    isActive={path === "/profile"}
+                    isActive={path === "/"}
+                    icon={<FaHome />}
                     href={null}
-                    icon={<FaUser />}
+                    onClick={() => router.push("/")}
                   >
-                    Profile
+                    Home
                   </NavItem>
-                </Link>
-              </Nav>
-              <Spacer />
-              <Switch
-                colorScheme="primary"
-                size="lg"
-                onChange={toggleColorMode}
-                isChecked={colorMode === "dark"}
-              />
-            </Flex>
+                  <Link href={"/profile"} prefetch={false}>
+                    <NavItem
+                      isActive={path === "/profile"}
+                      href={null}
+                      icon={<FaUser />}
+                    >
+                      Profile
+                    </NavItem>
+                  </Link>
+                </Nav>
+                <Spacer />
+                <Switch
+                  colorScheme="primary"
+                  size="lg"
+                  onChange={toggleColorMode}
+                  isChecked={colorMode === "dark"}
+                />
+              </Flex>
+            </Box>
           </Suspense>
         )}
         <Box
           maxW={"1100px"}
           width="100%"
-          borderRight={"1px"}
+          // borderLeft={"1px"}
+          minHeight={"100vh"}
+          paddingBottom={"10rem"}
           borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
         >
           <Box
