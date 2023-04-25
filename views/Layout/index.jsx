@@ -221,17 +221,7 @@ const DesktopNav = () => {
             borderRadius={"lg"}
             bg={colorMode === "dark" ? "gray.800" : "white"}
           >
-            <Flex
-              width={"100%"}
-              justify={"space-between"}
-              pt={2}
-              px={2}
-              alignItems={"center"}
-            >
-              <Text>Create Post</Text>
-              <IoClose onClick={() => setIsCreatingNewPost(false)} />
-            </Flex>
-            <MyPostWidget />
+            <MyPostWidget setIsCreatingNewPost={setIsCreatingNewPost} />
           </Box>
         </Flex>
       )}
@@ -363,17 +353,7 @@ const MobileNav = () => {
             shadow={"lg"}
             bg={colorMode === "dark" ? "gray.800" : "white"}
           >
-            <Flex
-              width={"100%"}
-              justify={"space-between"}
-              pt={2}
-              px={2}
-              alignItems={"center"}
-            >
-              <Text>Create Post</Text>
-              <IoClose onClick={() => setIsCreatingNewPost(false)} />
-            </Flex>
-            <MyPostWidget />
+            <MyPostWidget setIsCreatingNewPost={setIsCreatingNewPost} />
           </Box>
         </Flex>
       )}

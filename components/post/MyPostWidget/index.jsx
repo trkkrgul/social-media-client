@@ -53,7 +53,7 @@ const EmojiPicker = dynamic(() => import("emoji-picker-react"), {
   ssr: false,
 });
 
-const MyPostWidget = () => {
+const MyPostWidget = ({ setIsCreatingNewPost }) => {
   const user = useSelector((state) => state.auth.user);
   const walletAddress = useSelector((state) => state.auth.walletAddress);
   const isProfileCreated = useSelector(
@@ -133,6 +133,7 @@ const MyPostWidget = () => {
             setUploadedImages([]);
             dispatch(setFeedPosts([res.data[0], ...feedPosts]));
             setReadyToShare(true);
+            !!setIsCreatingNewPost && setIsCreatingNewPost(false);
           } else {
             setReadyToShare(true);
             dispatch(setSessionEnd(true));
