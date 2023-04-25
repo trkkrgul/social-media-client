@@ -206,7 +206,7 @@ const DesktopNav = () => {
   const [isCreatingNewPost, setIsCreatingNewPost] = useState(false);
   return (
     <Suspense>
-      {!!user && user.username && isCreatingNewPost && (
+      {!!user && user.isProfileCreated && isCreatingNewPost && (
         <Flex
           zIndex={"overlay"}
           position={"fixed"}
@@ -288,7 +288,7 @@ const DesktopNav = () => {
             )}
           </Box>
           <Spacer />
-          {!!user && !!user.username && <UserMenuWidget />}
+          {!!user && !!user.isProfileCreated && <UserMenuWidget />}
           <Divider />
           <HStack justifyContent={"space-between"} w={"100%"} p={2}>
             <Text>Theme</Text>
@@ -349,7 +349,7 @@ const MobileNav = () => {
   const path = router.pathname;
   return (
     <Suspense>
-      {!!user && user.username && isCreatingNewPost && (
+      {!!user && user.isProfileCreated && isCreatingNewPost && (
         <Flex
           zIndex={"overlay"}
           position={"fixed"}
@@ -400,7 +400,7 @@ const MobileNav = () => {
               variant="ghost"
             />
           </Link>
-          {!!user && !!user.username && (
+          {!!user && !!user.isProfileCreated && (
             <>
               <IconButton
                 isDisabled
@@ -459,7 +459,7 @@ const MobileNav = () => {
                       </Button>
                     </Link>
                   </Nav>
-                  {!!user && !!user.username && <UserMenuWidget />}
+                  {!!user && !!user.isProfileCreated && <UserMenuWidget />}
                   <Divider />
                   <HStack justifyContent={"space-between"} w={"100%"} p={2}>
                     <Text>Theme</Text>
