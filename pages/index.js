@@ -274,11 +274,7 @@ export default function Home({ feedPosts }) {
             <Virtuoso
               className="gradient-feed"
               useWindowScroll
-              data={
-                tab === "feed"
-                  ? feed.slice(0, count)
-                  : followingsPosts.slice(0, count)
-              }
+              data={feed.slice(0, count)}
               endReached={loadMore}
               overscan={200}
               components={<div>asdas</div>}
