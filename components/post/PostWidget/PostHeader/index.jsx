@@ -65,12 +65,14 @@ const PostHeader = ({ post, handleRemove }) => {
           />
           <MenuList>
             <MenuItem
+              isDisabled={true}
               _hover={{ bgColor: "blackAlpha.300" }}
               icon={<IoShareOutline size={16} />}
             >
               Share Post
             </MenuItem>
             <MenuItem
+              isDisabled={true}
               _hover={{ bgColor: "blackAlpha.300" }}
               icon={<BsBookmarkCheck size={16} />}
             >
@@ -78,6 +80,7 @@ const PostHeader = ({ post, handleRemove }) => {
             </MenuItem>
             <Divider my={1} />
             <MenuItem
+              isDisabled={true}
               _hover={{ bgColor: "blackAlpha.300" }}
               icon={<MdReport size={16} />}
             >
