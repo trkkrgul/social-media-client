@@ -6,6 +6,7 @@ import {
   IconButton,
   Menu,
   MenuButton,
+  MenuGroup,
   MenuList,
   Spacer,
   Switch,
@@ -15,7 +16,13 @@ import {
   useDisclosure,
   useTheme,
 } from "@chakra-ui/react";
-import { Button, MenuItem, useModals } from "@saas-ui/react";
+import {
+  Button,
+  MenuDialog,
+  MenuDialogList,
+  MenuItem,
+  useModals,
+} from "@saas-ui/react";
 import { useMediaQuery } from "@chakra-ui/react";
 import React, { Suspense } from "react";
 import { NavGroup, NavItem, Nav } from "@saas-ui/sidebar";
@@ -40,8 +47,23 @@ import LoginStepper from "@/components/auth/LoginStepper";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
-import { IoKey, IoKeySharp, IoLogOut, IoMenu } from "react-icons/io5";
+import {
+  IoAddCircle,
+  IoKey,
+  IoKeySharp,
+  IoLogOut,
+  IoMenu,
+  IoPerson,
+} from "react-icons/io5";
 import { ConnectKitButton } from "connectkit";
+import {
+  MdOutlineExplore,
+  MdPerson,
+  MdPerson2,
+  MdPerson3,
+  MdPerson4,
+} from "react-icons/md";
+import MyPostWidget from "@/components/post/MyPostWidget";
 const PageLayout = ({ children, title }) => {
   const user = useSelector((state) => state.auth.user);
   const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
@@ -269,9 +291,30 @@ const MobileNav = () => {
   const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
   const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
+  const disclosure = useDisclosure();
   const path = router.pathname;
   return (
     <Suspense>
+      <MenuDialog
+        {...disclosure}
+        closeOnOverlayClick={true}
+        hideCloseButton={true}
+      >
+        <MenuDialogList
+          m={0}
+          p={0}
+          margin={0}
+          padding={0}
+          height={"500px"}
+          backdropFilter={null}
+          title="Create Post"
+        >
+          <Box>
+            <MyPostWidget />
+            <Divider />
+          </Box>
+        </MenuDialogList>
+      </MenuDialog>
       <Flex
         position={"fixed"}
         bottom={"0"}
@@ -288,8 +331,36 @@ const MobileNav = () => {
           borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
           flexDirection={"row"}
           alignItems={"center"}
-          p={1}
+          justifyContent={"space-between"}
+          width={"100%"}
+          px={4}
         >
+          <Link href={"/"}>
+            <IconButton
+              aria-label="Home"
+              icon={<FaHome size={24} />}
+              variant="ghost"
+            />
+          </Link>
+          <IconButton
+            isDisabled
+            aria-label="Explore"
+            icon={<MdOutlineExplore size={24} />}
+            variant="ghost"
+          />
+          <IconButton
+            onClick={() => disclosure.onOpen()}
+            aria-label="Add Post"
+            icon={<IoAddCircle size={24} />}
+            variant="ghost"
+          />
+          <Link href={"/profile"}>
+            <IconButton
+              aria-label="Profile"
+              icon={<MdPerson2 size={24} />}
+              variant="ghost"
+            />
+          </Link>
           <Menu>
             <MenuButton
               as={IconButton}
@@ -332,7 +403,6 @@ const MobileNav = () => {
                   </Button>
                 </Link>
               </Nav>
-
               {!!user && !!user.username && <UserMenuWidget />}
               <Divider />
               <HStack justifyContent={"space-between"} w={"100%"} p={2}>
