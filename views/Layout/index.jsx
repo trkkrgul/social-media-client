@@ -2,6 +2,7 @@ import {
   Box,
   Divider,
   Flex,
+  HStack,
   Spacer,
   Switch,
   Text,
@@ -67,7 +68,7 @@ const PageLayout = ({ children, title }) => {
                 alignItems={"center"}
                 p={1}
               >
-                <Nav>
+                <Nav width={"100%"}>
                   <NavItem
                     isActive={path === "/"}
                     icon={<FaHome />}
@@ -87,12 +88,23 @@ const PageLayout = ({ children, title }) => {
                   </Link>
                 </Nav>
                 <Spacer />
-                <Switch
-                  colorScheme="primary"
-                  size="lg"
-                  onChange={toggleColorMode}
-                  isChecked={colorMode === "dark"}
-                />
+                <HStack>
+                  <Switch
+                    colorScheme="primary"
+                    size="lg"
+                    onChange={toggleColorMode}
+                    isChecked={colorMode === "dark"}
+                    sx={{
+                      ".chakra-switch__thumb": {
+                        background:
+                          colorMode === "light"
+                            ? "url(./icons/sun.svg) center center, #fff !important"
+                            : "url(./icons/moon.svg) center center, #000 !important",
+                        backgroundSize: "contain,cover !important",
+                      },
+                    }}
+                  />
+                </HStack>
               </Flex>
             </Box>
           </Suspense>
