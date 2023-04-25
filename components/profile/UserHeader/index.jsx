@@ -6,12 +6,11 @@ import {
   Flex,
   HStack,
   IconButton,
-  Image,
   Spacer,
   Text,
   useMediaQuery,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Image as ImageAntd } from "antd";
 import { Web3Address } from "@saas-ui/web3";
@@ -21,6 +20,8 @@ import { BsMailbox } from "react-icons/bs";
 import { FaDiscord, FaTelegramPlane, FaTwitter } from "react-icons/fa";
 import axios from "axios";
 import { setUser as setLoggedUser } from "@/state/slices/auth";
+import ImagePreviewer from "@/components/images/ImagePreviewer";
+import Image from "next/image";
 
 const UserHeader = ({ user, setUser }) => {
   const dispatch = useDispatch();
@@ -29,6 +30,9 @@ const UserHeader = ({ user, setUser }) => {
   const [isMobile] = useMediaQuery("(max-width: 768px)");
   const imageSize = isMobile ? 96 : 192;
   const token = useSelector((state) => state.auth.token);
+  const [isProfilePhotoPreviewOpen, setIsProfilePhotoPreviewOpen] =
+    useState(false);
+  const [isCoverPhotoPreviewOpen, setIsCoverPhotoPreviewOpen] = useState(false);
   const UserNameAndWallet = () => {
     return (
       <Box pt={(1 * imageSize) / 2.5 + "px"}>
@@ -57,14 +61,35 @@ const UserHeader = ({ user, setUser }) => {
   return (
     user && (
       <>
+        <ImagePreviewer
+          image={user.profilePicturePath}
+          isOpen={isProfilePhotoPreviewOpen}
+          setOpen={setIsProfilePhotoPreviewOpen}
+        />
+        <ImagePreviewer
+          image={user.coverPicturePath}
+          isOpen={isCoverPhotoPreviewOpen}
+          setOpen={setIsCoverPhotoPreviewOpen}
+        />
         <Box
-          borderBottom={"1px solid"}
-          borderColor={"whiteAlpha.200"}
           position={"relative"}
           mb={!isMobile ? (2 * imageSize) / 3 + "px" : "0"}
         >
-          <AspectRatio ratio={3 / 1} width={"100%"} maxW={"100%"}>
-            <ImageAntd src={user?.coverPicturePath} alt="img-cover" />
+          <AspectRatio
+            ratio={3 / 1}
+            width={"100%"}
+            maxW={"100%"}
+            position={"relative"}
+          >
+            <Image
+              src={user.coverPicturePath}
+              width={1500}
+              height={500}
+              className="gradient-mask"
+              onClick={() => {
+                setIsCoverPhotoPreviewOpen(true);
+              }}
+            />
           </AspectRatio>
           <Flex
             position={"absolute"}
@@ -84,13 +109,18 @@ const UserHeader = ({ user, setUser }) => {
                 borderRadius={"10%"}
                 overflow={"hidden"}
               >
-                <ImageAntd
-                  alt="img-profile"
-                  src={user?.profilePicturePath}
+                <Image
+                  src={user.profilePicturePath}
+                  width={400}
+                  height={400}
                   style={{
                     objectFit: "cover",
-                    height: "100%",
                     width: "100%",
+                    height: "100%",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    setIsProfilePhotoPreviewOpen(true);
                   }}
                 />
               </AspectRatio>
@@ -142,13 +172,11 @@ const UserHeader = ({ user, setUser }) => {
         <Box px={4} mt="6">
           {isMobile && <UserNameAndWallet />}
         </Box>
-
         <Box px="4">
           <Flex justifyContent={"space-between"}>
             <Text>{user?.biography}</Text>
           </Flex>
         </Box>
-
         <Box px="4" my={"4"}>
           <Flex justifyContent={"space-between"}>
             <ButtonGroup spacing={4}>
@@ -170,7 +198,6 @@ const UserHeader = ({ user, setUser }) => {
             </HStack>
           </Flex>
         </Box>
-
         <Divider />
       </>
     )

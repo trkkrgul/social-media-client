@@ -85,3 +85,11 @@ body {
 input {
   font-size: 16px !important;
 }
+
+.gradient-mask {
+  mask-image: linear-gradient(rgba(0, 0, 0, 1) calc(10%), transparent);
+}
+
+.gradient-feed {
+  mask-image: linear-gradient(rgba(0, 0, 0, 1), transparent);
+}

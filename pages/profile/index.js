@@ -31,7 +31,12 @@ const Profile = () => {
     };
     init();
   }, []);
-  if (!user || !user.isProfileCreated) return <LoginStepper />;
+  if (!user || !user.isProfileCreated)
+    return (
+      <PageLayout title={"Login"}>
+        <LoginStepper />
+      </PageLayout>
+    );
 
   return (
     <>

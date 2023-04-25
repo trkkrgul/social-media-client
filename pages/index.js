@@ -269,6 +269,7 @@ export default function Home({ feedPosts }) {
           </Flex>
           {!!feed && tab === "feed" ? (
             <Virtuoso
+              className="gradient-feed"
               useWindowScroll
               data={
                 tab === "feed"

@@ -57,11 +57,7 @@ const CreateProfileModal = () => {
   const coverPhotoRef = useRef();
 
   const token = useSelector((state) => state.auth.token);
-  const user = useSelector((state) => state.auth.user);
   const walletAddress = useSelector((state) => state.auth.walletAddress);
-  const isProfileCreated = useSelector(
-    (state) => state.auth.user?.isProfileCreated
-  );
   const router = useRouter();
   const dispatch = useDispatch();
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
@@ -244,6 +240,8 @@ const CreateProfileModal = () => {
                   aspectRatio: "1/1",
                   borderRadius: "50%",
                   objectFit: "cover",
+                  height: "100px",
+                  width: "100px",
                 }}
                 src={
                   !!photos.profilePhoto

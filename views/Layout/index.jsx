@@ -139,7 +139,12 @@ const UserMenuWidget = () => {
             src={user.profilePicturePath}
             height={36}
             width={36}
-            style={{ objectFit: "cover" }}
+            style={{
+              objectFit: "cover",
+              height: "36px",
+              width: "36px",
+              borderRadius: "50%",
+            }}
           />
           <VStack align={"left"}>
             <Text lineHeight={"1"} fontWeight={"700"}>
@@ -267,18 +272,20 @@ const DesktopNav = () => {
                 Profile
               </Button>
             </Link>
-            <Button
-              size={"lg"}
-              height={"36px"}
-              width={"100%"}
-              variant={"ghost"}
-              leftIcon={<IoAddCircle />}
-              href={null}
-              justifyContent={"left"}
-              onClick={() => setIsCreatingNewPost(true)}
-            >
-              Create Post
-            </Button>
+            {!!user && (
+              <Button
+                size={"lg"}
+                height={"36px"}
+                width={"100%"}
+                variant={"ghost"}
+                leftIcon={<IoAddCircle />}
+                href={null}
+                justifyContent={"left"}
+                onClick={() => setIsCreatingNewPost(true)}
+              >
+                Create Post
+              </Button>
+            )}
           </Box>
           <Spacer />
           {!!user && !!user.username && <UserMenuWidget />}
@@ -307,7 +314,16 @@ const DesktopNav = () => {
               <Text as="em" fontSize={"sm"}>
                 Powered by
               </Text>
-              <Image src={"./sakaivault-dark.svg"} width={80} height={50} />
+              <Image
+                src={
+                  colorMode === "dark"
+                    ? "./sakaivault-dark.svg"
+                    : "./sakaivault-light.svg"
+                }
+                width={100}
+                height={50}
+                style={{ objectFit: "contain", height: "50px", width: "100px" }}
+              />
             </HStack>
             <HStack>
               <Link href={"https://twitter.com/sakaivault"} target="_blank">
@@ -340,7 +356,7 @@ const MobileNav = () => {
           left={"0"}
           top={"0px"}
           width={"100%"}
-          height={"50%"}
+          height={"100%"}
           justify={"center"}
           align={"center"}
           onClick={() => setIsCreatingNewPost(false)}
@@ -384,106 +400,120 @@ const MobileNav = () => {
               variant="ghost"
             />
           </Link>
-          <IconButton
-            isDisabled
-            aria-label="Explore"
-            icon={<MdOutlineExplore size={24} />}
-            variant="ghost"
-          />
-          <IconButton
-            onClick={() => setIsCreatingNewPost(true)}
-            aria-label="Add Post"
-            icon={<IoAddCircle size={24} />}
-            variant="ghost"
-          />
-          <Link href={"/profile"}>
-            <IconButton
-              aria-label="Profile"
-              icon={<MdPerson2 size={24} />}
-              variant="ghost"
-            />
-          </Link>
-          <Menu>
-            <MenuButton
-              as={IconButton}
-              aria-label="Options"
-              icon={<IoMenu size={24} />}
-              variant="ghost"
-            />
-            <MenuList
-              bg="whiteAlpha.200"
-              backdropFilter={"auto"}
-              backdropBlur={"md"}
-            >
-              <Nav width={"100%"}>
-                <Link href={"/"} prefetch={false}>
-                  <Button
-                    size={"lg"}
-                    height={"36px"}
-                    colorScheme={path === "/" ? "primary" : "gray"}
-                    width={"100%"}
-                    variant={path === "/" ? "solid" : "ghost"}
-                    leftIcon={<FaHome />}
-                    href={null}
-                    justifyContent={"left"}
-                  >
-                    Home
-                  </Button>
-                </Link>
-                <Link href={"/profile"} prefetch={false}>
-                  <Button
-                    size={"lg"}
-                    height={"36px"}
-                    width={"100%"}
-                    colorScheme={path === "/profile" ? "primary" : "gray"}
-                    variant={path === "/profile" ? "solid" : "ghost"}
-                    leftIcon={<FaUser />}
-                    href={null}
-                    justifyContent={"left"}
-                  >
-                    Profile
-                  </Button>
-                </Link>
-              </Nav>
-              {!!user && !!user.username && <UserMenuWidget />}
-              <Divider />
-              <HStack justifyContent={"space-between"} w={"100%"} p={2}>
-                <Text>Theme</Text>
-                <Switch
-                  colorScheme="primary"
-                  size="lg"
-                  onChange={toggleColorMode}
-                  isChecked={colorMode === "dark"}
-                  sx={{
-                    ".chakra-switch__thumb": {
-                      background:
-                        colorMode === "light"
-                          ? "url(./icons/sun.svg) center center, #fff !important"
-                          : "url(./icons/moon.svg) center center, #000 !important",
-                      backgroundSize: "contain,cover !important",
-                    },
-                  }}
+          {!!user && !!user.username && (
+            <>
+              <IconButton
+                isDisabled
+                aria-label="Explore"
+                icon={<MdOutlineExplore size={24} />}
+                variant="ghost"
+              />
+              <IconButton
+                onClick={() => setIsCreatingNewPost(true)}
+                aria-label="Add Post"
+                icon={<IoAddCircle size={24} />}
+                variant="ghost"
+              />
+              <Link href={"/profile"}>
+                <IconButton
+                  aria-label="Profile"
+                  icon={<MdPerson2 size={24} />}
+                  variant="ghost"
                 />
-              </HStack>
-              <Divider />
-              <HStack justifyContent={"space-between"} w={"100%"} p={2}>
-                <HStack>
-                  <Text as="em" fontSize={"sm"}>
-                    Powered by
-                  </Text>
-                  <Image src={"./sakaivault-dark.svg"} width={80} height={50} />
-                </HStack>
-                <HStack>
-                  <Link href={"https://twitter.com/sakaivault"} target="_blank">
-                    <IconButton icon={<FaTwitter />} />
-                  </Link>
-                  <Link href={"https://t.me/sakaivault"} target="_blank">
-                    <IconButton icon={<FaTelegramPlane />} />
-                  </Link>
-                </HStack>
-              </HStack>
-            </MenuList>
-          </Menu>
+              </Link>{" "}
+              <Menu>
+                <MenuButton
+                  as={IconButton}
+                  aria-label="Options"
+                  icon={<IoMenu size={24} />}
+                  variant="ghost"
+                />
+                <MenuList backdropFilter={"auto"} backdropBlur={"md"}>
+                  <Nav width={"100%"}>
+                    <Link href={"/"} prefetch={false}>
+                      <Button
+                        size={"lg"}
+                        height={"36px"}
+                        colorScheme={path === "/" ? "primary" : "gray"}
+                        width={"100%"}
+                        variant={path === "/" ? "solid" : "ghost"}
+                        leftIcon={<FaHome />}
+                        href={null}
+                        justifyContent={"left"}
+                      >
+                        Home
+                      </Button>
+                    </Link>
+                    <Link href={"/profile"} prefetch={false}>
+                      <Button
+                        size={"lg"}
+                        height={"36px"}
+                        width={"100%"}
+                        colorScheme={path === "/profile" ? "primary" : "gray"}
+                        variant={path === "/profile" ? "solid" : "ghost"}
+                        leftIcon={<FaUser />}
+                        href={null}
+                        justifyContent={"left"}
+                      >
+                        Profile
+                      </Button>
+                    </Link>
+                  </Nav>
+                  {!!user && !!user.username && <UserMenuWidget />}
+                  <Divider />
+                  <HStack justifyContent={"space-between"} w={"100%"} p={2}>
+                    <Text>Theme</Text>
+                    <Switch
+                      colorScheme="primary"
+                      size="lg"
+                      onChange={toggleColorMode}
+                      isChecked={colorMode === "dark"}
+                      sx={{
+                        ".chakra-switch__thumb": {
+                          background:
+                            colorMode === "light"
+                              ? "url(./icons/sun.svg) center center, #fff !important"
+                              : "url(./icons/moon.svg) center center, #000 !important",
+                          backgroundSize: "contain,cover !important",
+                        },
+                      }}
+                    />
+                  </HStack>
+                  <Divider />
+                  <HStack justifyContent={"space-between"} w={"100%"} p={2}>
+                    <HStack>
+                      <Text as="em" fontSize={"sm"}>
+                        Powered by
+                      </Text>
+                      <Image
+                        src={"./sakaivault-dark.svg"}
+                        width={80}
+                        height={50}
+                      />
+                    </HStack>
+                    <HStack>
+                      <Link
+                        href={"https://twitter.com/sakaivault"}
+                        target="_blank"
+                      >
+                        <IconButton icon={<FaTwitter />} />
+                      </Link>
+                      <Link href={"https://t.me/sakaivault"} target="_blank">
+                        <IconButton icon={<FaTelegramPlane />} />
+                      </Link>
+                    </HStack>
+                  </HStack>
+                </MenuList>
+              </Menu>
+            </>
+          )}
+          {!user && (
+            <Link href={"/login"}>
+              <Button size={"lg"} variant={"solid"} colorScheme={"primary"}>
+                Login
+              </Button>
+            </Link>
+          )}
         </Flex>
       </Flex>
     </Suspense>

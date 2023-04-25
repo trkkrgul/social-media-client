@@ -1,11 +1,12 @@
 import LoginStepper from "@/components/auth/LoginStepper";
+import PageLayout from "@/views/Layout";
 import React from "react";
 
 const LoginPage = () => {
   return (
-    <div>
+    <PageLayout title={"Login"}>
       <LoginStepper />
-    </div>
+    </PageLayout>
   );
 };
 
