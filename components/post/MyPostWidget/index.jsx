@@ -367,6 +367,7 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
                           />
                         </MenuItem>
                         <MenuItem
+                          isDisabled={true}
                           onClick={() => uploadedImagesRef.current.click()}
                           _hover={{ bgColor: "blackAlpha.300" }}
                           icon={<IoVideocamOutline size={16} />}
@@ -374,6 +375,7 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
                           Video
                         </MenuItem>
                         <MenuItem
+                          isDisabled={true}
                           onClick={() => uploadedImagesRef.current.click()}
                           _hover={{ bgColor: "blackAlpha.300" }}
                           icon={<IoMicOutline size={16} />}
