@@ -24,7 +24,7 @@ import {
   useModals,
 } from "@saas-ui/react";
 import { useMediaQuery } from "@chakra-ui/react";
-import React, { Suspense } from "react";
+import React, { Suspense, useState } from "react";
 import { NavGroup, NavItem, Nav } from "@saas-ui/sidebar";
 import {
   FaChevronRight,
@@ -49,6 +49,7 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   IoAddCircle,
+  IoClose,
   IoKey,
   IoKeySharp,
   IoLogOut,
@@ -197,8 +198,43 @@ const DesktopNav = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
   const path = router.pathname;
+  const [isCreatingNewPost, setIsCreatingNewPost] = useState(false);
   return (
     <Suspense>
+      {!!user && user.username && isCreatingNewPost && (
+        <Flex
+          zIndex={"overlay"}
+          position={"fixed"}
+          left={"0"}
+          top={"0"}
+          width={"100%"}
+          height={"100%"}
+          justify={"center"}
+          align={"center"}
+          onClick={() => setIsCreatingNewPost(false)}
+        >
+          <Box
+            onClick={(e) => e.stopPropagation()}
+            w={"100%"}
+            maxW={"600px"}
+            shadow={"lg"}
+            borderRadius={"lg"}
+            bg={colorMode === "dark" ? "gray.800" : "white"}
+          >
+            <Flex
+              width={"100%"}
+              justify={"space-between"}
+              pt={2}
+              px={2}
+              alignItems={"center"}
+            >
+              <Text>Create Post</Text>
+              <IoClose onClick={() => setIsCreatingNewPost(false)} />
+            </Flex>
+            <MyPostWidget />
+          </Box>
+        </Flex>
+      )}
       <Box
         zIndex={"banner"}
         borderRight={"1px"}
@@ -212,7 +248,7 @@ const DesktopNav = () => {
           alignItems={"center"}
           p={1}
         >
-          <Nav width={"100%"}>
+          <Box w={"100%"}>
             <Link href={"/"} prefetch={false}>
               <Button
                 size={"lg"}
@@ -241,7 +277,19 @@ const DesktopNav = () => {
                 Profile
               </Button>
             </Link>
-          </Nav>
+            <Button
+              size={"lg"}
+              height={"36px"}
+              width={"100%"}
+              variant={"ghost"}
+              leftIcon={<IoAddCircle />}
+              href={null}
+              justifyContent={"left"}
+              onClick={() => setIsCreatingNewPost(true)}
+            >
+              Create Post
+            </Button>
+          </Box>
           <Spacer />
           {!!user && !!user.username && <UserMenuWidget />}
           <Divider />
@@ -291,30 +339,44 @@ const MobileNav = () => {
   const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
   const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
-  const disclosure = useDisclosure();
+  const [isCreatingNewPost, setIsCreatingNewPost] = useState(false);
   const path = router.pathname;
   return (
     <Suspense>
-      <MenuDialog
-        {...disclosure}
-        closeOnOverlayClick={true}
-        hideCloseButton={true}
-      >
-        <MenuDialogList
-          m={0}
-          p={0}
-          margin={0}
-          padding={0}
-          height={"500px"}
-          backdropFilter={null}
-          title="Create Post"
+      {!!user && user.username && isCreatingNewPost && (
+        <Flex
+          zIndex={"overlay"}
+          position={"fixed"}
+          left={"0"}
+          top={"0px"}
+          width={"100%"}
+          height={"50%"}
+          justify={"center"}
+          align={"center"}
+          onClick={() => setIsCreatingNewPost(false)}
         >
-          <Box>
+          <Box
+            onClick={(e) => e.stopPropagation()}
+            w={"100%"}
+            maxW={"600px"}
+            borderRadius={"lg"}
+            shadow={"lg"}
+            bg={colorMode === "dark" ? "gray.800" : "white"}
+          >
+            <Flex
+              width={"100%"}
+              justify={"space-between"}
+              pt={2}
+              px={2}
+              alignItems={"center"}
+            >
+              <Text>Create Post</Text>
+              <IoClose onClick={() => setIsCreatingNewPost(false)} />
+            </Flex>
             <MyPostWidget />
-            <Divider />
           </Box>
-        </MenuDialogList>
-      </MenuDialog>
+        </Flex>
+      )}
       <Flex
         position={"fixed"}
         bottom={"0"}
@@ -349,7 +411,7 @@ const MobileNav = () => {
             variant="ghost"
           />
           <IconButton
-            onClick={() => disclosure.onOpen()}
+            onClick={() => setIsCreatingNewPost(true)}
             aria-label="Add Post"
             icon={<IoAddCircle size={24} />}
             variant="ghost"
