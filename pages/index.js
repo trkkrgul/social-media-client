@@ -225,6 +225,7 @@ export default function Home({ feedPosts }) {
       console.warn(err);
     }
   };
+  const { colorMode } = useColorMode();
   return (
     <>
       <Head>
@@ -241,6 +242,8 @@ export default function Home({ feedPosts }) {
             height={"36px"}
             alignItems={"center"}
             cursor={"pointer"}
+            border={"1px solid"}
+            borderColor={colorMode === "light" ? "gray.200" : "gray.700"}
           >
             <Flex
               onClick={() => setTab("feed")}
