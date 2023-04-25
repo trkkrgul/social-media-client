@@ -97,18 +97,16 @@ const ImageGallery = ({ images }) => {
             backdropFilter={"auto"}
             backdropBlur={"sm"}
             onClick={closePreview}
-            style={{
-              position: "fixed",
-              zIndex: "100",
-              top: "0",
-              left: "0",
-              width: "100vw",
-              height: "100vh",
-              backgroundColor: " rgba(0, 0, 0, 0.7)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
+            position={"fixed"}
+            zIndex={"overlay"}
+            top={"0"}
+            left={"0"}
+            width={"100vw"}
+            height={"100vh"}
+            backgroundColor={" rgba(0, 0, 0, 0.7)"}
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"center"}
           >
             <Card
               onClick={(event) => event.stopPropagation()}

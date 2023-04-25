@@ -239,7 +239,7 @@ const MyPostWidget = () => {
                               opacity: 1,
                             }}
                             opacity={0}
-                            zIndex={"4433"}
+                            zIndex={"popover"}
                             position={"absolute"}
                             top={0}
                             padding={2}
