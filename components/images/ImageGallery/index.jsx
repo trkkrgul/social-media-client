@@ -72,6 +72,7 @@ const ImageGallery = ({ images }) => {
               onError={(event) => {
                 event.target.src = src;
               }}
+              src={src}
               width={700}
               height={700}
               alt="Post Image"
@@ -144,22 +145,24 @@ const ImageGallery = ({ images }) => {
                     }}
                   />
 
-                  <Image
-                    onMouseDown={handleMouseDown}
-                    onMouseUp={handleMouseUp}
-                    onMouseLeave={() => setDragStartX(null)}
-                    style={{
-                      borderRadius: "10px",
-                      maxHeight: "100%",
-                      maxWidth: "100%",
-                      objectFit: "contain",
-                      flexGrow: "1",
-                    }}
-                    src={images[previewIndex]}
-                    width={600}
-                    height={450}
-                    alt={`Image ${previewIndex + 1}`}
-                  />
+                  {!!(images.length > 0) && (
+                    <Image
+                      onMouseDown={handleMouseDown}
+                      onMouseUp={handleMouseUp}
+                      onMouseLeave={() => setDragStartX(null)}
+                      style={{
+                        borderRadius: "10px",
+                        maxHeight: "100%",
+                        maxWidth: "100%",
+                        objectFit: "contain",
+                        flexGrow: "1",
+                      }}
+                      src={images[previewIndex]}
+                      width={600}
+                      height={450}
+                      alt={`Image ${previewIndex + 1}`}
+                    />
+                  )}
                   <Icon
                     fontSize={"24"}
                     as={BsArrowRightCircle}

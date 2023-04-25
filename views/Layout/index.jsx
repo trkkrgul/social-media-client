@@ -15,7 +15,7 @@ import {
   useDisclosure,
   useTheme,
 } from "@chakra-ui/react";
-import { MenuItem, useModals } from "@saas-ui/react";
+import { Button, MenuItem, useModals } from "@saas-ui/react";
 import { useMediaQuery } from "@chakra-ui/react";
 import React, { Suspense } from "react";
 import { NavGroup, NavItem, Nav } from "@saas-ui/sidebar";
@@ -40,112 +40,18 @@ import LoginStepper from "@/components/auth/LoginStepper";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
-import { IoMenu } from "react-icons/io5";
+import { IoKey, IoKeySharp, IoLogOut, IoMenu } from "react-icons/io5";
+import { ConnectKitButton } from "connectkit";
 const PageLayout = ({ children, title }) => {
-  const dispatch = useDispatch();
-  const walletAddress = useSelector((state) => state.auth.walletAddress);
-  const token = useSelector((state) => state.auth.token);
-  const signature = useSelector((state) => state.auth.signature);
-  const nonce = useSelector((state) => state.auth.nonce);
   const user = useSelector((state) => state.auth.user);
-  const handleSignout = () => {
-    dispatch(setSignOut());
-  };
-  const modals = useModals();
-  const theme = useTheme();
-  const [isLargerThan800] = useMediaQuery("(min-width: 1000px)");
+  const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
   const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
   const path = router.pathname;
   return (
     <>
-      <Flex m={"0 auto"} maxW={"1200px"}>
-        {true && (
-          <Suspense>
-            <Box
-              zIndex={"banner"}
-              borderRight={"1px"}
-              borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
-            >
-              <Flex
-                borderColor={
-                  colorMode === "dark" ? "whiteAlpha.300" : "gray.200"
-                }
-                width={"300px"}
-                className="sticky-div"
-                flexDirection={"column"}
-                alignItems={"center"}
-                p={1}
-              >
-                <Nav width={"100%"}>
-                  <Link href={"/"} prefetch={false}>
-                    <NavItem
-                      isActive={path === "/"}
-                      icon={<FaHome />}
-                      href={null}
-                    >
-                      Home
-                    </NavItem>
-                  </Link>
-                  <Link href={"/profile"} prefetch={false}>
-                    <NavItem
-                      isActive={path === "/profile"}
-                      href={null}
-                      icon={<FaUser />}
-                    >
-                      Profile
-                    </NavItem>
-                  </Link>
-                </Nav>
-                <Spacer />
-                {!!user && !!user.username && <UserMenuWidget />}
-                <Divider />
-                <HStack justifyContent={"space-between"} w={"100%"} p={2}>
-                  <Text>Theme</Text>
-                  <Switch
-                    colorScheme="primary"
-                    size="lg"
-                    onChange={toggleColorMode}
-                    isChecked={colorMode === "dark"}
-                    sx={{
-                      ".chakra-switch__thumb": {
-                        background:
-                          colorMode === "light"
-                            ? "url(./icons/sun.svg) center center, #fff !important"
-                            : "url(./icons/moon.svg) center center, #000 !important",
-                        backgroundSize: "contain,cover !important",
-                      },
-                    }}
-                  />
-                </HStack>
-                <Divider />
-                <HStack justifyContent={"space-between"} w={"100%"} p={2}>
-                  <HStack>
-                    <Text as="em" fontSize={"sm"}>
-                      Powered by
-                    </Text>
-                    <Image
-                      src={"./sakaivault-dark.svg"}
-                      width={80}
-                      height={50}
-                    />
-                  </HStack>
-                  <HStack>
-                    <Link
-                      href={"https://twitter.com/sakaivault"}
-                      target="_blank"
-                    >
-                      <IconButton icon={<FaTwitter />} />
-                    </Link>
-                    <Link href={"https://t.me/sakaivault"} target="_blank">
-                      <IconButton icon={<FaTelegramPlane />} />
-                    </Link>
-                  </HStack>
-                </HStack>
-              </Flex>
-            </Box>
-          </Suspense>
-        )}
+      <Flex m={"0 auto"} maxW={"1200px"} position={"relative"}>
+        {isLargerThan1000 && <DesktopNav />}
         <Box
           maxW={"1100px"}
           width="100%"
@@ -189,25 +95,19 @@ const PageLayout = ({ children, title }) => {
           {children}
         </Box>
       </Flex>
+      {!isLargerThan1000 && <MobileNav />}
     </>
   );
 };
 
 const UserMenuWidget = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const modals = useModals();
-  const walletAddress = useSelector((state) => state.auth.walletAddress);
-  const token = useSelector((state) => state.auth.token);
-  const signature = useSelector((state) => state.auth.signature);
-  const nonce = useSelector((state) => state.auth.nonce);
   const user = useSelector((state) => state.auth.user);
-  const handleSignout = () => {
-    dispatch(setSignOut());
-  };
   const dispatch = useDispatch();
   const router = useRouter();
-  const path = router.pathname;
+  const handleSignout = () => {
+    dispatch(setSignOut());
+    router.push("/login");
+  };
   return (
     <>
       <HStack justifyContent={"space-between"} w={"100%"} p={2}>
@@ -240,24 +140,241 @@ const UserMenuWidget = () => {
             <MenuButton
               as={IconButton}
               aria-label="Options"
-              icon={<IoMenu />}
+              icon={<IoMenu size={16} />}
               variant="outline"
             />
             <MenuList zIndex={"dropdown"}>
-              <MenuItem icon={<FaHome />} command="⌘T">
-                New Tab
+              <MenuItem
+                icon={<FaUser size={16} />}
+                onClick={() => router.push("/profile")}
+              >
+                Profile
               </MenuItem>
-              <MenuItem icon={<FaHome />} command="⌘T">
-                New Tab
-              </MenuItem>
-              <MenuItem icon={<FaHome />} command="⌘T">
-                New Tab
+              <Divider my={1} />
+              <MenuItem icon={<IoKey size={16} />}>Settings</MenuItem>
+              <MenuItem
+                icon={<IoLogOut size={16} />}
+                onClick={handleSignout}
+                color={"white"}
+                bg={"red.500"}
+                _hover={{ bg: "red.600" }}
+              >
+                Logout
               </MenuItem>
             </MenuList>
           </Menu>
         </HStack>
       </HStack>
     </>
+  );
+};
+
+const DesktopNav = () => {
+  const user = useSelector((state) => state.auth.user);
+  const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
+  const { colorMode, toggleColorMode } = useColorMode();
+  const router = useRouter();
+  const path = router.pathname;
+  return (
+    <Suspense>
+      <Box
+        zIndex={"banner"}
+        borderRight={"1px"}
+        borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
+      >
+        <Flex
+          borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
+          width={"300px"}
+          className="sticky-div"
+          flexDirection={"column"}
+          alignItems={"center"}
+          p={1}
+        >
+          <Nav width={"100%"}>
+            <Link href={"/"} prefetch={false}>
+              <Button
+                size={"lg"}
+                height={"36px"}
+                colorScheme={path === "/" ? "primary" : "gray"}
+                width={"100%"}
+                variant={path === "/" ? "solid" : "ghost"}
+                leftIcon={<FaHome />}
+                href={null}
+                justifyContent={"left"}
+              >
+                Home
+              </Button>
+            </Link>
+            <Link href={"/profile"} prefetch={false}>
+              <Button
+                size={"lg"}
+                height={"36px"}
+                width={"100%"}
+                colorScheme={path === "/profile" ? "primary" : "gray"}
+                variant={path === "/profile" ? "solid" : "ghost"}
+                leftIcon={<FaUser />}
+                href={null}
+                justifyContent={"left"}
+              >
+                Profile
+              </Button>
+            </Link>
+          </Nav>
+          <Spacer />
+          {!!user && !!user.username && <UserMenuWidget />}
+          <Divider />
+          <HStack justifyContent={"space-between"} w={"100%"} p={2}>
+            <Text>Theme</Text>
+            <Switch
+              colorScheme="primary"
+              size="lg"
+              onChange={toggleColorMode}
+              isChecked={colorMode === "dark"}
+              sx={{
+                ".chakra-switch__thumb": {
+                  background:
+                    colorMode === "light"
+                      ? "url(./icons/sun.svg) center center, #fff !important"
+                      : "url(./icons/moon.svg) center center, #000 !important",
+                  backgroundSize: "contain,cover !important",
+                },
+              }}
+            />
+          </HStack>
+          <Divider />
+          <HStack justifyContent={"space-between"} w={"100%"} p={2}>
+            <HStack>
+              <Text as="em" fontSize={"sm"}>
+                Powered by
+              </Text>
+              <Image src={"./sakaivault-dark.svg"} width={80} height={50} />
+            </HStack>
+            <HStack>
+              <Link href={"https://twitter.com/sakaivault"} target="_blank">
+                <IconButton icon={<FaTwitter />} />
+              </Link>
+              <Link href={"https://t.me/sakaivault"} target="_blank">
+                <IconButton icon={<FaTelegramPlane />} />
+              </Link>
+            </HStack>
+          </HStack>
+        </Flex>
+      </Box>
+    </Suspense>
+  );
+};
+
+const MobileNav = () => {
+  const user = useSelector((state) => state.auth.user);
+  const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
+  const { colorMode, toggleColorMode } = useColorMode();
+  const router = useRouter();
+  const path = router.pathname;
+  return (
+    <Suspense>
+      <Flex
+        position={"fixed"}
+        bottom={"0"}
+        height={"60px"}
+        width={"100%"}
+        bg={colorMode === "dark" ? "blackAlpha.500" : "white"}
+        backdropFilter={"auto"}
+        backdropBlur={"md"}
+        zIndex={"popover"}
+        borderTop={"1px"}
+        borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
+      >
+        <Flex
+          borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
+          flexDirection={"row"}
+          alignItems={"center"}
+          p={1}
+        >
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label="Options"
+              icon={<IoMenu size={24} />}
+              variant="ghost"
+            />
+            <MenuList
+              bg="whiteAlpha.200"
+              backdropFilter={"auto"}
+              backdropBlur={"md"}
+            >
+              <Nav width={"100%"}>
+                <Link href={"/"} prefetch={false}>
+                  <Button
+                    size={"lg"}
+                    height={"36px"}
+                    colorScheme={path === "/" ? "primary" : "gray"}
+                    width={"100%"}
+                    variant={path === "/" ? "solid" : "ghost"}
+                    leftIcon={<FaHome />}
+                    href={null}
+                    justifyContent={"left"}
+                  >
+                    Home
+                  </Button>
+                </Link>
+                <Link href={"/profile"} prefetch={false}>
+                  <Button
+                    size={"lg"}
+                    height={"36px"}
+                    width={"100%"}
+                    colorScheme={path === "/profile" ? "primary" : "gray"}
+                    variant={path === "/profile" ? "solid" : "ghost"}
+                    leftIcon={<FaUser />}
+                    href={null}
+                    justifyContent={"left"}
+                  >
+                    Profile
+                  </Button>
+                </Link>
+              </Nav>
+
+              {!!user && !!user.username && <UserMenuWidget />}
+              <Divider />
+              <HStack justifyContent={"space-between"} w={"100%"} p={2}>
+                <Text>Theme</Text>
+                <Switch
+                  colorScheme="primary"
+                  size="lg"
+                  onChange={toggleColorMode}
+                  isChecked={colorMode === "dark"}
+                  sx={{
+                    ".chakra-switch__thumb": {
+                      background:
+                        colorMode === "light"
+                          ? "url(./icons/sun.svg) center center, #fff !important"
+                          : "url(./icons/moon.svg) center center, #000 !important",
+                      backgroundSize: "contain,cover !important",
+                    },
+                  }}
+                />
+              </HStack>
+              <Divider />
+              <HStack justifyContent={"space-between"} w={"100%"} p={2}>
+                <HStack>
+                  <Text as="em" fontSize={"sm"}>
+                    Powered by
+                  </Text>
+                  <Image src={"./sakaivault-dark.svg"} width={80} height={50} />
+                </HStack>
+                <HStack>
+                  <Link href={"https://twitter.com/sakaivault"} target="_blank">
+                    <IconButton icon={<FaTwitter />} />
+                  </Link>
+                  <Link href={"https://t.me/sakaivault"} target="_blank">
+                    <IconButton icon={<FaTelegramPlane />} />
+                  </Link>
+                </HStack>
+              </HStack>
+            </MenuList>
+          </Menu>
+        </Flex>
+      </Flex>
+    </Suspense>
   );
 };
 
