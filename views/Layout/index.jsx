@@ -437,6 +437,7 @@ const MobileNav = () => {
                         size={"lg"}
                         height={"36px"}
                         colorScheme={path === "/" ? "primary" : "gray"}
+                        color={path === "/" ? "black" : null}
                         width={"100%"}
                         variant={path === "/" ? "solid" : "ghost"}
                         leftIcon={<FaHome />}
@@ -452,6 +453,7 @@ const MobileNav = () => {
                         height={"36px"}
                         width={"100%"}
                         colorScheme={path === "/profile" ? "primary" : "gray"}
+                        color={path === "/profile" ? "black" : null}
                         variant={path === "/profile" ? "solid" : "ghost"}
                         leftIcon={<FaUser />}
                         href={null}
