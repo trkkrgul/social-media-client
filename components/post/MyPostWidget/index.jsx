@@ -151,13 +151,6 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
       <Box borderRadius={"lg"} w={"100%"}>
         <Card
           minW={"400px"}
-          bgGradient={
-            "linear(to-t, " +
-            (colorMode === "dark" ? "blackAlpha.100" : "whiteAlpha.50") +
-            ", " +
-            (colorMode === "dark" ? "primary.900" : "primary.50") +
-            ")"
-          }
           borderRadius={isLargerThan800 ? "lg" : "none"}
           marginY={isLargerThan800 ? "2" : "0"}
           shadow={
@@ -411,6 +404,7 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
                   <Button
                     variant={"solid"}
                     colorScheme="primary"
+                    color={"black"}
                     onClick={readyToShare ? () => handlePost() : () => null}
                   >
                     {readyToShare ? "Share" : <Spinner size="xs" />}

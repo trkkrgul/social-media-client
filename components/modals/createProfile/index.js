@@ -336,7 +336,9 @@ const CreateProfileModal = () => {
                 <Field name="discordId" label="Discord" type="text" />
                 <Field name="twitterId" label="Twitter" type="text" />
               </FormLayout>
-              <SubmitButton disableIfInvalid>Create Profile</SubmitButton>
+              <SubmitButton disableIfInvalid color="black">
+                Create Profile
+              </SubmitButton>
             </FormLayout>
           </Form>
         </CardBody>

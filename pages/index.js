@@ -254,6 +254,7 @@ export default function Home({ feedPosts }) {
               fontWeight={"bold"}
               height={"100%"}
               bg={tab === "feed" ? "primary.500" : "transparent"}
+              color={tab === "feed" ? "black" : null}
             >
               <Text>Recommended</Text>
             </Flex>
@@ -266,6 +267,7 @@ export default function Home({ feedPosts }) {
               fontSize={"md"}
               fontWeight={"bold"}
               bg={tab !== "feed" ? "primary.500" : "transparent"}
+              color={tab !== "feed" ? "black" : null}
             >
               <Text>Followings</Text>
             </Flex>

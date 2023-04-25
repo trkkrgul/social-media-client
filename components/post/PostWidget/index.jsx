@@ -193,7 +193,9 @@ const PostWidget = ({
                     <FormLayout column={1} w={"100%"}>
                       <Field isRequired name="content" type="text" />
                     </FormLayout>
-                    <SubmitButton disableIfInvalid>Comment</SubmitButton>
+                    <SubmitButton disableIfInvalid color={"black"}>
+                      Comment
+                    </SubmitButton>
                   </HStack>
                 </HStack>
               </Form>
@@ -389,7 +391,9 @@ const CommentLayout = ({ comment, handleReply, user, token, post }) => {
                     <FormLayout column={1} w={"100%"}>
                       <Field isRequired name="content" type="text" />
                     </FormLayout>
-                    <SubmitButton disableIfInvalid>Reply</SubmitButton>
+                    <SubmitButton disableIfInvalid color={"black"}>
+                      Reply
+                    </SubmitButton>
                   </HStack>
                 </HStack>
               </Form>

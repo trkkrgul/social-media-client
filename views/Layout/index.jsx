@@ -81,6 +81,7 @@ const PageLayout = ({ children, title }) => {
           // borderLeft={"1px"}
           minHeight={"100vh"}
           paddingBottom={"10rem"}
+          borderRight={"1px"}
           borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
         >
           <Box
@@ -249,6 +250,7 @@ const DesktopNav = () => {
                 size={"lg"}
                 height={"36px"}
                 colorScheme={path === "/" ? "primary" : "gray"}
+                color={path === "/" ? "black" : null}
                 width={"100%"}
                 variant={path === "/" ? "solid" : "ghost"}
                 leftIcon={<FaHome />}
@@ -264,6 +266,7 @@ const DesktopNav = () => {
                 height={"36px"}
                 width={"100%"}
                 colorScheme={path === "/profile" ? "primary" : "gray"}
+                color={path === "/profile" ? "black" : null}
                 variant={path === "/profile" ? "solid" : "ghost"}
                 leftIcon={<FaUser />}
                 href={null}
@@ -386,7 +389,6 @@ const MobileNav = () => {
         borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
       >
         <Flex
-          borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
           flexDirection={"row"}
           alignItems={"center"}
           justifyContent={"space-between"}
