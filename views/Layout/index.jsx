@@ -65,6 +65,9 @@ import {
   MdPerson4,
 } from "react-icons/md";
 import MyPostWidget from "@/components/post/MyPostWidget";
+import darkLogo from "@/assets/logo-dark.svg";
+import lightLogo from "@/assets/logo-light.svg";
+import icon from "@/assets/icon.svg";
 const PageLayout = ({ children, title }) => {
   const user = useSelector((state) => state.auth.user);
   const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
@@ -245,6 +248,18 @@ const DesktopNav = () => {
           p={1}
         >
           <Box w={"100%"}>
+            <VStack my={4} align={"right"}>
+              <Link href={"/"}>
+                <HStack>
+                  <Image
+                    src={"/icons/logo.png"}
+                    width={48}
+                    height={48}
+                    unoptimized
+                  />
+                </HStack>
+              </Link>
+            </VStack>
             <Link href={"/"} prefetch={false}>
               <Button
                 size={"lg"}
@@ -422,7 +437,7 @@ const MobileNav = () => {
                   icon={<MdPerson2 size={24} />}
                   variant="ghost"
                 />
-              </Link>{" "}
+              </Link>
               <Menu>
                 <MenuButton
                   as={IconButton}

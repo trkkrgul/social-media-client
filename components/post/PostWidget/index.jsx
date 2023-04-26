@@ -126,6 +126,7 @@ const PostWidget = ({
               <FaHeart
                 onClick={() => {
                   handleLike(post._id);
+                  !isLiked && setDisliked(false);
                   setLiked(!isLiked);
                 }}
                 size={"24px"}
@@ -136,6 +137,7 @@ const PostWidget = ({
               <BsFillHandThumbsDownFill
                 onClick={() => {
                   handleDislike(post._id);
+                  !isDisliked && setLiked(false);
                   setDisliked(!isDisliked);
                 }}
                 size={"24px"}
