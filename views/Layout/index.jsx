@@ -251,12 +251,7 @@ const DesktopNav = () => {
             <VStack my={4} align={"right"}>
               <Link href={"/"}>
                 <HStack>
-                  <Image
-                    src={"/icons/logo.png"}
-                    width={48}
-                    height={48}
-                    unoptimized
-                  />
+                  <Image src={icon} width={48} height={48} unoptimized />
                 </HStack>
               </Link>
             </VStack>
