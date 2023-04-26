@@ -330,8 +330,8 @@ const DesktopNav = () => {
               <Image
                 src={
                   colorMode === "dark"
-                    ? "./sakaivault-dark.svg"
-                    : "./sakaivault-light.svg"
+                    ? "/sakaivault-dark.svg"
+                    : "/sakaivault-light.svg"
                 }
                 width={100}
                 height={50}

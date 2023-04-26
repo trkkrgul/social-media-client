@@ -125,9 +125,9 @@ const PostWidget = ({
               {post.likers.length !== 0 && <Badge title={post.likers.length} />}
               <FaHeart
                 onClick={() => {
-                  handleLike(post._id);
                   !isLiked && setDisliked(false);
                   setLiked(!isLiked);
+                  handleLike(post._id);
                 }}
                 size={"24px"}
                 color={isLiked ? "#ff4444cc" : "#55aaaa50"}
@@ -136,9 +136,9 @@ const PostWidget = ({
               <Divider orientation="vertical" height={"10px"} mx={3} />
               <BsFillHandThumbsDownFill
                 onClick={() => {
-                  handleDislike(post._id);
                   !isDisliked && setLiked(false);
                   setDisliked(!isDisliked);
+                  handleDislike(post._id);
                 }}
                 size={"24px"}
                 color={isDisliked ? "#ff4444cc" : "#55aaaa50"}
@@ -173,9 +173,10 @@ const PostWidget = ({
             <Flex>
               <Form
                 width={"100%"}
-                onSubmit={async (values) => {
+                onSubmit={(values, e) => {
                   try {
                     handleComment(post._id, values);
+                    e.target.reset();
                   } catch (err) {
                     console.warn(err);
                   }
@@ -367,13 +368,14 @@ const CommentLayout = ({ comment, handleReply, user, token, post }) => {
             <Flex w={"100%"}>
               <Form
                 width={"100%"}
-                onSubmit={async (values) => {
+                onSubmit={(values, e) => {
                   try {
                     handleReply(post._id, {
                       ...values,
                       parentComment: comment._id,
                     });
                     toggleRepliesShown.on();
+                    e.target.reset();
                   } catch (err) {
                     console.warn(err);
                   }

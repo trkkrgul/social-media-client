@@ -282,7 +282,7 @@ const CreateProfileModal = () => {
           <Form
             defaultValues={{}}
             resolver={yupResolver(schema)}
-            onSubmit={async (values, actions) => {
+            onSubmit={async (values, e) => {
               try {
                 const profilePicturePath = await imageLinkGenerator(
                   photos.profilePhoto
@@ -312,6 +312,7 @@ const CreateProfileModal = () => {
                       router.push("/");
                     }
                   });
+                e.target.reset();
               } catch (e) {
                 dispatch(setSessionEnd(true));
               }
