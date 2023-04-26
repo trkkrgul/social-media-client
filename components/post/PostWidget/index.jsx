@@ -35,7 +35,7 @@ import {
   Persona,
   SubmitButton,
 } from "@saas-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaAddressBook,
   FaComment,
@@ -80,10 +80,22 @@ const PostWidget = ({
   const [isCommentShown, toggleCommentShown] = useBoolean(false);
   const user = useSelector((state) => state.auth.user);
   const [isRepliesShown, toggleRepliesShown] = useBoolean(false);
+  const [isLiked, setLiked] = useState(
+    post.likers.filter((e) => e.user._id === user._id).length !== 0
+  );
+  const [isDisliked, setDisliked] = useState(
+    post.dislikers.filter((e) => e.user._id === user._id).length !== 0
+  );
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)", {
     ssr: true,
     fallback: false, // return false on the server, and re-evaluate on the client side
   });
+  useEffect(() => {
+    setLiked(post.likers.filter((e) => e.user._id === user._id).length !== 0);
+    setDisliked(
+      post.dislikers.filter((e) => e.user._id === user._id).length !== 0
+    );
+  }, [post]);
   return (
     <Card
       borderRadius={isLargerThan800 ? "lg" : "none"}
@@ -112,26 +124,22 @@ const PostWidget = ({
             <Flex alignItems={"center"}>
               {post.likers.length !== 0 && <Badge title={post.likers.length} />}
               <FaHeart
-                onClick={() => handleLike(post._id)}
+                onClick={() => {
+                  handleLike(post._id);
+                  setLiked(!isLiked);
+                }}
                 size={"24px"}
-                color={
-                  post.likers.filter((e) => e.user._id === user._id).length !==
-                  0
-                    ? "#ff4444cc"
-                    : "#55aaaa50"
-                }
+                color={isLiked ? "#ff4444cc" : "#55aaaa50"}
               />
               <Text mx={1}>{post.likers.length}</Text>
               <Divider orientation="vertical" height={"10px"} mx={3} />
               <BsFillHandThumbsDownFill
-                onClick={() => handleDislike(post._id)}
+                onClick={() => {
+                  handleDislike(post._id);
+                  setDisliked(!isDisliked);
+                }}
                 size={"24px"}
-                color={
-                  post.dislikers.filter((e) => e.user._id === user._id)
-                    .length !== 0
-                    ? "#ff4444cc"
-                    : "#55aaaa50"
-                }
+                color={isDisliked ? "#ff4444cc" : "#55aaaa50"}
               />
               <Text mx={1}>{post.dislikers.length}</Text>
               <Divider orientation="vertical" height={"10px"} mx={3} />

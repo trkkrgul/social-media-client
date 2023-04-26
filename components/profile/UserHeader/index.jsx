@@ -10,7 +10,7 @@ import {
   Text,
   useMediaQuery,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Image as ImageAntd } from "antd";
 import { Web3Address } from "@saas-ui/web3";
@@ -33,6 +33,14 @@ const UserHeader = ({ user, setUser }) => {
   const [isProfilePhotoPreviewOpen, setIsProfilePhotoPreviewOpen] =
     useState(false);
   const [isCoverPhotoPreviewOpen, setIsCoverPhotoPreviewOpen] = useState(false);
+  const [isFollowings, setIsFollowings] = useState(
+    loggedUser?.followings.filter((e) => e === user._id).length !== 0
+  );
+  useEffect(() => {
+    setIsFollowings(
+      loggedUser?.followings.filter((e) => e === user._id).length !== 0
+    );
+  }, [loggedUser?.followings]);
   const UserNameAndWallet = () => {
     return (
       <Box pt={(1 * imageSize) / 2.5 + "px"}>
@@ -140,6 +148,7 @@ const UserHeader = ({ user, setUser }) => {
                   size={"lg"}
                   variant={"solid"}
                   onClick={async () => {
+                    setIsFollowings(!isFollowings);
                     await axios
                       .post(
                         `https://api.defitalks.io/api/user/follow/${user.walletAddress}`,
@@ -156,12 +165,10 @@ const UserHeader = ({ user, setUser }) => {
                         dispatch(setLoggedUser({ ...updatedLoggedUser }));
                         setUser(res.data.targetUser);
                       });
+                    setIsFollowings(!isFollowings);
                   }}
                 >
-                  {!!loggedUser &&
-                  !!loggedUser?.followings &&
-                  loggedUser?.followings.filter((e) => e === user._id).length >
-                    0
+                  {!!loggedUser && !!loggedUser?.followings && isFollowings
                     ? "Unfollow"
                     : "Follow"}
                 </Button>
