@@ -19,7 +19,7 @@ import { Button, Property } from "@saas-ui/react";
 import { BsMailbox } from "react-icons/bs";
 import { FaDiscord, FaTelegramPlane, FaTwitter } from "react-icons/fa";
 import axios from "axios";
-import { setUser as setLoggedUser } from "@/state/slices/auth";
+import { setUser as setLoggedUser, setSessionEnd } from "@/state/slices/auth";
 import ImagePreviewer from "@/components/images/ImagePreviewer";
 import Image from "next/image";
 
@@ -164,6 +164,9 @@ const UserHeader = ({ user, setUser }) => {
                         const updatedLoggedUser = res.data.user;
                         dispatch(setLoggedUser({ ...updatedLoggedUser }));
                         setUser(res.data.targetUser);
+                      })
+                      .catch((err) => {
+                        dispatch(setSessionEnd(true));
                       });
                     setIsFollowings(!isFollowings);
                   }}

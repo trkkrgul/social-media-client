@@ -27,6 +27,7 @@ import {
 } from "react";
 
 import { Virtuoso } from "react-virtuoso";
+import { setSessionEnd } from "@/state/slices/auth";
 
 const PostWidget = dynamic(() => import("@/components/post/PostWidget"), {
   ssr: false,
@@ -61,7 +62,7 @@ const FollowingPosts = () => {
           }
         )
         .then((res) => dispatch(setFollowingPosts(res.data)))
-        .catch((err) => console.log(err));
+        .catch((err) => dispatch(setSessionEnd(true)));
     } else {
       console.log("No user");
 
@@ -100,7 +101,7 @@ const FollowingPosts = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        dispatch(setSessionEnd(true));
       });
   };
   const handleLike = async (postId) => {
@@ -135,7 +136,7 @@ const FollowingPosts = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        dispatch(setSessionEnd(true));
       });
   };
   const handleDislike = async (postId) => {
@@ -168,7 +169,7 @@ const FollowingPosts = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        dispatch(setSessionEnd(true));
       });
   };
   const handleComment = async (postId, values) => {
@@ -205,7 +206,7 @@ const FollowingPosts = () => {
           }
         })
         .catch((err) => {
-          console.log(err);
+          dispatch(setSessionEnd(true));
         });
     } catch (err) {
       console.warn(err);
@@ -243,7 +244,7 @@ const FollowingPosts = () => {
           }
         });
     } catch (err) {
-      console.warn(err);
+      dispatch(setSessionEnd(true));
     }
   };
 

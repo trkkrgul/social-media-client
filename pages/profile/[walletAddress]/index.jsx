@@ -1,6 +1,7 @@
 import LoginStepper from "@/components/auth/LoginStepper";
 import PostWidget from "@/components/post/PostWidget";
 import UserHeader from "@/components/profile/UserHeader";
+import { setSessionEnd } from "@/state/slices/auth";
 import PageLayout from "@/views/Layout";
 import { Box, Text } from "@chakra-ui/react";
 import axios from "axios";
@@ -37,7 +38,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        dispatch(setSessionEnd(true));
       });
   };
   const handleLike = async (postId) => {
@@ -70,7 +71,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        dispatch(setSessionEnd(true));
       });
   };
   const handleDislike = async (postId) => {
@@ -101,7 +102,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
         }
       })
       .catch((err) => {
-        console.log(err);
+        dispatch(setSessionEnd(true));
       });
   };
   const handleComment = async (postId, values) => {
@@ -134,7 +135,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
           }
         });
     } catch (err) {
-      console.warn(err);
+      dispatch(setSessionEnd(true));
     }
   };
   const handleReply = async (postId, values) => {
@@ -167,7 +168,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
           }
         });
     } catch (err) {
-      console.warn(err);
+      dispatch(setSessionEnd(true));
     }
   };
 

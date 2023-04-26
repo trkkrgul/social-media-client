@@ -523,7 +523,12 @@ const MobileNav = () => {
           )}
           {!user && (
             <Link href={"/login"}>
-              <Button size={"lg"} variant={"solid"} colorScheme={"primary"}>
+              <Button
+                size={"lg"}
+                variant={"solid"}
+                colorScheme={"primary"}
+                color={"black"}
+              >
                 Login
               </Button>
             </Link>

@@ -26,6 +26,7 @@ import {
 } from "react";
 
 import { Virtuoso } from "react-virtuoso";
+import { setSessionEnd } from "@/state/slices/auth";
 
 const PageLayout = dynamic(() => import("@/views/Layout"), {
   ssr: false,
@@ -84,7 +85,7 @@ export default function Home({ feedPosts }) {
         }
       })
       .catch((err) => {
-        console.log(err);
+        dispatch(setSessionEnd(true));
       });
   };
   const handleLike = async (postId) => {
@@ -119,7 +120,7 @@ export default function Home({ feedPosts }) {
         }
       })
       .catch((err) => {
-        console.log(err);
+        dispatch(setSessionEnd(true));
       });
   };
   const handleDislike = async (postId) => {
@@ -152,7 +153,7 @@ export default function Home({ feedPosts }) {
         }
       })
       .catch((err) => {
-        console.log(err);
+        dispatch(setSessionEnd(true));
       });
   };
   const handleComment = async (postId, values) => {
@@ -187,7 +188,7 @@ export default function Home({ feedPosts }) {
           }
         });
     } catch (err) {
-      console.warn(err);
+      dispatch(setSessionEnd(true));
     }
   };
   const handleReply = async (postId, values) => {
@@ -222,7 +223,7 @@ export default function Home({ feedPosts }) {
           }
         });
     } catch (err) {
-      console.warn(err);
+      dispatch(setSessionEnd(true));
     }
   };
   const { colorMode } = useColorMode();

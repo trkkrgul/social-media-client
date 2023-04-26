@@ -1,4 +1,4 @@
-import { setUser } from "@/state/slices/auth";
+import { setSessionEnd, setUser } from "@/state/slices/auth";
 import {
   AspectRatio,
   Box,
@@ -313,7 +313,7 @@ const CreateProfileModal = () => {
                     }
                   });
               } catch (e) {
-                console.log(e);
+                dispatch(setSessionEnd(true));
               }
             }}
           >
