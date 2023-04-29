@@ -80,6 +80,8 @@ const PostWidget = ({
   const [isCommentShown, toggleCommentShown] = useBoolean(false);
   const user = useSelector((state) => state.auth.user);
   const [isRepliesShown, toggleRepliesShown] = useBoolean(false);
+  const [likeCount, setLikeCount] = useState(post.likers.length);
+  const [dislikeCount, setDislikeCount] = useState(post.dislikers.length);
   const [isLiked, setLiked] = useState(
     post.likers.filter((e) => e.user._id === user._id).length !== 0
   );
@@ -95,6 +97,8 @@ const PostWidget = ({
     setDisliked(
       post.dislikers.filter((e) => e.user._id === user._id).length !== 0
     );
+    setLikeCount(post.likers.length);
+    setDislikeCount(post.dislikers.length);
   }, [post]);
   return (
     <Card
@@ -124,26 +128,50 @@ const PostWidget = ({
             <Flex alignItems={"center"}>
               {post.likers.length !== 0 && <Badge title={post.likers.length} />}
               <FaHeart
-                onClick={() => {
-                  !isLiked && setDisliked(false);
-                  setLiked(!isLiked);
-                  handleLike(post._id);
-                }}
+                onClick={
+                  !isLiked
+                    ? () => {
+                        if (isDisliked) {
+                          setDisliked(false);
+                          setDislikeCount(dislikeCount - 1);
+                        }
+                        setLiked(true);
+                        setLikeCount(likeCount + 1);
+                        handleLike(post._id);
+                      }
+                    : () => {
+                        setLiked(false);
+                        setLikeCount(likeCount - 1);
+                        handleLike(post._id);
+                      }
+                }
                 size={"24px"}
                 color={isLiked ? "#ff4444cc" : "#55aaaa50"}
               />
-              <Text mx={1}>{post.likers.length}</Text>
+              <Text mx={1}>{likeCount}</Text>
               <Divider orientation="vertical" height={"10px"} mx={3} />
               <BsFillHandThumbsDownFill
-                onClick={() => {
-                  !isDisliked && setLiked(false);
-                  setDisliked(!isDisliked);
-                  handleDislike(post._id);
-                }}
+                onClick={
+                  !isDisliked
+                    ? () => {
+                        if (isLiked) {
+                          setLiked(false);
+                          setLikeCount(likeCount - 1);
+                        }
+                        setDisliked(true);
+                        setDislikeCount(dislikeCount + 1);
+                        handleDislike(post._id);
+                      }
+                    : () => {
+                        setDisliked(false);
+                        setDislikeCount(dislikeCount - 1);
+                        handleDislike(post._id);
+                      }
+                }
                 size={"24px"}
                 color={isDisliked ? "#ff4444cc" : "#55aaaa50"}
               />
-              <Text mx={1}>{post.dislikers.length}</Text>
+              <Text mx={1}>{dislikeCount}</Text>
               <Divider orientation="vertical" height={"10px"} mx={3} />
               <FaComment
                 onClick={toggleCommentShown.toggle}
@@ -283,7 +311,8 @@ const RepliesLayout = ({ reply }) => {
           justifyContent={"space-between"}
         >
           <Text
-            fontSize={"sm"}
+            fontSize={"lg"}
+            fontWeight={"400"}
             whiteSpace={"pre-wrap"}
             linebreak={"anywhere"}
             color={colorMode === "dark" ? "whiteAlpha.700" : "blackAlpha.700"}
@@ -356,7 +385,8 @@ const CommentLayout = ({ comment, handleReply, user, token, post }) => {
             justifyContent={"space-between"}
           >
             <Text
-              fontSize={"sm"}
+              fontSize={"lg"}
+              fontWeight={"400"}
               whiteSpace={"pre-wrap"}
               linebreak={"anywhere"}
               color={colorMode === "dark" ? "whiteAlpha.700" : "blackAlpha.700"}

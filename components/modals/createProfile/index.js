@@ -46,7 +46,8 @@ import { Web3Address } from "@saas-ui/web3";
 import { connectFirebase } from "@/utils/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
-
+import userPlaceholder from "@/assets/user-placeholder.png";
+import coverPlaceholder from "@/assets/cover-placeholder.png";
 const CreateProfileModal = () => {
   const [photos, setPhotos] = useState({
     coverPhoto: "",
@@ -179,21 +180,30 @@ const CreateProfileModal = () => {
           <AspectRatio ratio={3 / 1} maxH={"200px"}>
             <Box
               margin={"auto"}
-              bg={
-                !!photos.coverPhoto
-                  ? `url(${URL.createObjectURL(photos.coverPhoto)}
-                    )`
-                  : "url(https://sakaivault.io/img/bg-wires.svg)"
-              }
               bgRepeat={"no-repeat"}
               bgPos={"center center"}
               bgSize={"cover"}
               borderRadius={"md"}
               border={"1px solid"}
+              bg={colorMode === "dark" ? "gray.800" : "gray.50"}
               borderColor={
                 colorMode === "dark" ? "whiteAlpha.50" : "blackAlpha.200"
               }
             >
+              <Image
+                style={{
+                  objectFit: "cover",
+                  height: "100%",
+                  width: "100%",
+                }}
+                src={
+                  !!photos.coverPhoto
+                    ? URL.createObjectURL(photos.coverPhoto)
+                    : coverPlaceholder.src
+                }
+                preview={false}
+                alt="img"
+              />
               <IconButton
                 onClick={() => coverPhotoRef.current.click()}
                 position={"absolute"}
@@ -228,8 +238,7 @@ const CreateProfileModal = () => {
               width={"100px"}
               height={"100px"}
               borderRadius={"50%"}
-              bg={colorMode === "dark" ? "whiteAlpha.200" : "blackAlpha.200"}
-              padding={"1"}
+              bg={colorMode === "dark" ? "gray.800" : "gray.50"}
               border="1px solid"
               borderColor={
                 colorMode === "dark" ? "whiteAlpha.200" : "blackAlpha.200"
@@ -237,7 +246,6 @@ const CreateProfileModal = () => {
             >
               <Image
                 style={{
-                  aspectRatio: "1/1",
                   borderRadius: "50%",
                   objectFit: "cover",
                   height: "100px",
@@ -246,7 +254,7 @@ const CreateProfileModal = () => {
                 src={
                   !!photos.profilePhoto
                     ? URL.createObjectURL(photos.profilePhoto)
-                    : "https://sakaivault.io/512.png"
+                    : userPlaceholder.src
                 }
                 preview={false}
                 alt="img"

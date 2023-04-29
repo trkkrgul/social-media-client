@@ -128,11 +128,7 @@ const ImageGallery = ({ images }) => {
                 </HStack>
               </CardHeader>
               <CardBody>
-                <HStack
-                  justifyContent={"space-between"}
-                  margin={"auto"}
-                  height={"50vh"}
-                >
+                <HStack justifyContent={"space-between"}>
                   <Icon
                     fontSize={"24"}
                     as={BsArrowLeftCircle}
@@ -147,13 +143,11 @@ const ImageGallery = ({ images }) => {
 
                   {!!(images.length > 0) && (
                     <Image
-                      onMouseDown={handleMouseDown}
-                      onMouseUp={handleMouseUp}
-                      onMouseLeave={() => setDragStartX(null)}
                       style={{
+                        flexBasis: "100%",
                         borderRadius: "10px",
                         maxHeight: "100%",
-                        maxWidth: "100%",
+                        maxWidth: "50%",
                         objectFit: "contain",
                         flexGrow: "1",
                       }}
