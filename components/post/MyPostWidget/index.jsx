@@ -150,7 +150,6 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
     isProfileCreated && (
       <Box borderRadius={"lg"} w={"100%"}>
         <Card
-          minW={"400px"}
           borderRadius={isLargerThan800 ? "lg" : "none"}
           marginY={isLargerThan800 ? "2" : "0"}
           shadow={
