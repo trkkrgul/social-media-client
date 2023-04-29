@@ -26,6 +26,26 @@ export default function Document() {
           href="/favicon-16x16.png"
         />
         <link rel="manifest" href="/site.webmanifest" />
+        <meta
+          name="twitter:card"
+          content="
+         World's first DeFi social media platform. 
+        "
+        />
+        <meta name="twitter:site" content="@sakaivault" />
+        <meta
+          name="twitter:title"
+          content=" 
+          World's first DeFi social media platform.
+        "
+        />
+        <meta
+          name="twitter:description"
+          content="
+          Share your thoughts, ideas, and projects with the world.
+        "
+        />
+        <meta name="twitter:image" content="/og-img.jpg" />
       </Head>
       <body>
         {/* 👇 Here's the script */}

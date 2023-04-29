@@ -95,7 +95,11 @@ const UserHeader = ({ user, setUser }) => {
             position={"relative"}
           >
             <Image
-              src={user.coverPicturePath}
+              src={
+                !!user.coverPicturePath
+                  ? user.coverPicturePath
+                  : "/icons/cover-placeholder.png"
+              }
               width={1500}
               height={500}
               alt="cover"
@@ -124,7 +128,11 @@ const UserHeader = ({ user, setUser }) => {
                 overflow={"hidden"}
               >
                 <Image
-                  src={user.profilePicturePath}
+                  src={
+                    !!user.profilePicturePath
+                      ? user.profilePicturePath
+                      : "/icons/user-placeholder.png"
+                  }
                   width={400}
                   height={400}
                   alt="profile"
