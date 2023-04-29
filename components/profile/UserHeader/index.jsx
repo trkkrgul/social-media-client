@@ -35,11 +35,15 @@ const UserHeader = ({ user, setUser }) => {
     useState(false);
   const [isCoverPhotoPreviewOpen, setIsCoverPhotoPreviewOpen] = useState(false);
   const [isFollowings, setIsFollowings] = useState(
-    loggedUser?.followings.filter((e) => e === user._id).length !== 0
+    !!loggedUser.followings
+      ? loggedUser?.followings.filter((e) => e === user._id).length !== 0
+      : false
   );
   useEffect(() => {
     setIsFollowings(
-      loggedUser?.followings.filter((e) => e === user._id).length !== 0
+      !!loggedUser.followings
+        ? loggedUser?.followings.filter((e) => e === user._id).length !== 0
+        : false
     );
   }, [loggedUser?.followings]);
   const UserNameAndWallet = () => {
