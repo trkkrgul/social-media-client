@@ -22,6 +22,7 @@ import axios from "axios";
 import { setUser as setLoggedUser, setSessionEnd } from "@/state/slices/auth";
 import ImagePreviewer from "@/components/images/ImagePreviewer";
 import Image from "next/image";
+import Link from "next/link";
 
 const UserHeader = ({ user, setUser }) => {
   const dispatch = useDispatch();
@@ -202,9 +203,25 @@ const UserHeader = ({ user, setUser }) => {
               )}
             </ButtonGroup>
             <HStack m={1}>
-              <IconButton size="sm" icon={<FaTelegramPlane />} />
-              <IconButton size="sm" icon={<FaTwitter />} />
-              <IconButton size="sm" icon={<FaDiscord />} />
+              {!!user.twitterId && (
+                <Link
+                  href={`https://twitter.com/${String(user?.twitterId).slice(
+                    1
+                  )}`}
+                  target="_blank"
+                >
+                  <IconButton icon={<FaTwitter />} />
+                </Link>
+              )}
+
+              {!!user.telegramId && (
+                <Link
+                  href={`https://t.me/${String(user?.telegramId).slice(1)}`}
+                  target="_blank"
+                >
+                  <IconButton icon={<FaTwitter />} />
+                </Link>
+              )}
             </HStack>
           </Flex>
         </Box>

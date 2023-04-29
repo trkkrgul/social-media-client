@@ -83,19 +83,19 @@ const PostWidget = ({
   const [likeCount, setLikeCount] = useState(post.likers.length);
   const [dislikeCount, setDislikeCount] = useState(post.dislikers.length);
   const [isLiked, setLiked] = useState(
-    post.likers.filter((e) => e.user._id === user._id).length !== 0
+    post.likers.filter((e) => e.user?._id === user?._id).length !== 0
   );
   const [isDisliked, setDisliked] = useState(
-    post.dislikers.filter((e) => e.user._id === user._id).length !== 0
+    post.dislikers.filter((e) => e.user?._id === user?._id).length !== 0
   );
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)", {
     ssr: true,
     fallback: false, // return false on the server, and re-evaluate on the client side
   });
   useEffect(() => {
-    setLiked(post.likers.filter((e) => e.user._id === user._id).length !== 0);
+    setLiked(post.likers.filter((e) => e.user._id === user?._id).length !== 0);
     setDisliked(
-      post.dislikers.filter((e) => e.user._id === user._id).length !== 0
+      post.dislikers.filter((e) => e.user._id === user?._id).length !== 0
     );
     setLikeCount(post.likers.length);
     setDislikeCount(post.dislikers.length);
