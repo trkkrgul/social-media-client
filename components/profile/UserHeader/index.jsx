@@ -98,6 +98,7 @@ const UserHeader = ({ user, setUser }) => {
               src={user.coverPicturePath}
               width={1500}
               height={500}
+              alt="cover"
               className="gradient-mask"
               onClick={() => {
                 setIsCoverPhotoPreviewOpen(true);
@@ -126,6 +127,7 @@ const UserHeader = ({ user, setUser }) => {
                   src={user.profilePicturePath}
                   width={400}
                   height={400}
+                  alt="profile"
                   style={{
                     objectFit: "cover",
                     width: "100%",
@@ -223,7 +225,7 @@ const UserHeader = ({ user, setUser }) => {
                   href={`https://t.me/${String(user?.telegramId).slice(1)}`}
                   target="_blank"
                 >
-                  <IconButton icon={<FaTwitter />} />
+                  <IconButton icon={<FaTelegramPlane />} />
                 </Link>
               )}
             </HStack>

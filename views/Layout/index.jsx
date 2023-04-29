@@ -149,6 +149,7 @@ const UserMenuWidget = () => {
               width: "36px",
               borderRadius: "50%",
             }}
+            alt="profile picture"
           />
           <VStack align={"left"}>
             <Text lineHeight={"1"} fontWeight={"700"}>
@@ -251,7 +252,13 @@ const DesktopNav = () => {
             <VStack my={4} align={"right"}>
               <Link href={"/"}>
                 <HStack>
-                  <Image src={icon} width={48} height={48} unoptimized />
+                  <Image
+                    src={icon}
+                    width={48}
+                    height={48}
+                    unoptimized
+                    alt="icon"
+                  />
                 </HStack>
               </Link>
             </VStack>
@@ -335,6 +342,7 @@ const DesktopNav = () => {
                 }
                 width={100}
                 height={50}
+                alt="sakaivault"
                 style={{ objectFit: "contain", height: "50px", width: "100px" }}
               />
             </HStack>
@@ -503,6 +511,7 @@ const MobileNav = () => {
                         src={"./sakaivault-dark.svg"}
                         width={80}
                         height={50}
+                        alt="SakaiVault"
                       />
                     </HStack>
                     <HStack>

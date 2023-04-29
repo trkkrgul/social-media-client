@@ -213,19 +213,24 @@ const PostWidget = ({
                 <HStack justifyContent={"space-between"} w={"100%"} p={2}>
                   <HStack>
                     <Image
-                      alt="profile"
-                      src={user.profilePicturePath}
+                      flexGrow={1}
+                      onError={(e) =>
+                        (e.target.src = "/icons/user-placeholder.png")
+                      }
+                      width={24}
+                      height={24}
                       style={{
-                        minWidth: "24px",
-                        objectFit: "fill",
-                        height: "24px",
                         width: "24px",
+                        height: "24px",
+                        minWidth: "24px",
+                        minHeight: "24px",
+                        objectFit: "cover",
                         borderRadius: "50%",
                       }}
+                      src={`${user.profilePicturePath}`}
+                      alt={`${user.username}'s profile picture`}
                     />
-                    <Text fontSize={"md"} fontWeight={"600"}>
-                      @{user.username}
-                    </Text>
+                    <Text>{`@${user.username}`}</Text>
                   </HStack>
 
                   <HStack w={"100%"}>
@@ -289,13 +294,25 @@ const RepliesLayout = ({ reply }) => {
           width={"100%"}
           justifyContent={"space-between"}
         >
-          <Persona
-            flexGrow={1}
-            me="1"
-            src={reply.user.profilePicturePath}
-            name={`@${reply.user.username}`}
-            size={"xs"}
-          />
+          <HStack>
+            <Image
+              flexGrow={1}
+              onError={(e) => (e.target.src = "/icons/user-placeholder.png")}
+              width={24}
+              height={24}
+              style={{
+                width: "24px",
+                height: "24px",
+                minWidth: "24px",
+                minHeight: "24px",
+                objectFit: "cover",
+                borderRadius: "50%",
+              }}
+              alt="profile picture"
+              src={`${reply.user.profilePicturePath}`}
+            />
+            <Text>{`@${reply.user.username}`}</Text>
+          </HStack>
 
           <Spacer />
 
@@ -358,13 +375,26 @@ const CommentLayout = ({ comment, handleReply, user, token, post }) => {
             width={"100%"}
             justifyContent={"space-between"}
           >
-            <Persona
-              flexGrow={1}
-              me="1"
-              src={`${comment.user.profilePicturePath}`}
-              name={`@${comment.user.username}`}
-              size={"xs"}
-            />
+            <HStack>
+              <Image
+                flexGrow={1}
+                me="1"
+                onError={(e) => (e.target.src = "/icons/user-placeholder.png")}
+                width={24}
+                height={24}
+                style={{
+                  width: "24px",
+                  height: "24px",
+                  minWidth: "24px",
+                  minHeight: "24px",
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                }}
+                src={`${comment.user.profilePicturePath}`}
+                alt="profile picture"
+              />
+              <Text>{`@${comment.user.username}`}</Text>
+            </HStack>
 
             <Spacer />
 
@@ -414,19 +444,24 @@ const CommentLayout = ({ comment, handleReply, user, token, post }) => {
                 <HStack justifyContent={"space-between"} w={"100%"} p={2}>
                   <HStack>
                     <Image
-                      alt="cover"
-                      src={user.profilePicturePath}
+                      flexGrow={1}
+                      onError={(e) =>
+                        (e.target.src = "/icons/user-placeholder.png")
+                      }
+                      width={24}
+                      height={24}
                       style={{
-                        minWidth: "24px",
-                        objectFit: "fill",
-                        height: "24px",
                         width: "24px",
+                        height: "24px",
+                        minWidth: "24px",
+                        minHeight: "24px",
+                        objectFit: "cover",
                         borderRadius: "50%",
                       }}
+                      src={`${user.profilePicturePath}`}
+                      alt="profile picture"
                     />
-                    <Text fontSize={"md"} fontWeight={"600"}>
-                      @{user.username}
-                    </Text>
+                    <Text>{`@${user.username}`}</Text>
                   </HStack>
 
                   <HStack w={"100%"}>

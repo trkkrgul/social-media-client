@@ -1,15 +1,18 @@
 import {
   Flex,
+  HStack,
   IconButton,
   Menu,
   MenuButton,
   MenuList,
   Spacer,
+  Text,
   useColorMode,
 } from "@chakra-ui/react";
 import { Divider } from "@chakra-ui/react";
 import { CardHeader, MenuItem, Persona } from "@saas-ui/react";
 import { Web3Address } from "@saas-ui/web3";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -30,13 +33,29 @@ const PostHeader = ({ post, handleRemove }) => {
       <Flex alignItems={"center"} width={"100%"}>
         <Flex alignItems={"center"} width={"100%"}>
           <Link href={`/profile/${post.user?.walletAddress}`}>
-            <Persona
-              me="1"
-              src={post.user?.profilePicturePath}
-              name={`@${post.user?.username}`}
-              fontWeight={"bold"}
-              size={"xs"}
-            />
+            <HStack me={1}>
+              <Image
+                flexGrow={1}
+                width={24}
+                height={24}
+                style={{
+                  width: "24px",
+                  height: "24px",
+                  minWidth: "24px",
+                  minHeight: "24px",
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                }}
+                src={`${
+                  !!post.user.profilePicturePath
+                    ? post.user.profilePicturePath
+                    : "/icons/user-placeholder.png"
+                }`}
+                alt="profile picture"
+              />
+              <Text>{`@${post.user.username}`}</Text>
+              <Divider />
+            </HStack>
           </Link>
           <Flex alignItems={"center"}>
             <Link href={`/profile/${post.user?.walletAddress}`}>

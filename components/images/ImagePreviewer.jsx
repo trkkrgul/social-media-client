@@ -28,6 +28,7 @@ const ImagePreviewer = ({ image, isOpen, setOpen }) => {
       >
         <Image
           src={image}
+          alt="image"
           width={700}
           height={700}
           style={{ objectFit: "cover", width: "100%", height: "100%" }}

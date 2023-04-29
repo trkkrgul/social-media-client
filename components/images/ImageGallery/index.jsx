@@ -69,9 +69,6 @@ const ImageGallery = ({ images }) => {
           {images.map((src, index) => (
             <Image
               onClick={() => openPreview(index)}
-              onError={(event) => {
-                event.target.src = src;
-              }}
               src={src}
               width={700}
               height={700}

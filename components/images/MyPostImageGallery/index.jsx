@@ -104,6 +104,7 @@ const MyPostImageGallery = ({ images }) => {
               </HStack>
               <Image
                 width={"100%"}
+                alt="image"
                 preview={{
                   mask: (
                     <Box textAlign={"center"}>
