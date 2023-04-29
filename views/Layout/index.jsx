@@ -12,6 +12,7 @@ import {
   Switch,
   Text,
   VStack,
+  color,
   useColorMode,
   useDisclosure,
   useTheme,
@@ -67,6 +68,8 @@ import {
 import MyPostWidget from "@/components/post/MyPostWidget";
 import darkLogo from "@/assets/logo-dark.svg";
 import lightLogo from "@/assets/logo-light.svg";
+import lightIcon from "@/assets/icon-light.svg";
+import darkIcon from "@/assets/icon-dark.svg";
 import icon from "@/assets/icon.svg";
 const PageLayout = ({ children, title }) => {
   const user = useSelector((state) => state.auth.user);
@@ -253,11 +256,15 @@ const DesktopNav = () => {
               <Link href={"/"}>
                 <HStack>
                   <Image
-                    src={icon}
-                    width={48}
+                    src={colorMode === "dark" ? darkLogo : lightLogo}
                     height={48}
                     unoptimized
                     alt="icon"
+                    style={{
+                      height: "48px",
+                      objectFit: "contain",
+                      minWidth: "200px",
+                    }}
                   />
                 </HStack>
               </Link>
@@ -298,7 +305,16 @@ const DesktopNav = () => {
                 height={"36px"}
                 width={"100%"}
                 variant={"ghost"}
-                leftIcon={<IoAddCircle />}
+                leftIcon={
+                  <Image
+                    src={colorMode === "dark" ? darkIcon : lightIcon}
+                    style={{
+                      objectFit: "contain",
+                      width: "28px",
+                      height: "28px",
+                    }}
+                  />
+                }
                 href={null}
                 justifyContent={"left"}
                 onClick={() => setIsCreatingNewPost(true)}
@@ -431,7 +447,16 @@ const MobileNav = () => {
               <IconButton
                 onClick={() => setIsCreatingNewPost(true)}
                 aria-label="Add Post"
-                icon={<IoAddCircle size={24} />}
+                icon={
+                  <Image
+                    src={colorMode === "dark" ? darkIcon : lightIcon}
+                    style={{
+                      objectFit: "contain",
+                      width: "28px",
+                      height: "28px",
+                    }}
+                  />
+                }
                 variant="ghost"
               />
               <Link href={"/profile"}>
