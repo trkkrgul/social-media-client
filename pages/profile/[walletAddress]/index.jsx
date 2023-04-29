@@ -5,6 +5,7 @@ import { setSessionEnd } from "@/state/slices/auth";
 import PageLayout from "@/views/Layout";
 import { Box, Text } from "@chakra-ui/react";
 import axios from "axios";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -179,6 +180,9 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
 
   return (
     <>
+      <Head>
+        <title>{user?.username} | DeFiTalks</title>
+      </Head>
       {!!user && user.username && (
         <PageLayout title={user.username}>
           <UserHeader user={user} setUser={setUser} />

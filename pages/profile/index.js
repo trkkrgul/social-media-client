@@ -7,6 +7,7 @@ import PageLayout from "@/views/Layout";
 import { Box, Text } from "@chakra-ui/react";
 import { NavItem } from "@saas-ui/sidebar";
 import axios from "axios";
+import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useEffect } from "react";
@@ -199,6 +200,9 @@ const Profile = () => {
 
   return (
     <>
+      <Head>
+        <title>Profile | DeFiTalks</title>
+      </Head>
       <PageLayout title={"Your Profile"}>
         <UserHeader user={user} />
 

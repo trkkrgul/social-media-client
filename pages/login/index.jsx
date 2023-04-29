@@ -1,12 +1,18 @@
 import LoginStepper from "@/components/auth/LoginStepper";
 import PageLayout from "@/views/Layout";
+import Head from "next/head";
 import React from "react";
 
 const LoginPage = () => {
   return (
-    <PageLayout title={"Login"}>
-      <LoginStepper />
-    </PageLayout>
+    <>
+      <Head>
+        <title>Login | DeFiTalks</title>
+      </Head>
+      <PageLayout title={"Login"}>
+        <LoginStepper />
+      </PageLayout>
+    </>
   );
 };
 
