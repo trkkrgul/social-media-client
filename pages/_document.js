@@ -8,6 +8,31 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta
+          name="description"
+          content="DeFiTalks | World's first DeFi social media platform."
+        />
+        <meta property="og:title" content="Defi Talks" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://defitalks.io/" />
+        <meta property="og:image" content="/og-img.jpg" />
+        <meta
+          property="og:description"
+          content="World's first DeFi social media platform."
+        />
+        <meta property="og:site_name" content="Defi Talks" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@sakaivault" />
+        <meta name="twitter:title" content="Defi Talks" />
+        <meta
+          name="twitter:description"
+          content="World's first DeFi social media platform."
+        />
+        <meta name="twitter:image" content="/og-img.jpg" />
+        <meta name="twitter:image:alt" content="Defi Talks" />
+        <meta name="twitter:creator" content="@sakaivault" />
+        <meta name="twitter:creator:id" content="sakaivault" />
         <link
           rel="apple-touch-icon"
           sizes="180x180"
