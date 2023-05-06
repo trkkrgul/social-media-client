@@ -1,5 +1,4 @@
 import { Suspense, useState } from "react";
-import Image from "next/image";
 import { FaDownload } from "react-icons/fa";
 import { Card, CardBody, CardFooter, CardHeader } from "@saas-ui/react";
 import {
@@ -8,6 +7,7 @@ import {
   HStack,
   Icon,
   IconButton,
+  Image,
   Spacer,
   useColorMode,
 } from "@chakra-ui/react";
@@ -111,7 +111,7 @@ const ImageGallery = ({ images }) => {
               bg={colorMode === "dark" ? "gray.800" : "whiteAlpha.800"}
               border={"1px solid"}
               borderColor={"whiteAlpha.300"}
-              w={"90%"}
+              w={['90%', '90%', '900px']}
             >
               <CardHeader>
                 <HStack w={"100%"}>
@@ -140,18 +140,12 @@ const ImageGallery = ({ images }) => {
 
                   {!!(images.length > 0) && (
                     <Image
-                      style={{
-                        flexBasis: "100%",
-                        borderRadius: "10px",
-                        maxHeight: "100%",
-                        maxWidth: "50%",
-                        objectFit: "contain",
-                        flexGrow: "1",
-                      }}
+                      objectFit='contain'
                       src={images[previewIndex]}
-                      width={600}
+                      width={['79%', '79%', '640px']}
                       height={450}
                       alt={`Image ${previewIndex + 1}`}
+                      borderRadius='10px'
                     />
                   )}
                   <Icon
