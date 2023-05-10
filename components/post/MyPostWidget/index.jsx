@@ -64,6 +64,7 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
   const [readyToShare, setReadyToShare] = React.useState(true);
   const uploadedImagesRef = React.useRef(null);
   const [uploadedImages, setUploadedImages] = React.useState([]);
+
   const handleUploadImage = async () => {
     const firebaseStorage = await connectFirebase();
     if (uploadedImages.length === 0) return;
@@ -95,6 +96,7 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
   };
 
   const { colorMode, toggleColorMode } = useColorMode();
+  
   const [isLargerThan800] = useMediaQuery("(min-width: 1000px)", {
     ssr: true,
     fallback: false, // return false on the server, and re-evaluate on the client side
@@ -102,36 +104,41 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
   const [content, setContent] = React.useState(``);
   const feedPosts = useSelector((state) => state.post.feed);
   const dispatch = useDispatch();
+
   const onEmojiClick = (e) => {
     setContent(content + e.emoji);
   };
+
   const handlePost = async () => {
     try {
       if (content.length === 0) return;
+    
       setReadyToShare(false);
-      const images = await handleUploadImage();
+      // const images = await handleUploadImage();
+
+      const formData = new FormData();
+      uploadedImages.map(image => formData.append('images', image));
+      formData.append('content', content);
+      formData.append('tags', 'test');
+      formData.append('tags', 'test2');
+      formData.append('categories', 'test');
+      formData.append('userWalletAddress', walletAddress);
+      console.log('ortam', process.env.NEXT_PUBLIC_API_ENDPOINT)
       await axios
         .post(
-          "https://api.defitalks.io/api/post/create",
-          {
-            content: content,
-            tags: ["test"],
-            categories: ["test"],
-            userWalletAddress: walletAddress,
-            media: images,
-          },
+          "https://api.defitalks.io/api/post/create",formData,
           {
             headers: {
-              "Content-Type": "application/json",
+              "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
             },
           }
         )
-        .then((res) => {
+        .then((res) => {          
           if (res.status === 200) {
             setContent(``);
             setUploadedImages([]);
-            dispatch(setFeedPosts([res.data[0], ...feedPosts]));
+            dispatch(setFeedPosts([res.data, ...feedPosts]));
             setReadyToShare(true);
             !!setIsCreatingNewPost && setIsCreatingNewPost(false);
           } else {
@@ -145,6 +152,7 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
       dispatch(setSessionEnd(true));
     }
   };
+
   return (
     token &&
     isProfileCreated && (
