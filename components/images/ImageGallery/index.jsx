@@ -1,5 +1,4 @@
 import { Suspense, useState } from "react";
-import Image from "next/image";
 import { FaDownload } from "react-icons/fa";
 import { Card, CardBody, CardFooter, CardHeader } from "@saas-ui/react";
 import {
@@ -13,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
 import { IoCloseCircle, IoCloseCircleOutline } from "react-icons/io5";
+import Image from "next/image";
 
 const ImageGallery = ({ images }) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -111,7 +111,7 @@ const ImageGallery = ({ images }) => {
               bg={colorMode === "dark" ? "gray.800" : "whiteAlpha.800"}
               border={"1px solid"}
               borderColor={"whiteAlpha.300"}
-              w={"90%"}
+              w={['90%', '90%', '900px']}
             >
               <CardHeader>
                 <HStack w={"100%"}>
@@ -140,18 +140,16 @@ const ImageGallery = ({ images }) => {
 
                   {!!(images.length > 0) && (
                     <Image
-                      style={{
-                        flexBasis: "100%",
-                        borderRadius: "10px",
-                        maxHeight: "100%",
-                        maxWidth: "50%",
-                        objectFit: "contain",
-                        flexGrow: "1",
-                      }}
                       src={images[previewIndex]}
-                      width={600}
+                      width={640} // ['79%', '79%', '640px']
                       height={450}
                       alt={`Image ${previewIndex + 1}`}
+                      style={{
+                        objectFit: 'contain',
+                        borderRadius: 10,
+                        maxHeight: '450px',
+                        maxWidth: '80%',
+                      }}
                     />
                   )}
                   <Icon

@@ -18,6 +18,7 @@ import {
   Tooltip,
   useColorMode,
   useMediaQuery,
+  useToast,
 } from "@chakra-ui/react";
 import {
   Button,
@@ -41,7 +42,7 @@ import {
   IoVideocamOutline,
 } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { Image } from "antd";
+import { Image, message } from "antd";
 import { connectFirebase } from "@/utils/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
@@ -64,6 +65,9 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
   const [readyToShare, setReadyToShare] = React.useState(true);
   const uploadedImagesRef = React.useRef(null);
   const [uploadedImages, setUploadedImages] = React.useState([]);
+  const toast = useToast();
+
+
   const handleUploadImage = async () => {
     const firebaseStorage = await connectFirebase();
     if (uploadedImages.length === 0) return;
@@ -95,6 +99,7 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
   };
 
   const { colorMode, toggleColorMode } = useColorMode();
+  
   const [isLargerThan800] = useMediaQuery("(min-width: 1000px)", {
     ssr: true,
     fallback: false, // return false on the server, and re-evaluate on the client side
@@ -102,42 +107,67 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
   const [content, setContent] = React.useState(``);
   const feedPosts = useSelector((state) => state.post.feed);
   const dispatch = useDispatch();
+
   const onEmojiClick = (e) => {
     setContent(content + e.emoji);
   };
+
   const handlePost = async () => {
     try {
       if (content.length === 0) return;
+    
       setReadyToShare(false);
-      const images = await handleUploadImage();
+      // const images = await handleUploadImage();
+
+      const formData = new FormData();
+      uploadedImages.map(image => formData.append('images', image));
+      formData.append('content', content);
+      formData.append('tags', 'test');
+      formData.append('tags', 'test2');
+      formData.append('categories', 'test');
+      formData.append('userWalletAddress', walletAddress);
+
       await axios
         .post(
-          "https://api.defitalks.io/api/post/create",
-          {
-            content: content,
-            tags: ["test"],
-            categories: ["test"],
-            userWalletAddress: walletAddress,
-            media: images,
-          },
+          "https://api.defitalks.io/api/post/create",formData,
+          "http://localhost:5001/api/post/create",formData,
           {
             headers: {
-              "Content-Type": "application/json",
+              "Content-Type": "multipart/form-data",
               Authorization: `Bearer ${token}`,
             },
           }
         )
-        .then((res) => {
+        .then((res) => {          
           if (res.status === 200) {
+            console.log(res);
             setContent(``);
             setUploadedImages([]);
-            dispatch(setFeedPosts([res.data[0], ...feedPosts]));
+            dispatch(setFeedPosts([res.data, ...feedPosts]));   
             setReadyToShare(true);
             !!setIsCreatingNewPost && setIsCreatingNewPost(false);
+
           } else {
+            dispatch(setSessionEnd(true));
             setReadyToShare(true);
+          }
+        }).catch(err => {
+          console.log(err)
+          if(err.response.status == 400){
+            if(err.response.data.message) {
+              toast({
+                title: 'Upload Error',
+                description: err.response?.data?.message,
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+              })
+            }
+          }
+          else if (err.response.status == 403) {
             dispatch(setSessionEnd(true));
           }
+          setReadyToShare(true);
         });
     } catch (e) {
       console.log(e);
