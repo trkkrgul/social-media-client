@@ -7,12 +7,12 @@ import {
   HStack,
   Icon,
   IconButton,
-  Image,
   Spacer,
   useColorMode,
 } from "@chakra-ui/react";
 import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
 import { IoCloseCircle, IoCloseCircleOutline } from "react-icons/io5";
+import Image from "next/image";
 
 const ImageGallery = ({ images }) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -140,12 +140,16 @@ const ImageGallery = ({ images }) => {
 
                   {!!(images.length > 0) && (
                     <Image
-                      objectFit='contain'
                       src={images[previewIndex]}
-                      width={['79%', '79%', '640px']}
+                      width={640} // ['79%', '79%', '640px']
                       height={450}
                       alt={`Image ${previewIndex + 1}`}
-                      borderRadius='10px'
+                      style={{
+                        objectFit: 'contain',
+                        borderRadius: 10,
+                        maxHeight: '450px',
+                        maxWidth: '80%',
+                      }}
                     />
                   )}
                   <Icon
