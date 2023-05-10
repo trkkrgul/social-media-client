@@ -18,6 +18,7 @@ import {
   Tooltip,
   useColorMode,
   useMediaQuery,
+  useToast,
 } from "@chakra-ui/react";
 import {
   Button,
@@ -41,7 +42,7 @@ import {
   IoVideocamOutline,
 } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { Image } from "antd";
+import { Image, message } from "antd";
 import { connectFirebase } from "@/utils/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
@@ -64,6 +65,8 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
   const [readyToShare, setReadyToShare] = React.useState(true);
   const uploadedImagesRef = React.useRef(null);
   const [uploadedImages, setUploadedImages] = React.useState([]);
+  const toast = useToast();
+
 
   const handleUploadImage = async () => {
     const firebaseStorage = await connectFirebase();
@@ -123,10 +126,11 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
       formData.append('tags', 'test2');
       formData.append('categories', 'test');
       formData.append('userWalletAddress', walletAddress);
-      console.log('ortam', process.env.NEXT_PUBLIC_API_ENDPOINT)
+
       await axios
         .post(
           "https://api.defitalks.io/api/post/create",formData,
+          "http://localhost:5001/api/post/create",formData,
           {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -136,15 +140,34 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
         )
         .then((res) => {          
           if (res.status === 200) {
+            console.log(res);
             setContent(``);
             setUploadedImages([]);
-            dispatch(setFeedPosts([res.data, ...feedPosts]));
+            dispatch(setFeedPosts([res.data, ...feedPosts]));   
             setReadyToShare(true);
             !!setIsCreatingNewPost && setIsCreatingNewPost(false);
+
           } else {
+            dispatch(setSessionEnd(true));
             setReadyToShare(true);
+          }
+        }).catch(err => {
+          console.log(err)
+          if(err.response.status == 400){
+            if(err.response.data.message) {
+              toast({
+                title: 'Upload Error',
+                description: err.response?.data?.message,
+                status: 'error',
+                duration: 9000,
+                isClosable: true,
+              })
+            }
+          }
+          else if (err.response.status == 403) {
             dispatch(setSessionEnd(true));
           }
+          setReadyToShare(true);
         });
     } catch (e) {
       console.log(e);
@@ -152,7 +175,6 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
       dispatch(setSessionEnd(true));
     }
   };
-
   return (
     token &&
     isProfileCreated && (
