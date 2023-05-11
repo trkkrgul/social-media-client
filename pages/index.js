@@ -109,7 +109,7 @@ export default function Home({ feedPosts }) {
             setFeedPosts(
               feed.map((post) => {
                 if (post._id === postId) {
-                  return res.data;
+                  return { ...post, likers: res.data.likers, dislikers: res.data.dislikers }
                 }
                 return post;
               })
@@ -142,7 +142,7 @@ export default function Home({ feedPosts }) {
             setFeedPosts(
               feed.map((post) => {
                 if (post._id === postId) {
-                  return res.data;
+                  return { ...post, likers: res.data.likers, dislikers: res.data.dislikers }
                 }
                 return post;
               })
@@ -178,7 +178,7 @@ export default function Home({ feedPosts }) {
               setFeedPosts(
                 feed.map((post) => {
                   if (post._id === res.data._id) {
-                    return res.data;
+                    return { ...post, comments: res.data.comments }
                   } else {
                     return post;
                   }
@@ -209,11 +209,12 @@ export default function Home({ feedPosts }) {
         )
         .then((res) => {
           if (res.status === 200) {
+            console.log(res)
             dispatch(
               setFeedPosts(
                 feed.map((post) => {
                   if (post._id === res.data._id) {
-                    return res.data;
+                    return { ...post, comments: res.data.comments }
                   } else {
                     return post;
                   }
