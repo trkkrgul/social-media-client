@@ -111,7 +111,7 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
   const onEmojiClick = (e) => {
     setContent(content + e.emoji);
   };
-
+  
   const handlePost = async () => {
     try {
       if (content.length === 0) return;
@@ -130,7 +130,6 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
       await axios
         .post(
           "https://api.defitalks.io/api/post/create",formData,
-          "http://localhost:5001/api/post/create",formData,
           {
             headers: {
               "Content-Type": "multipart/form-data",
@@ -143,7 +142,7 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
             console.log(res);
             setContent(``);
             setUploadedImages([]);
-            dispatch(setFeedPosts([res.data, ...feedPosts]));   
+            dispatch(setFeedPosts([res.data[0], ...feedPosts]));   
             setReadyToShare(true);
             !!setIsCreatingNewPost && setIsCreatingNewPost(false);
 
