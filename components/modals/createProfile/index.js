@@ -75,7 +75,7 @@ const CreateProfileModal = () => {
           try {
             let testResult = true;
             await axios
-              .post("https://api.defitalks.io/api/auth/checkUsername", {
+              .post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/auth/checkUsername`, {
                 username: value,
               })
               .then((res) => {
@@ -300,7 +300,7 @@ const CreateProfileModal = () => {
                 );
                 await axios
                   .post(
-                    "https://api.defitalks.io/api/user/createProfile",
+                    `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/createProfile`,
                     {
                       ...values,
                       profilePicturePath: profilePicturePath,

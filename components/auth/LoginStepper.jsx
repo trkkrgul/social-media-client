@@ -70,7 +70,7 @@ const LoginStepper = () => {
   const authenticateUser = async () => {
     try {
       await axios
-        .post("https://api.defitalks.io/api/auth/nonce", {
+        .post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/auth/nonce`, {
           walletAddress: walletAddress,
         })
         .then(async (res) => {
@@ -79,7 +79,7 @@ const LoginStepper = () => {
             signer.signMessage(`${res.data.nonce}`).then(async (_signature) => {
               dispatch(setSignature(_signature));
               await axios
-                .post("https://api.defitalks.io/api/auth/checkSignature", {
+                .post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/auth/checkSignature`, {
                   signature: _signature,
                   walletAddress: walletAddress,
                 })
@@ -88,7 +88,7 @@ const LoginStepper = () => {
                     dispatch(setToken(res.data.token));
                     dispatch(setSessionEnd(false));
                     await axios
-                      .get("https://api.defitalks.io/api/auth/profile", {
+                      .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/auth/profile`, {
                         headers: {
                           "Content-Type": "application/json",
                           Authorization: `Bearer ${res.data.token}`,

@@ -24,7 +24,7 @@ const Profile = () => {
   const handleRemove = async (postId) => {
     await axios
       .post(
-        "https://api.defitalks.io/api/post/delete",
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/delete`,
         {
           postId: postId,
         },
@@ -50,7 +50,7 @@ const Profile = () => {
   const handleLike = async (postId) => {
     await axios
       .post(
-        "https://api.defitalks.io/api/like/like",
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/like/like`,
         {
           postId: postId,
         },
@@ -83,7 +83,7 @@ const Profile = () => {
   const handleDislike = async (postId) => {
     await axios
       .post(
-        "https://api.defitalks.io/api/like/dislike",
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/like/dislike`,
         { postId: postId },
         {
           headers: {
@@ -115,7 +115,7 @@ const Profile = () => {
     try {
       await axios
         .post(
-          "https://api.defitalks.io/api/comment/post",
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/comment/post`,
           {
             ...values,
             postId: postId,
@@ -148,7 +148,7 @@ const Profile = () => {
     try {
       await axios
         .post(
-          "https://api.defitalks.io/api/comment/comment",
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/comment/comment`,
           {
             ...values,
             postId: postId,
@@ -181,7 +181,7 @@ const Profile = () => {
   useEffect(() => {
     const init = async () => {
       await axios
-        .get(`https://api.defitalks.io/api/post/wallet/${user.walletAddress}`)
+        .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/wallet/${user.walletAddress}`)
         .then((res) => {
           setUserPosts(res.data);
         })

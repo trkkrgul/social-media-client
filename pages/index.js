@@ -65,7 +65,7 @@ export default function Home({ feedPosts }) {
   const handleRemove = async (postId) => {
     await axios
       .post(
-        "https://api.defitalks.io/api/post/delete",
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/delete`,
         {
           postId: postId,
         },
@@ -91,7 +91,7 @@ export default function Home({ feedPosts }) {
   const handleLike = async (postId) => {
     await axios
       .post(
-        "https://api.defitalks.io/api/like/like",
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/like/like`,
         {
           postId: postId,
         },
@@ -126,7 +126,7 @@ export default function Home({ feedPosts }) {
   const handleDislike = async (postId) => {
     await axios
       .post(
-        "https://api.defitalks.io/api/like/dislike",
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/like/dislike`,
         { postId: postId },
         {
           headers: {
@@ -160,7 +160,7 @@ export default function Home({ feedPosts }) {
     try {
       await axios
         .post(
-          "https://api.defitalks.io/api/comment/post",
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/comment/post`,
           {
             ...values,
             postId: postId,
@@ -195,7 +195,7 @@ export default function Home({ feedPosts }) {
     try {
       await axios
         .post(
-          "https://api.defitalks.io/api/comment/comment",
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/comment/comment`,
           {
             ...values,
             postId: postId,
@@ -228,6 +228,7 @@ export default function Home({ feedPosts }) {
     }
   };
   const { colorMode } = useColorMode();
+  console.log(process.env.NODE_ENV)
   return (
     <>
       <Head>
@@ -320,7 +321,7 @@ export default function Home({ feedPosts }) {
 
 export async function getStaticProps() {
   const feedPosts = await axios
-    .get("https://api.defitalks.io/api/post/feed")
+    .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/feed`)
     .then((res) => res.data)
     .catch((err) => {
       console.log(err);

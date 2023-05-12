@@ -50,7 +50,7 @@ const FollowingPosts = () => {
     if (user && token && user.followings.length > 0) {
       axios
         .post(
-          "https://api.defitalks.io/api/post/followingPosts",
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/followingPosts`,
           {
             followings: user.followings,
           },
@@ -77,7 +77,7 @@ const FollowingPosts = () => {
   const handleRemove = async (postId) => {
     await axios
       .post(
-        "https://api.defitalks.io/api/post/delete",
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/delete`,
         {
           postId: postId,
         },
@@ -107,7 +107,7 @@ const FollowingPosts = () => {
   const handleLike = async (postId) => {
     await axios
       .post(
-        "https://api.defitalks.io/api/like/like",
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/like/like`,
         {
           postId: postId,
         },
@@ -142,7 +142,7 @@ const FollowingPosts = () => {
   const handleDislike = async (postId) => {
     await axios
       .post(
-        "https://api.defitalks.io/api/like/dislike",
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/like/dislike`,
         { postId: postId },
         {
           headers: {
@@ -176,7 +176,7 @@ const FollowingPosts = () => {
     try {
       await axios
         .post(
-          "https://api.defitalks.io/api/comment/post",
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/comment/post`,
           {
             ...values,
             postId: postId,
@@ -217,7 +217,7 @@ const FollowingPosts = () => {
     try {
       await axios
         .post(
-          "https://api.defitalks.io/api/comment/comment",
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/comment/comment`,
           {
             ...values,
             postId: postId,

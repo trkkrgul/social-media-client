@@ -129,7 +129,7 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
 
       await axios
         .post(
-          "https://api.defitalks.io/api/post/create",formData,
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/create`,formData,
           {
             headers: {
               "Content-Type": "multipart/form-data",

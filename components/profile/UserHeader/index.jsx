@@ -166,7 +166,7 @@ const UserHeader = ({ user, setUser }) => {
                     setIsFollowings(!isFollowings);
                     await axios
                       .post(
-                        `https://api.defitalks.io/api/user/follow/${user.walletAddress}`,
+                        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/follow/${user.walletAddress}`,
                         {},
                         {
                           headers: {

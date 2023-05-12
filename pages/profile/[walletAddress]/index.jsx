@@ -19,7 +19,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
   const handleRemove = async (postId) => {
     await axios
       .post(
-        "https://api.defitalks.io/api/post/delete",
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/delete`,
         {
           postId: postId,
         },
@@ -45,7 +45,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
   const handleLike = async (postId) => {
     await axios
       .post(
-        "https://api.defitalks.io/api/like/like",
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/like/like`,
         {
           postId: postId,
         },
@@ -78,7 +78,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
   const handleDislike = async (postId) => {
     await axios
       .post(
-        "https://api.defitalks.io/api/like/dislike",
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/like/dislike`,
         { postId: postId },
         {
           headers: {
@@ -110,7 +110,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
     try {
       await axios
         .post(
-          "https://api.defitalks.io/api/comment/post",
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/comment/post`,
           {
             ...values,
             postId: postId,
@@ -143,7 +143,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
     try {
       await axios
         .post(
-          "https://api.defitalks.io/api/comment/comment",
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/comment/comment`,
           {
             ...values,
             postId: postId,
@@ -220,14 +220,14 @@ export async function getStaticProps({ params }) {
   const walletAddress = params.walletAddress;
 
   const ssrUser = await axios
-    .get(`https://api.defitalks.io/api/user/wallet/${walletAddress}`)
+    .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/wallet/${walletAddress}`)
     .then((res) => res.data)
     .catch((err) => {
       console.log(err);
     });
 
   const ssrPosts = await axios
-    .get(`https://api.defitalks.io/api/post/wallet/${walletAddress}`)
+    .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/wallet/${walletAddress}`)
     .then((res) => res.data)
     .catch((err) => {
       console.log(err);
