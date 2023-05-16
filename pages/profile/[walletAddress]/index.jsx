@@ -62,7 +62,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
           setUserPosts(
             userPosts.map((post) => {
               if (post._id === postId) {
-                return res.data;
+                return { ...post, likers: res.data.likers, dislikers: res.data.dislikers }
               }
               return post;
             })
@@ -93,7 +93,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
           setUserPosts(
             userPosts.map((post) => {
               if (post._id === postId) {
-                return res.data;
+                return { ...post, likers: res.data.likers, dislikers: res.data.dislikers }
               }
               return post;
             })
@@ -127,7 +127,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
             setUserPosts(
               userPosts.map((post) => {
                 if (post._id === res.data._id) {
-                  return res.data;
+                  return { ...post, comments: res.data.comments }
                 } else {
                   return post;
                 }
@@ -160,7 +160,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
             setUserPosts(
               userPosts.map((post) => {
                 if (post._id === res.data._id) {
-                  return res.data;
+                  return { ...post, comments: res.data.comments }
                 } else {
                   return post;
                 }

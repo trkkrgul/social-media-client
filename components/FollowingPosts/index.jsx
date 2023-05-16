@@ -125,7 +125,7 @@ const FollowingPosts = () => {
             setFollowingPosts(
               followingPosts.map((post) => {
                 if (post._id === postId) {
-                  return res.data;
+                  return { ...post, likers: res.data.likers, dislikers: res.data.dislikers }
                 }
                 return post;
               })
@@ -158,7 +158,7 @@ const FollowingPosts = () => {
             setFollowingPosts(
               followingPosts.map((post) => {
                 if (post._id === postId) {
-                  return res.data;
+                  return { ...post, likers: res.data.likers, dislikers: res.data.dislikers }
                 }
                 return post;
               })
@@ -195,7 +195,7 @@ const FollowingPosts = () => {
               setFollowingPosts(
                 followingPosts.map((post) => {
                   if (post._id === postId) {
-                    return res.data;
+                    return { ...post, comments: res.data.comments }
                   }
                   return post;
                 })
@@ -235,7 +235,7 @@ const FollowingPosts = () => {
               setFollowingPosts(
                 followingPosts.map((post) => {
                   if (post._id === postId) {
-                    return res.data;
+                    return { ...post, comments: res.data.comments }
                   }
                   return post;
                 })
