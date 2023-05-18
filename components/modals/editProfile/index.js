@@ -188,7 +188,7 @@ const EditProfileModal = ({user}) => {
                 src={
                   !!photos.coverPhoto
                     ? URL.createObjectURL(photos.coverPhoto)
-                    : coverPlaceholder.src
+                    : user.coverPicturePath || coverPlaceholder.src
                 }
                 preview={false}
                 alt="img"
