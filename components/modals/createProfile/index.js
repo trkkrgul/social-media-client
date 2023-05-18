@@ -292,23 +292,31 @@ const CreateProfileModal = () => {
             resolver={yupResolver(schema)}
             onSubmit={async (values, e) => {
               try {
-                const profilePicturePath = await imageLinkGenerator(
-                  photos.profilePhoto
-                );
-                const coverPicturePath = await imageLinkGenerator(
-                  photos.coverPhoto
-                );
+                // const profilePicturePath = await imageLinkGenerator(
+                //   photos.profilePhoto
+                // );
+                // const coverPicturePath = await imageLinkGenerator(
+                //   photos.coverPhoto
+                // );
+
+                const formData = new FormData();
+                formData.append('images', photos.profilePhoto)
+                formData.append('images', photos.coverPhoto)
+                formData.append('username', values.username)
+                formData.append('biography', values.biography)
+                formData.append('telegramId', values.telegramId)
+                formData.append('discordId', values.discordId)
+                formData.append('twitterId', values.twitterId)
+                !!photos.coverPhoto && formData.append('cover', !!photos.coverPhoto);
+                !!photos.profilePhoto && formData.append('profile', !!photos.profilePhoto);
+                // formData.append('photoCheck', JSON.stringify({cover: !!photos.coverPhoto, profile: !!photos.profilePhoto}))
+                // console.log(JSON.stringify({cover: !!photos.coverPhoto, profile: !!photos.profilePhoto}))
                 await axios
                   .post(
-                    `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/createProfile`,
-                    {
-                      ...values,
-                      profilePicturePath: profilePicturePath,
-                      coverPicturePath: coverPicturePath,
-                    },
+                    `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/createProfile`, formData,
                     {
                       headers: {
-                        "Content-Type": "application/json",
+                        "Content-Type": "multipart/form-data",
                         Authorization: `Bearer ${token}`,
                       },
                     }
@@ -316,6 +324,7 @@ const CreateProfileModal = () => {
 
                   .then((res) => {
                     if (res.status === 200) {
+                      console.log(res.data)
                       dispatch(setUser(res.data));
                       router.push("/");
                     }
@@ -323,6 +332,7 @@ const CreateProfileModal = () => {
                 e.target.reset();
               } catch (e) {
                 dispatch(setSessionEnd(true));
+                console.log(e);
               }
             }}
           >

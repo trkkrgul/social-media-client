@@ -50,7 +50,7 @@ const EditProfileModal = ({user}) => {
   const dispatch = useDispatch();
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)");
   const { colorMode } = useColorMode();
-  const { username, biography, telegram, discord, twitter } = user;
+  const { username, biography, telegramId, discordId, twitterId } = user;
 
   const schema = Yup.object().shape({
     username: Yup.string()
@@ -60,6 +60,7 @@ const EditProfileModal = ({user}) => {
         "username",
         "Username is already taken",
         async function validateValue(value) {
+          if(value === user.username) return true;
           try {
             let testResult = true;
             await axios
@@ -279,9 +280,9 @@ const EditProfileModal = ({user}) => {
             defaultValues={{
               username,
               biography,
-              telegram,
-              discord,
-              twitter
+              telegramId,
+              discordId,
+              twitterId
             }}
             resolver={yupResolver(schema)}
             onSubmit={async (values, e) => {
@@ -295,12 +296,12 @@ const EditProfileModal = ({user}) => {
           
                 const formData = new FormData();
                 formData.append('images', photos.profilePhoto)
-                formData.append('images', null)
+                formData.append('images', photos.coverPhoto)
                 formData.append('username', username)
                 formData.append('biography', biography)
-                formData.append('telegram', telegram)
-                formData.append('discord', discord)
-                formData.append('twitter', twitter)
+                formData.append('telegramId', telegramId)
+                formData.append('discordId', discordId)
+                formData.append('twitterId', twitterId)
                 formData.append('controller', JSON.stringify({cover: !!photos.coverPhoto, profile: !!photos.profilePhoto}))
                 
                 await axios
@@ -316,14 +317,14 @@ const EditProfileModal = ({user}) => {
 
                   .then((res) => {
                     if (res.status === 200) {
-                      // dispatch(setUser(res.data));
-                      // router.push("/");
+                      dispatch(setUser(res.data));
+                      router.push("/");
                       console.log('res-200',res.data)
                     }
                   });
-                // e.target.reset();
+                e.target.reset();
               } catch (e) {
-                // dispatch(setSessionEnd(true));
+                dispatch(setSessionEnd(true));
                 console.log('hata',e)
               }
             }}
