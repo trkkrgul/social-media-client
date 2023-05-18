@@ -11,7 +11,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
   const router = useRouter();
-  const [userPosts, setUserPosts] = useState(null);
+  const [userPosts, setUserPosts] = useState([]);
   const [user, setUser] = useState(null);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
@@ -173,18 +173,42 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
     }
   };
 
+  
+  const fetchSsrUser = async () => {
+    axios
+    .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/wallet/${walletAddress}`)
+    .then((res) => setUser(res.data))
+    .catch((err) => {
+      // console.log(err);
+    });
+  }
+
+  const fetchSsrPosts = async () => {
+    await axios
+    .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/wallet/${walletAddress}`)
+    .then((res) => setUserPosts(res.data))
+    .catch((err) => {
+      // console.log(err);
+    });
+  }
+
+  // Fetch data for the wallet address from an API or database
+
   useEffect(() => {
-    setUserPosts(ssrPosts);
-    setUser(ssrUser);
-  }, [ssrPosts, ssrUser]);
+    fetchSsrUser();
+    fetchSsrPosts();
+  }, [walletAddress]);
 
   return (
     <>
       <Head>
         <title>{user?.username} | DeFiTalks</title>
       </Head>
-      {!!user && user.username && (
-        <PageLayout title={user.username}>
+      
+        <PageLayout title={user?.username}>
+          
+        {!!user && user.username && 
+        <>
           <UserHeader user={user} setUser={setUser} />
 
           {userPosts.length > 0 ? (
@@ -203,45 +227,54 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
               <Text>No posts yet</Text>
             </Box>
           )}
+          </>
+        }
+
         </PageLayout>
-      )}
+    
     </>
   );
 };
 
-export async function getStaticPaths() {
-  return {
-    paths: [],
-    fallback: "blocking",
-  };
-}
+UserProfile.getInitialProps = async (ctx) => {
+  const { query } = ctx;
+  const { walletAddress } = query;
+  return { walletAddress };
+};
 
-export async function getStaticProps({ params }) {
-  const walletAddress = params.walletAddress;
+// export async function getStaticPaths() {
+//   return {
+//     paths: [],
+//     fallback: "blocking",
+//   };
+// }
 
-  const ssrUser = await axios
-    .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/wallet/${walletAddress}`)
-    .then((res) => res.data)
-    .catch((err) => {
-      console.log(err);
-    });
+// export async function getStaticProps({ params }) {
+//   const walletAddress = params.walletAddress;
+//   console.log('walletAddress',walletAddress)
+//   const ssrUser = await axios
+//     .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/wallet/${walletAddress}`)
+//     .then((res) => res.data)
+//     .catch((err) => {
+//       // console.log(err);
+//     });
 
-  const ssrPosts = await axios
-    .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/wallet/${walletAddress}`)
-    .then((res) => res.data)
-    .catch((err) => {
-      console.log(err);
-    });
-  // Fetch data for the wallet address from an API or database
+//   const ssrPosts = await axios
+//     .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/wallet/${walletAddress}`)
+//     .then((res) => res.data)
+//     .catch((err) => {
+//       // console.log(err);
+//     });
+//   // Fetch data for the wallet address from an API or database
 
-  return {
-    props: {
-      walletAddress,
-      ssrUser,
-      ssrPosts,
-    },
-    revalidate: 60, // regenerate the page every 60 seconds
-  };
-}
+//   return {
+//     props: {
+//       walletAddress,
+//       ssrUser,
+//       ssrPosts,
+//     },
+//     revalidate: 60, // regenerate the page every 60 seconds
+//   };
+// }
 
 export default UserProfile;

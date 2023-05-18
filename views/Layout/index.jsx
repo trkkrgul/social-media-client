@@ -337,8 +337,8 @@ const DesktopNav = () => {
                 ".chakra-switch__thumb": {
                   background:
                     colorMode === "light"
-                      ? "url(./icons/sun.svg) center center, #fff !important"
-                      : "url(./icons/moon.svg) center center, #000 !important",
+                      ? "url(icons/sun.svg) center center, #fff !important"
+                      : "url(icons/moon.svg) center center, #000 !important",
                   backgroundSize: "contain,cover !important",
                 },
               }}
