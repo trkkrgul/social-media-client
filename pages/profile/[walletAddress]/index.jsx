@@ -9,7 +9,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-const UserProfile = ({}) => {
+const UserProfile = () => {
   const { walletAddress } = useRouter()?.query;
   const [userPosts, setUserPosts] = useState([]);
   const [user, setUser] = useState(null);
