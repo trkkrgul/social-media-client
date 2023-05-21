@@ -62,7 +62,11 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
           setUserPosts(
             userPosts.map((post) => {
               if (post._id === postId) {
-                return { ...post, likers: res.data.likers, dislikers: res.data.dislikers }
+                return {
+                  ...post,
+                  likers: res.data.likers,
+                  dislikers: res.data.dislikers,
+                };
               }
               return post;
             })
@@ -93,7 +97,11 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
           setUserPosts(
             userPosts.map((post) => {
               if (post._id === postId) {
-                return { ...post, likers: res.data.likers, dislikers: res.data.dislikers }
+                return {
+                  ...post,
+                  likers: res.data.likers,
+                  dislikers: res.data.dislikers,
+                };
               }
               return post;
             })
@@ -127,7 +135,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
             setUserPosts(
               userPosts.map((post) => {
                 if (post._id === res.data._id) {
-                  return { ...post, comments: res.data.comments }
+                  return { ...post, comments: res.data.comments };
                 } else {
                   return post;
                 }
@@ -160,7 +168,7 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
             setUserPosts(
               userPosts.map((post) => {
                 if (post._id === res.data._id) {
-                  return { ...post, comments: res.data.comments }
+                  return { ...post, comments: res.data.comments };
                 } else {
                   return post;
                 }
@@ -173,24 +181,27 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
     }
   };
 
-  
   const fetchSsrUser = async () => {
     axios
-    .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/wallet/${walletAddress}`)
-    .then((res) => setUser(res.data))
-    .catch((err) => {
-      // console.log(err);
-    });
-  }
+      .get(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/wallet/${walletAddress}`
+      )
+      .then((res) => setUser(res.data))
+      .catch((err) => {
+        // console.log(err);
+      });
+  };
 
   const fetchSsrPosts = async () => {
     await axios
-    .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/wallet/${walletAddress}`)
-    .then((res) => setUserPosts(res.data))
-    .catch((err) => {
-      // console.log(err);
-    });
-  }
+      .get(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/wallet/${walletAddress}`
+      )
+      .then((res) => setUserPosts(res.data))
+      .catch((err) => {
+        // console.log(err);
+      });
+  };
 
   // Fetch data for the wallet address from an API or database
 
@@ -204,34 +215,31 @@ const UserProfile = ({ walletAddress, ssrPosts, ssrUser }) => {
       <Head>
         <title>{user?.username} | DeFiTalks</title>
       </Head>
-      
-        <PageLayout title={user?.username}>
-          
-        {!!user && user.username && 
-        <>
-          <UserHeader user={user} setUser={setUser} />
 
-          {userPosts.length > 0 ? (
-            userPosts.map((post) => (
-              <PostWidget
-                handleComment={handleComment}
-                handleReply={handleReply}
-                handleLike={handleLike}
-                handleDislike={handleDislike}
-                handleRemove={handleRemove}
-                post={post}
-              />
-            ))
-          ) : (
-            <Box>
-              <Text>No posts yet</Text>
-            </Box>
-          )}
+      <PageLayout title={user?.username}>
+        {!!user && user.username && (
+          <>
+            <UserHeader user={user} setUser={setUser} />
+
+            {userPosts.length > 0 ? (
+              userPosts.map((post) => (
+                <PostWidget
+                  handleComment={handleComment}
+                  handleReply={handleReply}
+                  handleLike={handleLike}
+                  handleDislike={handleDislike}
+                  handleRemove={handleRemove}
+                  post={post}
+                />
+              ))
+            ) : (
+              <Box>
+                <Text>No posts yet</Text>
+              </Box>
+            )}
           </>
-        }
-
-        </PageLayout>
-    
+        )}
+      </PageLayout>
     </>
   );
 };
@@ -241,40 +249,5 @@ UserProfile.getInitialProps = async (ctx) => {
   const { walletAddress } = query;
   return { walletAddress };
 };
-
-// export async function getStaticPaths() {
-//   return {
-//     paths: [],
-//     fallback: "blocking",
-//   };
-// }
-
-// export async function getStaticProps({ params }) {
-//   const walletAddress = params.walletAddress;
-//   console.log('walletAddress',walletAddress)
-//   const ssrUser = await axios
-//     .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/wallet/${walletAddress}`)
-//     .then((res) => res.data)
-//     .catch((err) => {
-//       // console.log(err);
-//     });
-
-//   const ssrPosts = await axios
-//     .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/wallet/${walletAddress}`)
-//     .then((res) => res.data)
-//     .catch((err) => {
-//       // console.log(err);
-//     });
-//   // Fetch data for the wallet address from an API or database
-
-//   return {
-//     props: {
-//       walletAddress,
-//       ssrUser,
-//       ssrPosts,
-//     },
-//     revalidate: 60, // regenerate the page every 60 seconds
-//   };
-// }
 
 export default UserProfile;

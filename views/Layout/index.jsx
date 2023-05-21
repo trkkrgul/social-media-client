@@ -73,13 +73,16 @@ import darkIcon from "@/assets/icon-dark.svg";
 import icon from "@/assets/icon.svg";
 const PageLayout = ({ children, title }) => {
   const user = useSelector((state) => state.auth.user);
-  const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)");
+  const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)", {
+    ssr: false,
+    fallback: true,
+  });
   const { colorMode, toggleColorMode } = useColorMode();
   const router = useRouter();
   const path = router.pathname;
   return (
     <>
-      <Flex m={"0 auto"} maxW={"1200px"} position={"relative"}>
+      <Flex maxW={"1200px"} mx={"auto"} position={"relative"}>
         {isLargerThan1000 && <DesktopNav />}
         <Box
           maxW={"1100px"}
@@ -123,7 +126,7 @@ const PageLayout = ({ children, title }) => {
             <Divider />
           </Box>
           {children}
-        </Box>
+        </Box>{" "}
       </Flex>
       {!isLargerThan1000 && <MobileNav />}
     </>
