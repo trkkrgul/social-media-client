@@ -41,7 +41,7 @@ const FollowingPosts = dynamic(() => import("@/components/FollowingPosts"), {
   ssr: false,
 });
 
-export default function Home({ feedPosts }) {
+export default function Home() {
   const feed = useSelector((state) => state.post.feed);
   const token = useSelector((state) => state.auth.token);
   const [count, setCount] = useState(5);
@@ -55,7 +55,12 @@ export default function Home({ feedPosts }) {
   }, [setCount]);
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(setFeedPosts(feedPosts));
+    axios
+      .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/feed`)
+      .then((res) => dispatch(setFeedPosts(res.data)))
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
   useEffect(() => {
     const timeout = loadMore();
@@ -109,7 +114,11 @@ export default function Home({ feedPosts }) {
             setFeedPosts(
               feed.map((post) => {
                 if (post._id === postId) {
-                  return { ...post, likers: res.data.likers, dislikers: res.data.dislikers }
+                  return {
+                    ...post,
+                    likers: res.data.likers,
+                    dislikers: res.data.dislikers,
+                  };
                 }
                 return post;
               })
@@ -142,7 +151,11 @@ export default function Home({ feedPosts }) {
             setFeedPosts(
               feed.map((post) => {
                 if (post._id === postId) {
-                  return { ...post, likers: res.data.likers, dislikers: res.data.dislikers }
+                  return {
+                    ...post,
+                    likers: res.data.likers,
+                    dislikers: res.data.dislikers,
+                  };
                 }
                 return post;
               })
@@ -178,7 +191,7 @@ export default function Home({ feedPosts }) {
               setFeedPosts(
                 feed.map((post) => {
                   if (post._id === res.data._id) {
-                    return { ...post, comments: res.data.comments }
+                    return { ...post, comments: res.data.comments };
                   } else {
                     return post;
                   }
@@ -209,12 +222,12 @@ export default function Home({ feedPosts }) {
         )
         .then((res) => {
           if (res.status === 200) {
-            console.log(res)
+            console.log(res);
             dispatch(
               setFeedPosts(
                 feed.map((post) => {
                   if (post._id === res.data._id) {
-                    return { ...post, comments: res.data.comments }
+                    return { ...post, comments: res.data.comments };
                   } else {
                     return post;
                   }
@@ -228,7 +241,8 @@ export default function Home({ feedPosts }) {
     }
   };
   const { colorMode } = useColorMode();
-  console.log(process.env.NODE_ENV)
+  console.log(process.env.NODE_ENV);
+
   return (
     <>
       <Head>
@@ -317,22 +331,4 @@ export default function Home({ feedPosts }) {
       </PageLayout>
     </>
   );
-}
-
-export async function getStaticProps() {
-  const feedPosts = await axios
-    .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/feed`)
-    .then((res) => res.data)
-    .catch((err) => {
-      console.log(err);
-    });
-
-  // Fetch data for the wallet address from an API or database
-
-  return {
-    props: {
-      feedPosts,
-    },
-    revalidate: 30,
-  };
 }
