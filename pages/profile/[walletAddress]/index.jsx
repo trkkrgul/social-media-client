@@ -9,8 +9,8 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-const UserProfile = ({  }) => {
-  const { walletAddress } = useRouter().query;
+const UserProfile = ({}) => {
+  const { walletAddress } = useRouter()?.query;
   const [userPosts, setUserPosts] = useState([]);
   const [user, setUser] = useState(null);
   const dispatch = useDispatch();
@@ -204,19 +204,18 @@ const UserProfile = ({  }) => {
   };
 
   // Fetch data for the wallet address from an API or database
-  console.log('rt', walletAddress)
+  console.log("rt", walletAddress);
   useEffect(() => {
-    if(walletAddress){
+    if (walletAddress) {
       fetchSsrUser();
       fetchSsrPosts();
     }
-
   }, [walletAddress]);
 
   return (
     <>
       <Head>
-        <title>{(user?.username) && user?.username + ' | '}DeFiTalks</title>
+        <title>{user?.username && user?.username + " | "}DeFiTalks</title>
       </Head>
 
       <PageLayout title={user?.username}>

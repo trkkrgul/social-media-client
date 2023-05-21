@@ -74,7 +74,7 @@ import icon from "@/assets/icon.svg";
 const PageLayout = ({ children, title }) => {
   const user = useSelector((state) => state.auth.user);
   const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)", {
-    ssr: false,
+    ssr: true,
     fallback: true,
   });
   const { colorMode, toggleColorMode } = useColorMode();
