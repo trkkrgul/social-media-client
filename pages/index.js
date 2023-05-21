@@ -241,7 +241,6 @@ export default function Home() {
     }
   };
   const { colorMode } = useColorMode();
-  console.log(process.env.NODE_ENV);
 
   return (
     <>
