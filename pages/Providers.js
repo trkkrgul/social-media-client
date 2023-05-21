@@ -13,15 +13,15 @@ import SidebarWidget from "@/views/Layout";
 const Providers = ({ store, children }) => {
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistStore(store)}>
-        <WagmiConfig client={client}>
-          <SaasProvider theme={theme}>
-            <ConnectKitProvider debugMode>
-              <ModalsProvider>{children}</ModalsProvider>
-            </ConnectKitProvider>
-          </SaasProvider>
-        </WagmiConfig>
-      </PersistGate>
+      {/* <PersistGate loading={null} persistor={persistStore(store)}> */}
+      <WagmiConfig client={client}>
+        <SaasProvider theme={theme}>
+          <ConnectKitProvider debugMode>
+            <ModalsProvider>{children}</ModalsProvider>
+          </ConnectKitProvider>
+        </SaasProvider>
+      </WagmiConfig>
+      {/* </PersistGate> */}
     </Provider>
   );
 };
