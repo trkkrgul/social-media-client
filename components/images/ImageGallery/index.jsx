@@ -22,7 +22,8 @@ import {
 import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
 import { IoCloseCircle, IoCloseCircleOutline } from "react-icons/io5";
 import Image from "next/image";
-
+import imageLoader from "@/assets/image-loader.gif";
+import { imageLoaderGifBase64 } from "../imageLoaderBase64";
 const ImageGallery = ({ images }) => {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(0);
@@ -83,6 +84,8 @@ const ImageGallery = ({ images }) => {
         >
           {images.map((src, index) => (
             <Image
+              placeholder={"blur"}
+              blurDataURL={`${imageLoaderGifBase64}`}
               onClick={() => openPreview(index)}
               src={src}
               width={700}

@@ -53,18 +53,13 @@ import {
   BsFillHandThumbsDownFill,
   BsRepeat,
 } from "react-icons/bs";
-import { MdBugReport, MdOutlineDeleteOutline, MdReport } from "react-icons/md";
-import { HiMenuAlt3 } from "react-icons/hi";
-import { Badge, Image } from "antd";
-import axios from "axios";
+import { Badge } from "antd";
+import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
-import { setFeedPosts } from "@/state/slices/post";
-import { Web3Address } from "@saas-ui/web3";
-import { IoRemove, IoShareOutline } from "react-icons/io5";
-import { AiOutlineDelete } from "react-icons/ai";
 import moment from "moment";
 import PostHeader from "./PostHeader";
 import PostBody from "./PostBody";
+import { imageLoaderGifBase64 } from "@/components/images/imageLoaderBase64";
 const PostWidget = ({
   post,
   handleLike,
@@ -213,10 +208,9 @@ const PostWidget = ({
                 <HStack justifyContent={"space-between"} w={"100%"} p={2}>
                   <HStack>
                     <Image
+                      placeholder="blur"
+                      blurDataURL={imageLoaderGifBase64}
                       flexGrow={1}
-                      onError={(e) =>
-                        (e.target.src = "/icons/user-placeholder.png")
-                      }
                       width={24}
                       height={24}
                       style={{
@@ -241,7 +235,7 @@ const PostWidget = ({
                       Comment
                     </SubmitButton>
                   </HStack>
-                </HStack>
+                </HStack>{" "}
               </Form>
             </Flex>
           )}
