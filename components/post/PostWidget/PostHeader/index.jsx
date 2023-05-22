@@ -35,7 +35,6 @@ const PostHeader = ({ post, handleRemove }) => {
           <Link href={`/profile/${post.user?.walletAddress}`}>
             <HStack me={1}>
               <Image
-                flexGrow={1}
                 width={24}
                 height={24}
                 style={{
@@ -44,6 +43,7 @@ const PostHeader = ({ post, handleRemove }) => {
                   minWidth: "24px",
                   minHeight: "24px",
                   objectFit: "cover",
+                  flexGrow: 1,
                   borderRadius: "50%",
                 }}
                 src={`${

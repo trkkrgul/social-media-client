@@ -53,25 +53,191 @@ import {
   BsFillHandThumbsDownFill,
   BsRepeat,
 } from "react-icons/bs";
-import { Badge } from "antd";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import moment from "moment";
 import PostHeader from "./PostHeader";
 import PostBody from "./PostBody";
 import { imageLoaderGifBase64 } from "@/components/images/imageLoaderBase64";
-const PostWidget = ({
-  post,
-  handleLike,
-  handleDislike,
-  handleRemove,
-  handleComment,
-  handleReply,
-}) => {
+import axios from "axios";
+import { setSessionEnd } from "@/state/slices/auth";
+const PostWidget = ({ post, setState, postState }) => {
+  const handleRemove = async (postId) => {
+    await axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/delete`,
+        {
+          postId: postId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("Post deleted");
+          dispatch(setState(postState.filter((post) => post._id !== postId)));
+        } else {
+          console.log("Error");
+        }
+      })
+      .catch((err) => {
+        dispatch(setSessionEnd(true));
+      });
+  };
+  const handleLike = async (postId) => {
+    await axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/like/like`,
+        {
+          postId: postId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("Post liked");
+          dispatch(
+            setState(
+              postState.map((post) => {
+                if (post._id === postId) {
+                  return {
+                    ...post,
+                    likers: res.data.likers,
+                    dislikers: res.data.dislikers,
+                  };
+                }
+                return post;
+              })
+            )
+          );
+        } else {
+          console.log("Error");
+        }
+      })
+      .catch((err) => {
+        dispatch(setSessionEnd(true));
+      });
+  };
+  const handleDislike = async (postId) => {
+    await axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/like/dislike`,
+        { postId: postId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("Post disliked");
+          dispatch(
+            setState(
+              postState.map((post) => {
+                if (post._id === postId) {
+                  return {
+                    ...post,
+                    likers: res.data.likers,
+                    dislikers: res.data.dislikers,
+                  };
+                }
+                return post;
+              })
+            )
+          );
+        } else {
+          console.log("Error");
+        }
+      })
+      .catch((err) => {
+        dispatch(setSessionEnd(true));
+      });
+  };
+  const handleComment = async (postId, values) => {
+    try {
+      await axios
+        .post(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/comment/post`,
+          {
+            ...values,
+            postId: postId,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            dispatch(
+              setState(
+                postState.map((post) => {
+                  if (post._id === res.data._id) {
+                    return { ...post, comments: res.data.comments };
+                  } else {
+                    return post;
+                  }
+                })
+              )
+            );
+          }
+        });
+    } catch (err) {
+      dispatch(setSessionEnd(true));
+    }
+  };
+  const handleReply = async (postId, values) => {
+    try {
+      await axios
+        .post(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/comment/comment`,
+          {
+            ...values,
+            postId: postId,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(res);
+            dispatch(
+              setState(
+                postState.map((post) => {
+                  if (post._id === res.data._id) {
+                    return { ...post, comments: res.data.comments };
+                  } else {
+                    return post;
+                  }
+                })
+              )
+            );
+          }
+        });
+    } catch (err) {
+      dispatch(setSessionEnd(true));
+    }
+  };
   const { colorMode, toggleColorMode } = useColorMode();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-  const posts = useSelector((state) => state.post.feed);
   const [isCommentShown, toggleCommentShown] = useBoolean(false);
   const user = useSelector((state) => state.auth.user);
   const [isRepliesShown, toggleRepliesShown] = useBoolean(false);
@@ -121,7 +287,6 @@ const PostWidget = ({
         >
           {!!token && !!post.likers && !!post.dislikers && (
             <Flex alignItems={"center"}>
-              {post.likers.length !== 0 && <Badge title={post.likers.length} />}
               <FaHeart
                 onClick={
                   !isLiked
@@ -210,11 +375,11 @@ const PostWidget = ({
                     <Image
                       placeholder="blur"
                       blurDataURL={imageLoaderGifBase64}
-                      flexGrow={1}
                       width={24}
                       height={24}
                       style={{
                         width: "24px",
+                        flexGrow: 1,
                         height: "24px",
                         minWidth: "24px",
                         minHeight: "24px",
@@ -290,7 +455,6 @@ const RepliesLayout = ({ reply }) => {
         >
           <HStack>
             <Image
-              flexGrow={1}
               onError={(e) => (e.target.src = "/icons/user-placeholder.png")}
               width={24}
               height={24}
@@ -298,6 +462,7 @@ const RepliesLayout = ({ reply }) => {
                 width: "24px",
                 height: "24px",
                 minWidth: "24px",
+                flexGrow: 1,
                 minHeight: "24px",
                 objectFit: "cover",
                 borderRadius: "50%",
@@ -371,7 +536,6 @@ const CommentLayout = ({ comment, handleReply, user, token, post }) => {
           >
             <HStack>
               <Image
-                flexGrow={1}
                 me="1"
                 onError={(e) => (e.target.src = "/icons/user-placeholder.png")}
                 width={24}
@@ -382,6 +546,7 @@ const CommentLayout = ({ comment, handleReply, user, token, post }) => {
                   minWidth: "24px",
                   minHeight: "24px",
                   objectFit: "cover",
+                  flexGrow: 1,
                   borderRadius: "50%",
                 }}
                 src={`${comment.user.profilePicturePath}`}
@@ -438,7 +603,6 @@ const CommentLayout = ({ comment, handleReply, user, token, post }) => {
                 <HStack justifyContent={"space-between"} w={"100%"} p={2}>
                   <HStack>
                     <Image
-                      flexGrow={1}
                       onError={(e) =>
                         (e.target.src = "/icons/user-placeholder.png")
                       }
@@ -451,6 +615,7 @@ const CommentLayout = ({ comment, handleReply, user, token, post }) => {
                         minHeight: "24px",
                         objectFit: "cover",
                         borderRadius: "50%",
+                        flexGrow: 1,
                       }}
                       src={`${user.profilePicturePath}`}
                       alt="profile picture"

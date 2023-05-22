@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { setFeedPosts } from "@/state/slices/post";
+import { setFeedPosts, setFollowingPosts } from "@/state/slices/post";
 import { Button } from "@saas-ui/react";
 import {
   Avatar,
@@ -37,9 +37,6 @@ const MyPostWidget = dynamic(() => import("@/components/post/MyPostWidget"), {
 const PostWidget = dynamic(() => import("@/components/post/PostWidget"), {
   ssr: false,
 });
-const FollowingPosts = dynamic(() => import("@/components/FollowingPosts"), {
-  ssr: false,
-});
 
 export default function Home() {
   const feed = useSelector((state) => state.post.feed);
@@ -47,7 +44,7 @@ export default function Home() {
   const [count, setCount] = useState(5);
   const [tab, setTab] = useState("feed");
   const user = useSelector((state) => state.auth.user);
-  const [followingsPosts, setFollowingsPosts] = useState([]);
+  const followingPosts = useSelector((state) => state.post.followingPosts);
   const loadMore = useCallback(() => {
     return setTimeout(() => {
       setCount((prev) => prev + 2);
@@ -60,186 +57,32 @@ export default function Home() {
       .then((res) => dispatch(setFeedPosts(res.data)))
       .catch((err) => {
         console.log(err);
+        dispatch(setFeedPosts([]));
       });
-  }, []);
+    axios
+      .post(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/followingPosts`,
+        {
+          followings: user.followings,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => dispatch(setFollowingPosts(res.data)))
+      .catch((err) => {
+        console.log(err);
+        dispatch(setFollowingPosts([]));
+      });
+  }, [tab]);
   useEffect(() => {
     const timeout = loadMore();
     return () => clearTimeout(timeout);
   }, []);
 
-  const handleRemove = async (postId) => {
-    await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/delete`,
-        {
-          postId: postId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          console.log("Post deleted");
-          dispatch(setFeedPosts(feed.filter((post) => post._id !== postId)));
-        } else {
-          console.log("Error");
-        }
-      })
-      .catch((err) => {
-        dispatch(setSessionEnd(true));
-      });
-  };
-  const handleLike = async (postId) => {
-    await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/like/like`,
-        {
-          postId: postId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          console.log("Post liked");
-          dispatch(
-            setFeedPosts(
-              feed.map((post) => {
-                if (post._id === postId) {
-                  return {
-                    ...post,
-                    likers: res.data.likers,
-                    dislikers: res.data.dislikers,
-                  };
-                }
-                return post;
-              })
-            )
-          );
-        } else {
-          console.log("Error");
-        }
-      })
-      .catch((err) => {
-        dispatch(setSessionEnd(true));
-      });
-  };
-  const handleDislike = async (postId) => {
-    await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/like/dislike`,
-        { postId: postId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          console.log("Post disliked");
-          dispatch(
-            setFeedPosts(
-              feed.map((post) => {
-                if (post._id === postId) {
-                  return {
-                    ...post,
-                    likers: res.data.likers,
-                    dislikers: res.data.dislikers,
-                  };
-                }
-                return post;
-              })
-            )
-          );
-        } else {
-          console.log("Error");
-        }
-      })
-      .catch((err) => {
-        dispatch(setSessionEnd(true));
-      });
-  };
-  const handleComment = async (postId, values) => {
-    try {
-      await axios
-        .post(
-          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/comment/post`,
-          {
-            ...values,
-            postId: postId,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            dispatch(
-              setFeedPosts(
-                feed.map((post) => {
-                  if (post._id === res.data._id) {
-                    return { ...post, comments: res.data.comments };
-                  } else {
-                    return post;
-                  }
-                })
-              )
-            );
-          }
-        });
-    } catch (err) {
-      dispatch(setSessionEnd(true));
-    }
-  };
-  const handleReply = async (postId, values) => {
-    try {
-      await axios
-        .post(
-          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/comment/comment`,
-          {
-            ...values,
-            postId: postId,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            console.log(res);
-            dispatch(
-              setFeedPosts(
-                feed.map((post) => {
-                  if (post._id === res.data._id) {
-                    return { ...post, comments: res.data.comments };
-                  } else {
-                    return post;
-                  }
-                })
-              )
-            );
-          }
-        });
-    } catch (err) {
-      dispatch(setSessionEnd(true));
-    }
-  };
   const { colorMode } = useColorMode();
 
   return (
@@ -252,81 +95,80 @@ export default function Home() {
       </Head>
       <PageLayout title={"Homepage"}>
         <MyPostWidget />
-        <Suspense fallback={<div>Loading...</div>}>
+        <Flex
+          width={"100%"}
+          height={"36px"}
+          alignItems={"center"}
+          cursor={"pointer"}
+          border={"1px solid"}
+          borderColor={colorMode === "light" ? "gray.200" : "gray.700"}
+        >
           <Flex
-            width={"100%"}
-            height={"36px"}
+            onClick={() => setTab("feed")}
+            flexBasis={"50%"}
+            justifyContent={"center"}
             alignItems={"center"}
-            cursor={"pointer"}
-            border={"1px solid"}
-            borderColor={colorMode === "light" ? "gray.200" : "gray.700"}
+            fontSize={"md"}
+            fontWeight={"bold"}
+            height={"100%"}
+            bg={tab === "feed" ? "primary.500" : "transparent"}
+            color={tab === "feed" ? "black" : null}
           >
-            <Flex
-              onClick={() => setTab("feed")}
-              flexBasis={"50%"}
-              justifyContent={"center"}
-              alignItems={"center"}
-              fontSize={"md"}
-              fontWeight={"bold"}
-              height={"100%"}
-              bg={tab === "feed" ? "primary.500" : "transparent"}
-              color={tab === "feed" ? "black" : null}
-            >
-              <Text>Recommended</Text>
-            </Flex>
-            <Flex
-              height={"100%"}
-              alignItems={"center"}
-              justifyContent={"center"}
-              flexBasis={"50%"}
-              onClick={() => setTab("followings")}
-              fontSize={"md"}
-              fontWeight={"bold"}
-              bg={tab !== "feed" ? "primary.500" : "transparent"}
-              color={tab !== "feed" ? "black" : null}
-            >
-              <Text>Followings</Text>
-            </Flex>
+            <Text>Recommended</Text>
           </Flex>
-          {!!feed && tab === "feed" ? (
-            <Virtuoso
-              className="gradient-feed"
-              useWindowScroll
-              data={feed.slice(0, count)}
-              endReached={loadMore}
-              overscan={200}
-              components={<div>asdas</div>}
-              itemContent={(index, post) => {
-                return (
-                  <PostWidget
-                    key={post._id}
-                    post={post}
-                    handleRemove={handleRemove}
-                    handleLike={handleLike}
-                    handleDislike={handleDislike}
-                    handleComment={handleComment}
-                    handleReply={handleReply}
-                  />
-                );
-              }}
-            />
-          ) : (
-            <FollowingPosts />
-          )}
-
-          {/* {feed &&
-            feed.map((post) => (
-              <PostWidget
-                key={post._id}
-                post={post}
-                handleRemove={handleRemove}
-                handleLike={handleLike}
-                handleDislike={handleDislike}
-                handleComment={handleComment}
-                handleReply={handleReply}
-              />
-            ))} */}
-        </Suspense>
+          <Flex
+            height={"100%"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            flexBasis={"50%"}
+            onClick={() => setTab("followings")}
+            fontSize={"md"}
+            fontWeight={"bold"}
+            bg={tab !== "feed" ? "primary.500" : "transparent"}
+            color={tab !== "feed" ? "black" : null}
+          >
+            <Text>Followings</Text>
+          </Flex>
+        </Flex>
+        {tab === "feed" ? (
+          <Virtuoso
+            className="gradient-feed"
+            useWindowScroll
+            data={feed.slice(0, count)}
+            endReached={loadMore}
+            overscan={200}
+            components={<div>asdas</div>}
+            itemContent={(index, post) => {
+              return (
+                <PostWidget
+                  key={post._id}
+                  post={post}
+                  setState={setFeedPosts}
+                  postState={feed}
+                />
+              );
+            }}
+          />
+        ) : (
+          <Virtuoso
+            className="gradient-feed"
+            useWindowScroll
+            data={followingPosts.slice(0, count)}
+            endReached={loadMore}
+            overscan={200}
+            components={<div>asdas</div>}
+            itemContent={(index, post) => {
+              return (
+                <PostWidget
+                  key={post._id}
+                  post={post}
+                  setState={setFollowingPosts}
+                  postState={followingPosts}
+                />
+              );
+            }}
+          />
+        )}
       </PageLayout>
     </>
   );

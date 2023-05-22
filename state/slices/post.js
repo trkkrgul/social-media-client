@@ -16,14 +16,13 @@ export const postSlice = createSlice({
     setFollowingPosts(state, action) {
       state.followingPosts = action.payload;
     },
-
-    addProfilePosts(state, action) {
-      state.profilePosts.push(action.payload);
+    setProfilePosts(state, action) {
+      state.profilePosts = action.payload;
     },
   },
 });
 
-export const { setFeedPosts, addProfilePosts, setFollowingPosts } =
+export const { setFeedPosts, setFollowingPosts, setProfilePosts } =
   postSlice.actions;
 
 export default postSlice.reducer;

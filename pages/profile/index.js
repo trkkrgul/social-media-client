@@ -1,196 +1,43 @@
 import LoginStepper from "@/components/auth/LoginStepper";
 import PostWidget from "@/components/post/PostWidget";
 import UserHeader from "@/components/profile/UserHeader";
-import { setSessionEnd } from "@/state/slices/auth";
-import { addProfilePosts } from "@/state/slices/post";
+import { setProfilePosts } from "@/state/slices/post";
+
 import PageLayout from "@/views/Layout";
 import { Box, Text } from "@chakra-ui/react";
 import { NavItem } from "@saas-ui/sidebar";
 import axios from "axios";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Virtuoso } from "react-virtuoso";
 
 const Profile = () => {
   const user = useSelector((state) => state.auth.user);
-  const router = useRouter();
-  const feed = useSelector((state) => state.post.feed);
   const profilePosts = useSelector((state) => state.post.profilePosts);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-  const [userPosts, setUserPosts] = useState([]);
-  const handleRemove = async (postId) => {
-    await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/delete`,
-        {
-          postId: postId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          console.log("Post deleted");
-          setUserPosts(userPosts.filter((post) => post._id !== postId));
-        } else {
-          console.log("Error");
-        }
-      })
-      .catch((err) => {
-        dispatch(setSessionEnd(true));
-      });
-  };
-  const handleLike = async (postId) => {
-    await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/like/like`,
-        {
-          postId: postId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          console.log("Post liked");
-          setUserPosts(
-            userPosts.map((post) => {
-              if (post._id === postId) {
-                return { ...post, likers: res.data.likers, dislikers: res.data.dislikers }
-              }
-              return post;
-            })
-          );
-        } else {
-          console.log("Error");
-        }
-      })
-      .catch((err) => {
-        dispatch(setSessionEnd(true));
-      });
-  };
-  const handleDislike = async (postId) => {
-    await axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/like/dislike`,
-        { postId: postId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((res) => {
-        if (res.status === 200) {
-          console.log("Post disliked");
-          setUserPosts(
-            userPosts.map((post) => {
-              if (post._id === postId) {
-                return { ...post, likers: res.data.likers, dislikers: res.data.dislikers }
-              }
-              return post;
-            })
-          );
-        } else {
-          console.log("Error");
-        }
-      })
-      .catch((err) => {
-        dispatch(setSessionEnd(true));
-      });
-  };
-  const handleComment = async (postId, values) => {
-    try {
-      await axios
-        .post(
-          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/comment/post`,
-          {
-            ...values,
-            postId: postId,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            setUserPosts(
-              userPosts.map((post) => {
-                if (post._id === res.data._id) {
-                  return { ...post, comments: res.data.comments }
-                } else {
-                  return post;
-                }
-              })
-            );
-          }
-        });
-    } catch (err) {
-      dispatch(setSessionEnd(true));
-    }
-  };
-  const handleReply = async (postId, values) => {
-    try {
-      await axios
-        .post(
-          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/comment/comment`,
-          {
-            ...values,
-            postId: postId,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          if (res.status === 200) {
-            setUserPosts(
-              userPosts.map((post) => {
-                if (post._id === res.data._id) {
-                  return { ...post, comments: res.data.comments }
-                } else {
-                  return post;
-                }
-              })
-            );
-          }
-        });
-    } catch (err) {
-      dispatch(setSessionEnd(true));
-    }
-  };
+  const [count, setCount] = useState(5);
+  const loadMore = useCallback(() => {
+    return setTimeout(() => {
+      setCount((prev) => prev + 2);
+    }, 1000);
+  }, [setCount]);
 
   useEffect(() => {
-    const init = async () => {
-      await axios
-        .get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/wallet/${user.walletAddress}`)
-        .then((res) => {
-          setUserPosts(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    };
-    init();
-  }, []);
+    axios
+      .get(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/wallet/${user.walletAddress}`
+      )
+      .then((res) => dispatch(setProfilePosts(res.data)))
+      .catch((err) => {
+        console.log(err);
+        dispatch(setProfilePosts([]));
+      });
+  }, [user]);
+
   if (!user || !user.isProfileCreated)
     return (
       <PageLayout title={"Login"}>
@@ -206,18 +53,25 @@ const Profile = () => {
       <PageLayout title={"Your Profile"}>
         <UserHeader user={user} />
 
-        {userPosts.length > 0 ? (
-          userPosts.map((post) => (
-            <PostWidget
-              post={post}
-              key={post?._id}
-              handleComment={handleComment}
-              handleReply={handleReply}
-              handleLike={handleLike}
-              handleDislike={handleDislike}
-              handleRemove={handleRemove}
-            />
-          ))
+        {!!user && profilePosts.length > 0 ? (
+          <Virtuoso
+            className="gradient-feed"
+            useWindowScroll
+            data={profilePosts.slice(0, count)}
+            endReached={loadMore}
+            overscan={200}
+            components={<div>asdas</div>}
+            itemContent={(index, post) => {
+              return (
+                <PostWidget
+                  key={post._id}
+                  post={post}
+                  setState={setProfilePosts}
+                  postState={profilePosts}
+                />
+              );
+            }}
+          />
         ) : (
           <Box>
             <Text textAlign={"center"}>You dont have any posts yet.</Text>
