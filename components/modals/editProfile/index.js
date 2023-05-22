@@ -169,7 +169,7 @@ const EditProfileModal = ({ user }) => {
               />
               <Input
                 type="file"
-                accept="image/*"
+                accept="image/gif, image/jpeg, image/png, image/jpg"
                 ref={coverPhotoRef}
                 hidden
                 onChange={(e) =>
@@ -215,7 +215,7 @@ const EditProfileModal = ({ user }) => {
               />
               <Input
                 type="file"
-                accept="image/*"
+                accept="image/gif, image/jpeg, image/png, image/jpg"
                 ref={profilePhotoRef}
                 hidden
                 onChange={(e) =>
@@ -263,11 +263,11 @@ const EditProfileModal = ({ user }) => {
                 const formData = new FormData();
                 formData.append("images", photos.profilePhoto);
                 formData.append("images", photos.coverPhoto);
-                formData.append("username", username);
-                formData.append("biography", biography);
-                formData.append("telegramId", telegramId);
-                formData.append("discordId", discordId);
-                formData.append("twitterId", twitterId);
+                formData.append("username", values.username);
+                formData.append("biography", values.biography);
+                formData.append("telegramId", values.telegramId);
+                formData.append("discordId", values.discordId);
+                formData.append("twitterId", values.twitterId);
                 formData.append(
                   "controller",
                   JSON.stringify({

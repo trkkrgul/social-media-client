@@ -1,6 +1,7 @@
 import {
   Flex,
   HStack,
+  Icon,
   IconButton,
   Menu,
   MenuButton,
@@ -20,7 +21,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { BsBookmarkCheck } from "react-icons/bs";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { IoCopyOutline, IoShareOutline } from "react-icons/io5";
-import { MdReport } from "react-icons/md";
+import { MdReport, MdVerified } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 
 const PostHeader = ({ post, handleRemove }) => {
@@ -53,7 +54,12 @@ const PostHeader = ({ post, handleRemove }) => {
                 }`}
                 alt="profile picture"
               />
-              <Text>{`@${post.user.username}`}</Text>
+              <HStack spacing={"1"}>
+                <Text>{`${post?.user?.username}`}</Text>
+                {post?.user?.isVerified && (
+                  <Icon as={MdVerified} color={"primary.400"} />
+                )}
+              </HStack>
               <Divider />
             </HStack>
           </Link>

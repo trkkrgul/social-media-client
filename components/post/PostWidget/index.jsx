@@ -10,6 +10,7 @@ import {
   Grid,
   GridItem,
   HStack,
+  Icon,
   IconButton,
   Menu,
   MenuButton,
@@ -61,6 +62,7 @@ import PostBody from "./PostBody";
 import { imageLoaderGifBase64 } from "@/components/images/imageLoaderBase64";
 import axios from "axios";
 import { setSessionEnd } from "@/state/slices/auth";
+import { MdVerified } from "react-icons/md";
 const PostWidget = ({ post, setState, postState }) => {
   const handleRemove = async (postId) => {
     await axios
@@ -389,7 +391,12 @@ const PostWidget = ({ post, setState, postState }) => {
                       src={`${user.profilePicturePath}`}
                       alt={`${user.username}'s profile picture`}
                     />
-                    <Text>{`@${user.username}`}</Text>
+                    <HStack spacing={"1"}>
+                      <Text>{`@${user?.username}`}</Text>
+                      {user?.isVerified && (
+                        <Icon as={MdVerified} color={"primary.400"} />
+                      )}
+                    </HStack>
                   </HStack>
 
                   <HStack w={"100%"}>
@@ -470,7 +477,12 @@ const RepliesLayout = ({ reply }) => {
               alt="profile picture"
               src={`${reply.user.profilePicturePath}`}
             />
-            <Text>{`@${reply.user.username}`}</Text>
+            <HStack spacing={"1"}>
+              <Text>{`@${reply.user.username}`}</Text>
+              {reply.user?.isVerified && (
+                <Icon as={MdVerified} color={"primary.400"} />
+              )}
+            </HStack>
           </HStack>
 
           <Spacer />
@@ -552,7 +564,12 @@ const CommentLayout = ({ comment, handleReply, user, token, post }) => {
                 src={`${comment.user.profilePicturePath}`}
                 alt="profile picture"
               />
-              <Text>{`@${comment.user.username}`}</Text>
+              <HStack spacing={"1"}>
+                <Text>{`@${comment.user.username}`}</Text>
+                {comment.user?.isVerified && (
+                  <Icon as={MdVerified} color={"primary.400"} />
+                )}
+              </HStack>
             </HStack>
 
             <Spacer />
@@ -620,7 +637,12 @@ const CommentLayout = ({ comment, handleReply, user, token, post }) => {
                       src={`${user.profilePicturePath}`}
                       alt="profile picture"
                     />
-                    <Text>{`@${user.username}`}</Text>
+                    <HStack spacing={"1"}>
+                      <Text>{`@${user.username}`}</Text>
+                      {user?.isVerified && (
+                        <Icon as={MdVerified} color={"primary.400"} />
+                      )}
+                    </HStack>
                   </HStack>
 
                   <HStack w={"100%"}>

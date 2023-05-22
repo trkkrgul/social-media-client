@@ -5,6 +5,7 @@ import {
   Divider,
   Flex,
   HStack,
+  Icon,
   IconButton,
   Spacer,
   Text,
@@ -23,6 +24,11 @@ import { setUser as setLoggedUser, setSessionEnd } from "@/state/slices/auth";
 import ImagePreviewer from "@/components/images/ImagePreviewer";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  MdOutlineVerified,
+  MdOutlineVerifiedUser,
+  MdVerified,
+} from "react-icons/md";
 
 const UserHeader = ({ user, setUser }) => {
   const dispatch = useDispatch();
@@ -49,9 +55,15 @@ const UserHeader = ({ user, setUser }) => {
   const UserNameAndWallet = () => {
     return (
       <Box pt={(1 * imageSize) / 2.5 + "px"}>
-        <Text fontWeight={"bold"} fontSize={"2xl"} lineHeight={1}>
-          @{user?.username}
-        </Text>
+        <HStack spacing={"1"}>
+          <Text fontWeight={"bold"} fontSize={"2xl"} lineHeight={1}>
+            @{user?.username}
+          </Text>
+          {user?.isVerified && (
+            <Icon as={MdVerified} fontSize={"2xl"} color={"primary.400"} />
+          )}
+        </HStack>
+
         <Flex alignItems={"center"}>
           {!!user?.walletAddress && (
             <Web3Address address={user?.walletAddress} />
@@ -123,7 +135,10 @@ const UserHeader = ({ user, setUser }) => {
                 ratio={1 / 1}
                 width={imageSize + "px"}
                 border={"1px solid"}
-                borderColor={"whiteAlpha.600"}
+                backdropFilter={"auto"}
+                backdropBlur={"sm"}
+                borderColor={"whiteAlpha.400"}
+                bgColor={"#ffffff10"}
                 borderRadius={"10%"}
                 overflow={"hidden"}
               >

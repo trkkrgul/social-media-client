@@ -190,7 +190,7 @@ const CreateProfileModal = () => {
               />
               <Input
                 type="file"
-                accept="image/*"
+                accept="image/gif, image/jpeg, image/png, image/jpg"
                 ref={coverPhotoRef}
                 hidden
                 onChange={(e) =>
@@ -235,7 +235,7 @@ const CreateProfileModal = () => {
               />
               <Input
                 type="file"
-                accept="image/*"
+                accept="image/gif, image/jpeg, image/png, image/jpg"
                 ref={profilePhotoRef}
                 hidden
                 onChange={(e) =>

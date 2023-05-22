@@ -1,6 +1,7 @@
 import LoginStepper from "@/components/auth/LoginStepper";
 import PostWidget from "@/components/post/PostWidget";
 import UserHeader from "@/components/profile/UserHeader";
+import { setUser } from "@/state/slices/auth";
 import { setProfilePosts } from "@/state/slices/post";
 
 import PageLayout from "@/views/Layout";
@@ -27,16 +28,29 @@ const Profile = () => {
   }, [setCount]);
 
   useEffect(() => {
-    axios
-      .get(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/wallet/${user.walletAddress}`
-      )
-      .then((res) => dispatch(setProfilePosts(res.data)))
-      .catch((err) => {
-        console.log(err);
-        dispatch(setProfilePosts([]));
-      });
-  }, [user]);
+    if (user?.isProfileCreated) {
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/wallet/${user?.walletAddress}`
+        )
+        .then((res) => {
+          dispatch(setUser(res.data));
+        })
+        .catch((err) => {
+          console.log(err);
+          dispatch(setUser(null));
+        });
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/wallet/${user?.walletAddress}`
+        )
+        .then((res) => dispatch(setProfilePosts(res.data)))
+        .catch((err) => {
+          console.log(err);
+          dispatch(setProfilePosts([]));
+        });
+    }
+  }, [user?.walletAddress]);
 
   if (!user || !user.isProfileCreated)
     return (

@@ -341,7 +341,7 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
                           <Input
                             ref={uploadedImagesRef}
                             type="file"
-                            accept="image/png image/jpeg image/jpg"
+                            accept="image/gif, image/jpeg, image/png, image/jpg"
                             multiple
                             hidden
                             onChange={(e) => {
