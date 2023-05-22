@@ -1,7 +1,6 @@
 import coverPlaceholder from "@/assets/cover-placeholder.png";
 import userPlaceholder from "@/assets/user-placeholder.png";
 import { setSessionEnd, setUser } from "@/state/slices/auth";
-import { connectFirebase } from "@/utils/firebase";
 import {
   AspectRatio,
   Box,
@@ -10,32 +9,21 @@ import {
   IconButton,
   Input,
   useColorMode,
-  useMediaQuery
+  useMediaQuery,
 } from "@chakra-ui/react";
-import {
-  Field,
-  Form,
-  FormLayout,
-  SubmitButton
-} from "@saas-ui/forms";
+import { Field, Form, FormLayout, SubmitButton } from "@saas-ui/forms";
 import { yupResolver } from "@saas-ui/forms/yup";
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader
-} from "@saas-ui/react";
+import { Card, CardBody, CardFooter, CardHeader } from "@saas-ui/react";
 import { Web3Address } from "@saas-ui/web3";
 import { Image } from "antd";
 import axios from "axios";
-import { ref, uploadBytes } from "firebase/storage";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { MdEdit } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { v4 } from "uuid";
 import * as Yup from "yup";
-const EditProfileModal = ({user}) => {
+const EditProfileModal = ({ user }) => {
   const [photos, setPhotos] = useState({
     coverPhoto: "",
     profilePhoto: "",
@@ -60,13 +48,16 @@ const EditProfileModal = ({user}) => {
         "username",
         "Username is already taken",
         async function validateValue(value) {
-          if(value === user.username) return true;
+          if (value === user.username) return true;
           try {
             let testResult = true;
             await axios
-              .post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/auth/checkUsername`, {
-                username: value,
-              })
+              .post(
+                `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/auth/checkUsername`,
+                {
+                  username: value,
+                }
+              )
               .then((res) => {
                 if (res.status === 200) {
                   testResult = res.data.message;
@@ -120,33 +111,6 @@ const EditProfileModal = ({user}) => {
         }
       ),
   });
-
-  const imageLinkGenerator = async (image) => {
-    let url = "";
-    try {
-      const firebaseStorage = await connectFirebase();
-      if (!image) return false;
-      const storageRef = ref(
-        firebaseStorage,
-        `${image.type.split("/")[0]}s/${
-          v4() + String(image.name).replace(/ /g, "_")
-        }` 
-      );
-      await uploadBytes(storageRef, image).then(async (snapshot) => {
-        const fullpath = snapshot.metadata.name;
-        const name =
-          fullpath.slice(0, fullpath.lastIndexOf(".")) +
-          "_800x800" +
-          fullpath.slice(fullpath.lastIndexOf("."));
-        url =
-          "https://storage.googleapis.com/sakaivault-images.appspot.com/images/thumb/" +
-          name;
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return url;
-  };
 
   return (
     <>
@@ -209,7 +173,8 @@ const EditProfileModal = ({user}) => {
                 ref={coverPhotoRef}
                 hidden
                 onChange={(e) =>
-                  e.target.files[0] && setPhotos((prev) => ({
+                  e.target.files[0] &&
+                  setPhotos((prev) => ({
                     ...prev,
                     coverPhoto: e.target.files[0],
                   }))
@@ -242,8 +207,8 @@ const EditProfileModal = ({user}) => {
                 }}
                 src={
                   !!photos.profilePhoto
-                    ? URL.createObjectURL(photos.profilePhoto) :
-                    user.profilePicturePath || userPlaceholder.src
+                    ? URL.createObjectURL(photos.profilePhoto)
+                    : user.profilePicturePath || userPlaceholder.src
                 }
                 preview={false}
                 alt="img"
@@ -254,7 +219,8 @@ const EditProfileModal = ({user}) => {
                 ref={profilePhotoRef}
                 hidden
                 onChange={(e) =>
-                  e.target.files[0] && setPhotos((prev) => ({
+                  e.target.files[0] &&
+                  setPhotos((prev) => ({
                     ...prev,
                     profilePhoto: e.target.files[0],
                   }))
@@ -282,7 +248,7 @@ const EditProfileModal = ({user}) => {
               biography,
               telegramId,
               discordId,
-              twitterId
+              twitterId,
             }}
             resolver={yupResolver(schema)}
             onSubmit={async (values, e) => {
@@ -293,20 +259,27 @@ const EditProfileModal = ({user}) => {
                 // const coverPicturePath = await imageLinkGenerator(
                 //   photos.coverPhoto
                 // );
-          
+
                 const formData = new FormData();
-                formData.append('images', photos.profilePhoto)
-                formData.append('images', photos.coverPhoto)
-                formData.append('username', username)
-                formData.append('biography', biography)
-                formData.append('telegramId', telegramId)
-                formData.append('discordId', discordId)
-                formData.append('twitterId', twitterId)
-                formData.append('controller', JSON.stringify({cover: !!photos.coverPhoto, profile: !!photos.profilePhoto}))
-                
+                formData.append("images", photos.profilePhoto);
+                formData.append("images", photos.coverPhoto);
+                formData.append("username", username);
+                formData.append("biography", biography);
+                formData.append("telegramId", telegramId);
+                formData.append("discordId", discordId);
+                formData.append("twitterId", twitterId);
+                formData.append(
+                  "controller",
+                  JSON.stringify({
+                    cover: !!photos.coverPhoto,
+                    profile: !!photos.profilePhoto,
+                  })
+                );
+
                 await axios
                   .post(
-                    `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/updateProfile`,formData,
+                    `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/updateProfile`,
+                    formData,
                     {
                       headers: {
                         "Content-Type": "multipart/form-data",
@@ -319,23 +292,22 @@ const EditProfileModal = ({user}) => {
                     if (res.status === 200) {
                       dispatch(setUser(res.data));
                       router.push("/");
-                      console.log('res-200',res.data)
+                      console.log("res-200", res.data);
                     }
                   });
                 e.target.reset();
               } catch (e) {
                 dispatch(setSessionEnd(true));
-                console.log('hata',e)
+                console.log("hata", e);
               }
             }}
-            
           >
             <FormLayout>
               <Field
                 name="username"
                 label="Username*"
                 type="text"
-                help="Choose an username"                
+                help="Choose an username"
               />
               <Field
                 name="biography"
@@ -349,9 +321,7 @@ const EditProfileModal = ({user}) => {
                 <Field name="discordId" label="Discord" type="text" />
                 <Field name="twitterId" label="Twitter" type="text" />
               </FormLayout>
-              <SubmitButton  color="black">
-                Edit Profile
-              </SubmitButton>
+              <SubmitButton color="black">Edit Profile</SubmitButton>
             </FormLayout>
           </Form>
         </CardBody>

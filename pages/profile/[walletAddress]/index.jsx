@@ -246,10 +246,4 @@ const UserProfile = () => {
   );
 };
 
-// UserProfile.getInitialProps = async (ctx) => {
-//   const { query } = ctx;
-//   const { walletAddress } = query;
-//   return { walletAddress };
-// };
-
 export default UserProfile;

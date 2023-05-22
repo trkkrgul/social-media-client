@@ -43,8 +43,6 @@ import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import { yupResolver } from "@saas-ui/forms/yup";
 import { Web3Address } from "@saas-ui/web3";
-import { connectFirebase } from "@/utils/firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import userPlaceholder from "@/assets/user-placeholder.png";
 import coverPlaceholder from "@/assets/cover-placeholder.png";
@@ -75,9 +73,12 @@ const CreateProfileModal = () => {
           try {
             let testResult = true;
             await axios
-              .post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}api/auth/checkUsername`, {
-                username: value,
-              })
+              .post(
+                `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/auth/checkUsername`,
+                {
+                  username: value,
+                }
+              )
               .then((res) => {
                 if (res.status === 200) {
                   testResult = res.data.message;
@@ -131,33 +132,6 @@ const CreateProfileModal = () => {
         }
       ),
   });
-
-  const imageLinkGenerator = async (image) => {
-    let url = "";
-    try {
-      const firebaseStorage = await connectFirebase();
-      if (!image) return false;
-      const storageRef = ref(
-        firebaseStorage,
-        `${image.type.split("/")[0]}s/${
-          v4() + String(image.name).replace(/ /g, "_")
-        }`
-      );
-      await uploadBytes(storageRef, image).then(async (snapshot) => {
-        const fullpath = snapshot.metadata.name;
-        const name =
-          fullpath.slice(0, fullpath.lastIndexOf(".")) +
-          "_800x800" +
-          fullpath.slice(fullpath.lastIndexOf("."));
-        url =
-          "https://storage.googleapis.com/sakaivault-images.appspot.com/images/thumb/" +
-          name;
-      });
-    } catch (e) {
-      console.log(e);
-    }
-    return url;
-  };
 
   return (
     <>
@@ -300,20 +274,23 @@ const CreateProfileModal = () => {
                 // );
 
                 const formData = new FormData();
-                formData.append('images', photos.profilePhoto)
-                formData.append('images', photos.coverPhoto)
-                formData.append('username', values.username)
-                formData.append('biography', values.biography)
-                formData.append('telegramId', values.telegramId)
-                formData.append('discordId', values.discordId)
-                formData.append('twitterId', values.twitterId)
-                !!photos.coverPhoto && formData.append('cover', !!photos.coverPhoto);
-                !!photos.profilePhoto && formData.append('profile', !!photos.profilePhoto);
+                formData.append("images", photos.profilePhoto);
+                formData.append("images", photos.coverPhoto);
+                formData.append("username", values.username);
+                formData.append("biography", values.biography);
+                formData.append("telegramId", values.telegramId);
+                formData.append("discordId", values.discordId);
+                formData.append("twitterId", values.twitterId);
+                !!photos.coverPhoto &&
+                  formData.append("cover", !!photos.coverPhoto);
+                !!photos.profilePhoto &&
+                  formData.append("profile", !!photos.profilePhoto);
                 // formData.append('photoCheck', JSON.stringify({cover: !!photos.coverPhoto, profile: !!photos.profilePhoto}))
                 // console.log(JSON.stringify({cover: !!photos.coverPhoto, profile: !!photos.profilePhoto}))
                 await axios
                   .post(
-                    `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/createProfile`, formData,
+                    `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/user/createProfile`,
+                    formData,
                     {
                       headers: {
                         "Content-Type": "multipart/form-data",
@@ -324,7 +301,7 @@ const CreateProfileModal = () => {
 
                   .then((res) => {
                     if (res.status === 200) {
-                      console.log(res.data)
+                      console.log(res.data);
                       dispatch(setUser(res.data));
                       router.push("/");
                     }

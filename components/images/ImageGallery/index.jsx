@@ -36,7 +36,6 @@ const ImageGallery = ({ images }) => {
     // setIsPreviewOpen(true);
 
     onOpen();
-
   };
 
   const closePreview = (event) => {
@@ -106,33 +105,31 @@ const ImageGallery = ({ images }) => {
             />
           ))}{" "}
         </Flex>
-        
-   
-  
-          <Modal isOpen={isOpen} onClose={onClose} size="full">
-            <ModalOverlay />
-            <ModalContent>
-             <Box
-         backdropFilter={"auto"}
-         backdropBlur={"sm"}
-         onClick={closePreview}
-         position={"fixed"}
-         zIndex={"overlay"}
-         top={"0"}
-         left={"0"}
-         width={"100vw"}
-         height={"100vh"}
-         backgroundColor={" rgba(0, 0, 0, 0.7)"}
-         display={"flex"}
-         alignItems={"center"}
-         justifyContent={"center"}
-       >
+
+        <Modal isOpen={isOpen} onClose={onClose} size="full">
+          <ModalOverlay />
+          <ModalContent>
+            <Box
+              backdropFilter={"auto"}
+              backdropBlur={"sm"}
+              onClick={closePreview}
+              position={"fixed"}
+              zIndex={"overlay"}
+              top={"0"}
+              left={"0"}
+              width={"100vw"}
+              height={"100vh"}
+              backgroundColor={" rgba(0, 0, 0, 0.7)"}
+              display={"flex"}
+              alignItems={"center"}
+              justifyContent={"center"}
+            >
               <Card
                 onClick={(event) => event.stopPropagation()}
                 bg={colorMode === "dark" ? "gray.800" : "whiteAlpha.800"}
                 border={"1px solid"}
                 borderColor={"whiteAlpha.300"}
-                w={['90%', '90%', '900px']}
+                w={["90%", "90%", "900px"]}
                 className="essek"
               >
                 <CardHeader>
@@ -167,10 +164,10 @@ const ImageGallery = ({ images }) => {
                         height={450}
                         alt={`Image ${previewIndex + 1}`}
                         style={{
-                          objectFit: 'contain',
+                          objectFit: "contain",
                           borderRadius: 10,
-                          maxHeight: '450px',
-                          maxWidth: '80%',
+                          maxHeight: "450px",
+                          maxWidth: "80%",
                         }}
                       />
                     )}
@@ -217,10 +214,9 @@ const ImageGallery = ({ images }) => {
                   </Flex>
                 </CardFooter>
               </Card>
-              </Box>
-            </ModalContent>
-          </Modal>
-        
+            </Box>
+          </ModalContent>
+        </Modal>
       </div>
     </Suspense>
   );
