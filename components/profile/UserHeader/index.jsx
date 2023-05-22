@@ -135,6 +135,8 @@ const UserHeader = ({ user, setUser }) => {
                   }
                   width={400}
                   height={400}
+                  placeholder="blur"
+                  blurDataURL="/icons/user-placeholder.png"
                   alt="profile"
                   style={{
                     objectFit: "cover",
@@ -153,9 +155,7 @@ const UserHeader = ({ user, setUser }) => {
             {isOwnProfile && (
               <Flex paddingBottom={isMobile ? "0" : imageSize / 4 + "px"}>
                 <Button size={"lg"} variant={"solid"}>
-                  <Link href='/profile/edit'>
-                    Edit Profile
-                  </Link>
+                  <Link href="/profile/edit">Edit Profile</Link>
                 </Button>
               </Flex>
             )}
