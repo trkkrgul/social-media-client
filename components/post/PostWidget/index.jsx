@@ -243,8 +243,8 @@ const PostWidget = ({ post, setState, postState }) => {
   const [isCommentShown, toggleCommentShown] = useBoolean(false);
   const user = useSelector((state) => state.auth.user);
   const [isRepliesShown, toggleRepliesShown] = useBoolean(false);
-  const [likeCount, setLikeCount] = useState(post.likers.length);
-  const [dislikeCount, setDislikeCount] = useState(post.dislikers.length);
+  const [likeCount, setLikeCount] = useState(post?.likers?.length);
+  const [dislikeCount, setDislikeCount] = useState(post?.dislikers?.length);
   const [isLiked, setLiked] = useState(
     post.likers.filter((e) => e.user?._id === user?._id).length !== 0
   );
