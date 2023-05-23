@@ -59,24 +59,27 @@ export default function Home() {
         console.log(err);
         dispatch(setFeedPosts([]));
       });
-    axios
-      .post(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/followingPosts`,
-        {
-          followings: user.followings,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((res) => dispatch(setFollowingPosts(res.data)))
-      .catch((err) => {
-        console.log(err);
-        dispatch(setFollowingPosts([]));
-      });
+    {
+      token &&
+        axios
+          .post(
+            `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/followingPosts`,
+            {
+              followings: user.followings,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          )
+          .then((res) => dispatch(setFollowingPosts(res.data)))
+          .catch((err) => {
+            console.log(err);
+            dispatch(setFollowingPosts([]));
+          });
+    }
   }, [tab]);
   useEffect(() => {
     const timeout = loadMore();
