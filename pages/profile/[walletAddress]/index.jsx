@@ -61,7 +61,7 @@ const UserProfile = () => {
           <>
             <UserHeader user={user} setUser={setUser} />
 
-            {!!user && profilePosts.length > 0 ? (
+            {!!profilePosts && !!user && profilePosts.length > 0 ? (
               <Virtuoso
                 className="gradient-feed"
                 useWindowScroll

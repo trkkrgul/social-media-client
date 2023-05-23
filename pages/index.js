@@ -130,7 +130,7 @@ export default function Home() {
             <Text>Followings</Text>
           </Flex>
         </Flex>
-        {tab === "feed" ? (
+        {feed && tab === "feed" && (
           <Virtuoso
             className="gradient-feed"
             useWindowScroll
@@ -149,7 +149,8 @@ export default function Home() {
               );
             }}
           />
-        ) : (
+        )}
+        {followingPosts && tab === "followings" && (
           <Virtuoso
             className="gradient-feed"
             useWindowScroll

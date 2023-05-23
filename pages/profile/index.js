@@ -67,7 +67,7 @@ const Profile = () => {
       <PageLayout title={"Your Profile"}>
         <UserHeader user={user} />
 
-        {!!user && profilePosts.length > 0 ? (
+        {!!user && profilePosts && profilePosts.length > 0 ? (
           <Virtuoso
             className="gradient-feed"
             useWindowScroll
