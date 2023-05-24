@@ -189,6 +189,7 @@ const CreateProfileModal = () => {
                 borderRadius={"50%"}
               />
               <Input
+                name="cover"
                 type="file"
                 accept="image/gif, image/jpeg, image/png, image/jpg"
                 ref={coverPhotoRef}
@@ -234,6 +235,7 @@ const CreateProfileModal = () => {
                 alt="img"
               />
               <Input
+                name='profile'
                 type="file"
                 accept="image/gif, image/jpeg, image/png, image/jpg"
                 ref={profilePhotoRef}
@@ -274,17 +276,14 @@ const CreateProfileModal = () => {
                 // );
 
                 const formData = new FormData();
-                formData.append("images", photos.profilePhoto);
-                formData.append("images", photos.coverPhoto);
+                formData.append("profile", photos.profilePhoto);
+                formData.append("cover", photos.coverPhoto);
                 formData.append("username", values.username);
                 formData.append("biography", values.biography);
                 formData.append("telegramId", values.telegramId);
                 formData.append("discordId", values.discordId);
                 formData.append("twitterId", values.twitterId);
-                !!photos.coverPhoto &&
-                  formData.append("cover", !!photos.coverPhoto);
-                !!photos.profilePhoto &&
-                  formData.append("profile", !!photos.profilePhoto);
+
                 // formData.append('photoCheck', JSON.stringify({cover: !!photos.coverPhoto, profile: !!photos.profilePhoto}))
                 // console.log(JSON.stringify({cover: !!photos.coverPhoto, profile: !!photos.profilePhoto}))
                 await axios

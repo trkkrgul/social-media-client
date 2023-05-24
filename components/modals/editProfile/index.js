@@ -168,6 +168,7 @@ const EditProfileModal = ({ user }) => {
                 borderRadius={"50%"}
               />
               <Input
+                name="cover"
                 type="file"
                 accept="image/gif, image/jpeg, image/png, image/jpg"
                 ref={coverPhotoRef}
@@ -214,6 +215,7 @@ const EditProfileModal = ({ user }) => {
                 alt="img"
               />
               <Input
+                name="profile"
                 type="file"
                 accept="image/gif, image/jpeg, image/png, image/jpg"
                 ref={profilePhotoRef}
@@ -261,20 +263,13 @@ const EditProfileModal = ({ user }) => {
                 // );
 
                 const formData = new FormData();
-                formData.append("images", photos.profilePhoto);
-                formData.append("images", photos.coverPhoto);
+                formData.append("profile", photos.profilePhoto);
+                formData.append("cover", photos.coverPhoto);
                 formData.append("username", values.username);
                 formData.append("biography", values.biography);
                 formData.append("telegramId", values.telegramId);
                 formData.append("discordId", values.discordId);
                 formData.append("twitterId", values.twitterId);
-                formData.append(
-                  "controller",
-                  JSON.stringify({
-                    cover: !!photos.coverPhoto,
-                    profile: !!photos.profilePhoto,
-                  })
-                );
 
                 await axios
                   .post(

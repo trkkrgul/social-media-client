@@ -203,7 +203,7 @@ const LoginStepper = () => {
             !!nonce &&
             !!token &&
             !!signature &&
-            !user.isProfileCreated ? (
+            !user?.isProfileCreated ? (
               <CreateProfileModal />
             ) : (
               <>
