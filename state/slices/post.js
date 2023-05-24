@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   feed: false,
-  profilePosts: [{ wallet: "231", posts: [] }],
+  profilePosts: false,
   followingPosts: false,
 };
 
