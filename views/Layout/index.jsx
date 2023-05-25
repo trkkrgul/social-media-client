@@ -76,7 +76,7 @@ import OnlineUsers from "@/components/onlineUsers";
 const PageLayout = ({ children, title }) => {
   const user = useSelector((state) => state.auth.user);
   const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)", {
-    ssr: true,
+    ssr: false,
     fallback: true,
   });
   const { colorMode, toggleColorMode } = useColorMode();
