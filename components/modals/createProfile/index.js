@@ -165,10 +165,11 @@ const CreateProfileModal = () => {
               }
             >
               <Image
+                width={"100%"}
                 style={{
                   objectFit: "cover",
-                  height: "100%",
                   width: "100%",
+                  height: "auto",
                 }}
                 src={
                   !!photos.coverPhoto
@@ -235,7 +236,7 @@ const CreateProfileModal = () => {
                 alt="img"
               />
               <Input
-                name='profile'
+                name="profile"
                 type="file"
                 accept="image/gif, image/jpeg, image/png, image/jpg"
                 ref={profilePhotoRef}

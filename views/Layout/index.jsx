@@ -71,6 +71,7 @@ import lightLogo from "@/assets/logo-light.svg";
 import lightIcon from "@/assets/icon-light.svg";
 import darkIcon from "@/assets/icon-dark.svg";
 import icon from "@/assets/icon.svg";
+import OnlineUsers from "@/components/onlineUsers";
 const PageLayout = ({ children, title }) => {
   const user = useSelector((state) => state.auth.user);
   const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)", {
@@ -90,8 +91,6 @@ const PageLayout = ({ children, title }) => {
           // borderLeft={"1px"}
           minHeight={"100vh"}
           paddingBottom={"10rem"}
-          borderRight={"1px"}
-          borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
         >
           <Box
             width={"100%"}
@@ -126,7 +125,8 @@ const PageLayout = ({ children, title }) => {
             <Divider />
           </Box>
           {children}
-        </Box>{" "}
+        </Box>
+        {isLargerThan1000 && <RightNav />}
       </Flex>
       {!isLargerThan1000 && <MobileNav />}
     </>
@@ -146,7 +146,7 @@ const UserMenuWidget = () => {
       <HStack justifyContent={"space-between"} w={"100%"} p={2}>
         <HStack>
           <Image
-            src={user.profilePicturePath}
+            src={user?.profilePicturePath}
             height={36}
             width={36}
             style={{
@@ -159,7 +159,7 @@ const UserMenuWidget = () => {
           />
           <VStack align={"left"}>
             <Text lineHeight={"1"} fontWeight={"700"}>
-              @{user.username}
+              @{user?.username}
             </Text>
             <Text
               width={"120px"}
@@ -326,7 +326,8 @@ const DesktopNav = () => {
               </Button>
             )}
           </Box>
-          <Spacer />
+          <Spacer flexBasis={"100%"} /> <Divider />
+          <Divider />
           {!!user && !!user.isProfileCreated && <UserMenuWidget />}
           <Divider />
           <HStack justifyContent={"space-between"} w={"100%"} p={2}>
@@ -573,6 +574,30 @@ const MobileNav = () => {
         </Flex>
       </Flex>
     </Suspense>
+  );
+};
+
+const RightNav = () => {
+  const { colorMode } = useColorMode();
+  return (
+    <Box
+      zIndex={"banner"}
+      borderLeft={"1px"}
+      borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
+    >
+      <Flex
+        borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
+        width={"300px"}
+        className="sticky-div"
+        flexDirection={"column"}
+        alignItems={"center"}
+        p={1}
+      >
+        <Box width={"100%"} p={2}>
+          <OnlineUsers />
+        </Box>
+      </Flex>
+    </Box>
   );
 };
 

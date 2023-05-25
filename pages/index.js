@@ -60,7 +60,8 @@ export default function Home() {
         dispatch(setFeedPosts([]));
       });
     {
-      token &&
+      !!token &&
+        !!user &&
         axios
           .post(
             `${process.env.NEXT_PUBLIC_API_ENDPOINT}api/post/followingPosts`,

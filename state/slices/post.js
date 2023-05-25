@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  feed: false,
-  profilePosts: false,
-  followingPosts: false,
+  feed: [],
+  profilePosts: [],
+  followingPosts: [],
 };
 
 export const postSlice = createSlice({
