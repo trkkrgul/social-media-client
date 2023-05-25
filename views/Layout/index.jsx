@@ -19,6 +19,7 @@ import {
 } from "@chakra-ui/react";
 import {
   Button,
+  Card,
   MenuDialog,
   MenuDialogList,
   MenuItem,
@@ -88,7 +89,8 @@ const PageLayout = ({ children, title }) => {
         <Box
           maxW={"1100px"}
           width="100%"
-          // borderLeft={"1px"}
+          borderRight={"1px"}
+          borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
           minHeight={"100vh"}
           paddingBottom={"10rem"}
         >
@@ -126,7 +128,6 @@ const PageLayout = ({ children, title }) => {
           </Box>
           {children}
         </Box>
-        {isLargerThan1000 && <RightNav />}
       </Flex>
       {!isLargerThan1000 && <MobileNav />}
     </>
@@ -146,7 +147,7 @@ const UserMenuWidget = () => {
       <HStack justifyContent={"space-between"} w={"100%"} p={2}>
         <HStack>
           <Image
-            src={user?.profilePicturePath}
+            src={user?.profilePicturePath || "/icons/user-placeholder.png"}
             height={36}
             width={36}
             style={{
@@ -254,24 +255,23 @@ const DesktopNav = () => {
           alignItems={"center"}
           p={1}
         >
-          <Box w={"100%"}>
-            <VStack my={4} align={"right"}>
-              <Link href={"/"}>
-                <HStack>
-                  <Image
-                    src={colorMode === "dark" ? darkLogo : lightLogo}
-                    height={48}
-                    unoptimized
-                    alt="icon"
-                    style={{
-                      height: "48px",
-                      objectFit: "contain",
-                      minWidth: "200px",
-                    }}
-                  />
-                </HStack>
-              </Link>
-            </VStack>
+          <Link href={"/"}>
+            <HStack>
+              <Image
+                src={colorMode === "dark" ? darkLogo : lightLogo}
+                height={48}
+                unoptimized
+                alt="icon"
+                style={{
+                  height: "48px",
+                  objectFit: "contain",
+                  minWidth: "200px",
+                }}
+              />
+            </HStack>
+          </Link>
+          <Card my={2} py={4} w={"100%"} bg={"transparent"}>
+            <VStack></VStack>
             <Link href={"/"} prefetch={false}>
               <Button
                 size={"lg"}
@@ -308,13 +308,14 @@ const DesktopNav = () => {
                 height={"36px"}
                 width={"100%"}
                 variant={"ghost"}
+                iconSpacing={2}
                 leftIcon={
                   <Image
                     src={colorMode === "dark" ? darkIcon : lightIcon}
                     style={{
                       objectFit: "contain",
-                      width: "28px",
-                      height: "28px",
+                      width: "14px",
+                      height: "14px",
                     }}
                   />
                 }
@@ -325,56 +326,62 @@ const DesktopNav = () => {
                 Create Post
               </Button>
             )}
-          </Box>
-          <Spacer flexBasis={"100%"} /> <Divider />
-          <Divider />
-          {!!user && !!user.isProfileCreated && <UserMenuWidget />}
-          <Divider />
-          <HStack justifyContent={"space-between"} w={"100%"} p={2}>
-            <Text>Theme</Text>
-            <Switch
-              colorScheme="primary"
-              size="lg"
-              onChange={toggleColorMode}
-              isChecked={colorMode === "dark"}
-              sx={{
-                ".chakra-switch__thumb": {
-                  background:
-                    colorMode === "light"
-                      ? "url(icons/sun.svg) center center, #fff !important"
-                      : "url(icons/moon.svg) center center, #000 !important",
-                  backgroundSize: "contain,cover !important",
-                },
-              }}
-            />
-          </HStack>
-          <Divider />
-          <HStack justifyContent={"space-between"} w={"100%"} p={2}>
-            <HStack>
-              <Text as="em" fontSize={"sm"}>
-                Powered by
-              </Text>
-              <Image
-                src={
-                  colorMode === "dark"
-                    ? "/sakaivault-dark.svg"
-                    : "/sakaivault-light.svg"
-                }
-                width={100}
-                height={50}
-                alt="sakaivault"
-                style={{ objectFit: "contain", height: "50px", width: "100px" }}
+          </Card>
+          <Spacer flexBasis={"100%"} />
+          <OnlineUsers />
+          <Card my={2} w={"100%"} bg={"transparent"}>
+            {!!user && !!user.isProfileCreated && <UserMenuWidget />}
+            <Divider />
+            <HStack justifyContent={"space-between"} w={"100%"} p={2}>
+              <Text>Theme</Text>
+              <Switch
+                colorScheme="primary"
+                size="lg"
+                onChange={toggleColorMode}
+                isChecked={colorMode === "dark"}
+                sx={{
+                  ".chakra-switch__thumb": {
+                    background:
+                      colorMode === "light"
+                        ? "url(icons/sun.svg) center center, #fff !important"
+                        : "url(icons/moon.svg) center center, #000 !important",
+                    backgroundSize: "contain,cover !important",
+                  },
+                }}
               />
             </HStack>
-            <HStack>
-              <Link href={"https://twitter.com/sakaivault"} target="_blank">
-                <IconButton icon={<FaTwitter />} />
-              </Link>
-              <Link href={"https://t.me/sakaivault"} target="_blank">
-                <IconButton icon={<FaTelegramPlane />} />
-              </Link>
+            <Divider />
+            <HStack justifyContent={"space-between"} w={"100%"} p={2}>
+              <HStack>
+                <Text as="em" fontSize={"sm"}>
+                  Powered by
+                </Text>
+                <Image
+                  src={
+                    colorMode === "dark"
+                      ? "/sakaivault-dark.svg"
+                      : "/sakaivault-light.svg"
+                  }
+                  width={100}
+                  height={50}
+                  alt="sakaivault"
+                  style={{
+                    objectFit: "contain",
+                    height: "50px",
+                    width: "100px",
+                  }}
+                />
+              </HStack>
+              <HStack>
+                <Link href={"https://twitter.com/sakaivault"} target="_blank">
+                  <IconButton icon={<FaTwitter />} />
+                </Link>
+                <Link href={"https://t.me/sakaivault"} target="_blank">
+                  <IconButton icon={<FaTelegramPlane />} />
+                </Link>
+              </HStack>
             </HStack>
-          </HStack>
+          </Card>
         </Flex>
       </Box>
     </Suspense>
@@ -574,30 +581,6 @@ const MobileNav = () => {
         </Flex>
       </Flex>
     </Suspense>
-  );
-};
-
-const RightNav = () => {
-  const { colorMode } = useColorMode();
-  return (
-    <Box
-      zIndex={"banner"}
-      borderLeft={"1px"}
-      borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
-    >
-      <Flex
-        borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
-        width={"300px"}
-        className="sticky-div"
-        flexDirection={"column"}
-        alignItems={"center"}
-        p={1}
-      >
-        <Box width={"100%"} p={2}>
-          <OnlineUsers />
-        </Box>
-      </Flex>
-    </Box>
   );
 };
 

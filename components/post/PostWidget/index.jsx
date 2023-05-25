@@ -388,7 +388,7 @@ const PostWidget = ({ post, setState, postState }) => {
                         objectFit: "cover",
                         borderRadius: "50%",
                       }}
-                      src={`${user.profilePicturePath}`}
+                      src={user.profilePicturePath}
                       alt={`${user.username}'s profile picture`}
                     />
                     <HStack spacing={"1"}>
@@ -475,7 +475,7 @@ const RepliesLayout = ({ reply }) => {
                 borderRadius: "50%",
               }}
               alt="profile picture"
-              src={`${reply.user.profilePicturePath}`}
+              src={reply.user.profilePicturePath}
             />
             <HStack spacing={"1"}>
               <Text>{`@${reply.user.username}`}</Text>
@@ -561,7 +561,7 @@ const CommentLayout = ({ comment, handleReply, user, token, post }) => {
                   flexGrow: 1,
                   borderRadius: "50%",
                 }}
-                src={`${comment.user.profilePicturePath}`}
+                src={comment.user.profilePicturePath}
                 alt="profile picture"
               />
               <HStack spacing={"1"}>
@@ -634,7 +634,7 @@ const CommentLayout = ({ comment, handleReply, user, token, post }) => {
                         borderRadius: "50%",
                         flexGrow: 1,
                       }}
-                      src={`${user.profilePicturePath}`}
+                      src={user.profilePicturePath}
                       alt="profile picture"
                     />
                     <HStack spacing={"1"}>

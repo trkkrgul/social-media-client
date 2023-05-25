@@ -47,11 +47,11 @@ const PostHeader = ({ post, handleRemove }) => {
                   flexGrow: 1,
                   borderRadius: "50%",
                 }}
-                src={`${
+                src={
                   !!post.user.profilePicturePath
                     ? post.user.profilePicturePath
                     : "/icons/user-placeholder.png"
-                }`}
+                }
                 alt="profile picture"
               />
               <HStack spacing={"1"}>
