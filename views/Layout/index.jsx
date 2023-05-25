@@ -473,7 +473,7 @@ const MobileNav = () => {
                     borderRadius={"lg"}
                     overflow={"hidden"}
                     bg={
-                      colorMode === "dark" ? "blackAlpha.500" : "whiteAlpha.500"
+                      colorMode === "dark" ? "blackAlpha.700" : "whiteAlpha.700"
                     }
                     backdropFilter={"auto"}
                     backdropBlur={"md"}
