@@ -60,6 +60,7 @@ import {
 } from "react-icons/io5";
 import { ConnectKitButton } from "connectkit";
 import {
+  MdEdit,
   MdOutlineExplore,
   MdPerson,
   MdPerson2,
@@ -191,7 +192,12 @@ const UserMenuWidget = () => {
                 Profile
               </MenuItem>
               <Divider my={1} />
-              <MenuItem icon={<IoKey size={16} />}>Settings</MenuItem>
+              <MenuItem
+                onClick={() => router.push("/profile/edit")}
+                icon={<MdEdit size={16} />}
+              >
+                Edit
+              </MenuItem>
               <MenuItem
                 icon={<IoLogOut size={16} />}
                 onClick={handleSignout}
