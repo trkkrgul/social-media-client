@@ -8,6 +8,10 @@ import {
   MenuButton,
   MenuGroup,
   MenuList,
+  Popover,
+  PopoverBody,
+  PopoverContent,
+  PopoverTrigger,
   Spacer,
   Switch,
   Text,
@@ -455,12 +459,25 @@ const MobileNav = () => {
           </Link>
           {!!user && !!user.isProfileCreated && (
             <>
-              <IconButton
-                isDisabled
-                aria-label="Explore"
-                icon={<MdOutlineExplore size={24} />}
-                variant="ghost"
-              />
+              <Popover>
+                <PopoverTrigger>
+                  <IconButton
+                    aria-label="Explore"
+                    icon={<MdOutlineExplore size={24} />}
+                    variant="ghost"
+                  />
+                </PopoverTrigger>
+                <PopoverContent bg={"transparent"} border={"none"}>
+                  <PopoverBody
+                    p={0}
+                    borderRadius={"lg"}
+                    overflow={"hidden"}
+                    bg={colorMode === "dark" ? "gray.800" : "white"}
+                  >
+                    <OnlineUsers />
+                  </PopoverBody>
+                </PopoverContent>
+              </Popover>
               <IconButton
                 onClick={() => setIsCreatingNewPost(true)}
                 aria-label="Add Post"

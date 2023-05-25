@@ -23,7 +23,7 @@ const OnlineUsers = () => {
   }, []);
 
   return (
-    <Card my={2} py={2} w={"100%"} bg={"transparent"}>
+    <Card py={2} w={"100%"} bg={"transparent"}>
       <CardHeader py={2}>
         <Text fontSize={"lg"} fontWeight={"bold"}>
           Online Users
