@@ -472,7 +472,11 @@ const MobileNav = () => {
                     p={0}
                     borderRadius={"lg"}
                     overflow={"hidden"}
-                    bg={colorMode === "dark" ? "gray.800" : "white"}
+                    bg={
+                      colorMode === "dark" ? "blackAlpha.500" : "whiteAlpha.500"
+                    }
+                    backdropFilter={"auto"}
+                    backdropBlur={"md"}
                   >
                     <OnlineUsers />
                   </PopoverBody>
