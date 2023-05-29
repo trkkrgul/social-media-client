@@ -104,7 +104,7 @@ const CreateStoryWrapper = ({ isOpen, onClose, onOpen }) => {
                   </AspectRatio>
                 )}
                 {type === "video" && (
-                  <AspectRatio ratio={9 / 16}>
+                  <AspectRatio ratio={9 / 16} maxH={"80vh"} minW={"300px"}>
                     <video src={storyReader} controls />
                   </AspectRatio>
                 )}
