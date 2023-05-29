@@ -146,16 +146,12 @@ const MyPostWidget = ({ setIsCreatingNewPost }) => {
     isProfileCreated && (
       <Box borderRadius={"lg"} w={"100%"}>
         <Card
-          borderRadius={isLargerThan800 ? "lg" : "none"}
-          marginY={isLargerThan800 ? "2" : "0"}
-          shadow={
-            isLargerThan800 ? (colorMode === "dark" ? "dark-lg" : "lg") : "none"
-          }
           border={"1px solid"}
           borderColor={colorMode === "dark" ? "gray.700" : "blackAlpha.200"}
           width="100%"
           variant={"outline"}
           overflow={"hidden"}
+          borderRadius={"0"}
         >
           <CardBody>
             <Flex gap={1} alignItems={"start"}>

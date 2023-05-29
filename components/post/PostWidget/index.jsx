@@ -243,33 +243,39 @@ const PostWidget = ({ post, setState, postState }) => {
   const [isCommentShown, toggleCommentShown] = useBoolean(false);
   const user = useSelector((state) => state.auth.user);
   const [isRepliesShown, toggleRepliesShown] = useBoolean(false);
-  const [likeCount, setLikeCount] = useState(post?.likers?.length);
-  const [dislikeCount, setDislikeCount] = useState(post?.dislikers?.length);
+  const [likeCount, setLikeCount] = useState(post?.likers?.length || 0);
+  const [dislikeCount, setDislikeCount] = useState(
+    post?.dislikers?.length || 0
+  );
   const [isLiked, setLiked] = useState(
-    post.likers.filter((e) => e.user?._id === user?._id).length !== 0
+    post?.likers?.filter((e) => e.user?._id === user?._id).length !== 0 || false
   );
   const [isDisliked, setDisliked] = useState(
-    post.dislikers.filter((e) => e.user?._id === user?._id).length !== 0
+    post?.dislikers?.filter((e) => e.user?._id === user?._id).length !== 0 ||
+      false
   );
   const [isLargerThan800] = useMediaQuery("(min-width: 800px)", {
     ssr: true,
     fallback: false, // return false on the server, and re-evaluate on the client side
   });
   useEffect(() => {
-    setLiked(post.likers.filter((e) => e.user._id === user?._id).length !== 0);
-    setDisliked(
-      post.dislikers.filter((e) => e.user._id === user?._id).length !== 0
+    setLiked(
+      post?.likers?.filter((e) => e.user._id === user?._id).length !== 0 ||
+        false
     );
-    setLikeCount(post.likers.length);
-    setDislikeCount(post.dislikers.length);
+    setDisliked(
+      post?.dislikers?.filter((e) => e.user._id === user?._id).length !== 0 ||
+        false
+    );
+    setLikeCount(post?.likers?.length || 0);
+    setDislikeCount(post?.dislikers?.length || 0);
   }, [post]);
   return (
     <Card
-      borderRadius={isLargerThan800 ? "lg" : "none"}
-      marginY={isLargerThan800 ? "2" : "0"}
-      shadow={
-        isLargerThan800 ? (colorMode === "dark" ? "dark-lg" : "lg") : "none"
-      }
+      borderRadius={"0"}
+      marginY={"-1px"}
+      border={"1px solid"}
+      borderBottom={isLargerThan800 ? "1px solid" : "none"}
       borderColor={colorMode === "dark" ? "whiteAlpha.50" : "blackAlpha.200"}
       width="100%"
       variant={"outline"}

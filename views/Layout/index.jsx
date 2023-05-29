@@ -92,9 +92,10 @@ const PageLayout = ({ children, title }) => {
       <Flex maxW={"1200px"} mx={"auto"} position={"relative"}>
         {isLargerThan1000 && <DesktopNav />}
         <Box
-          maxW={"1100px"}
+          maxW={"1000px"}
           width="100%"
-          borderRight={"1px"}
+          minW={"300px"}
+          borderRight={isLargerThan1000 ? "1px" : "0px"}
           borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
           minHeight={"100vh"}
           paddingBottom={"10rem"}
@@ -254,7 +255,7 @@ const DesktopNav = () => {
       )}
       <Box
         zIndex={"banner"}
-        borderRight={"1px"}
+        borderRight={isLargerThan1000 ? "1px" : "0px"}
         borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
       >
         <Flex

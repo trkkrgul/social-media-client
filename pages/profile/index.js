@@ -47,7 +47,7 @@ const Profile = () => {
         .then((res) => dispatch(setProfilePosts(res.data)))
         .catch((err) => {
           console.log(err);
-          dispatch(setProfilePosts([]));
+          dispatch(setProfilePosts(false));
         });
     }
   }, [user?.walletAddress]);

@@ -12,13 +12,15 @@ import storage from "redux-persist/lib/storage";
 import { authSlice } from "./slices/auth";
 import { postSlice } from "./slices/post";
 import { userSlice } from "./slices/users";
-const persistConfig = { key: "root", storage, version: 1 };
+import { storySlice } from "./slices/story";
+const persistConfig = { key: "root", storage, version: 2 };
 const persistedReducer = persistReducer(
   persistConfig,
   combineReducers({
     [authSlice.name]: authSlice.reducer,
     [postSlice.name]: postSlice.reducer,
     [userSlice.name]: userSlice.reducer,
+    [storySlice.name]: storySlice.reducer,
   })
 );
 

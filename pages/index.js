@@ -13,20 +13,16 @@ import {
   Spacer,
   Text,
   useColorMode,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import SessionEnd from "@/components/toasts/SessionEnd";
 import dynamic from "next/dynamic";
-import {
-  useState,
-  useMemo,
-  useCallback,
-  useEffect,
-  useRef,
-  Suspense,
-} from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 
 import { Virtuoso } from "react-virtuoso";
 import { setSessionEnd } from "@/state/slices/auth";
+import StoryLine from "@/components/story";
+import StoryWrapper from "@/components/story/StoryWrapper";
 
 const PageLayout = dynamic(() => import("@/views/Layout"), {
   ssr: false,
@@ -39,9 +35,14 @@ const PostWidget = dynamic(() => import("@/components/post/PostWidget"), {
 });
 
 export default function Home() {
+  const scrollRef = useRef(null);
   const feed = useSelector((state) => state.post.feed);
   const token = useSelector((state) => state.auth.token);
   const [count, setCount] = useState(5);
+  const [largerThan1000] = useMediaQuery("(min-width: 1000px)", {
+    ssr: false,
+    fallback: true,
+  });
   const [tab, setTab] = useState("feed");
   const user = useSelector((state) => state.auth.user);
   const followingPosts = useSelector((state) => state.post.followingPosts);
@@ -93,11 +94,12 @@ export default function Home() {
     <>
       <Head>
         <title>Defi Talks</title>
-
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <PageLayout title={"Homepage"}>
+        <StoryLine />
+        <StoryWrapper />
         <MyPostWidget />
         <Flex
           width={"100%"}
