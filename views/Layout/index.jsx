@@ -78,6 +78,7 @@ import lightIcon from "@/assets/icon-light.svg";
 import darkIcon from "@/assets/icon-dark.svg";
 import icon from "@/assets/icon.svg";
 import OnlineUsers from "@/components/onlineUsers";
+import { BsMessenger } from "react-icons/bs";
 const PageLayout = ({ children, title }) => {
   const user = useSelector((state) => state.auth.user);
   const [isLargerThan1000] = useMediaQuery("(min-width: 1000px)", {
@@ -337,6 +338,21 @@ const DesktopNav = () => {
                 Create Post
               </Button>
             )}
+            <Link href={"/messages"} prefetch={false}>
+              <Button
+                size={"lg"}
+                height={"36px"}
+                width={"100%"}
+                colorScheme={path === "/profile" ? "primary" : "gray"}
+                color={path === "/profile" ? "black" : null}
+                variant={path === "/profile" ? "solid" : "ghost"}
+                leftIcon={<BsMessenger />}
+                href={null}
+                justifyContent={"left"}
+              >
+                Messages
+              </Button>
+            </Link>
           </Card>
           <Spacer flexBasis={"100%"} />
           <OnlineUsers />
