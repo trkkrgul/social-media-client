@@ -99,7 +99,6 @@ const PageLayout = ({ children, title }) => {
           borderRight={isLargerThan1000 ? "1px" : "0px"}
           borderColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
           minHeight={"100vh"}
-          paddingBottom={"10rem"}
         >
           <Box
             width={"100%"}
