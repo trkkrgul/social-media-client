@@ -1,38 +1,19 @@
+import ListUser from "@/components/messages/ListUser";
+import MessageList from "@/components/messages/MessageList";
 import PageLayout from "@/views/Layout";
-import { Avatar, Box, Button, Flex, Input, SimpleGrid, Stack, Text, VStack, useColorMode } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, VStack, useColorMode } from "@chakra-ui/react";
 import axios from "axios";
 import Head from "next/head";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BsSend } from "react-icons/bs";
 import { useSelector } from "react-redux";
 
-const Sender = () => {
-  return (
-    <Flex align="center" w="full">
-      <Avatar src="https://example.com/avatar1.png" mr={3} />
-      <Box bg="gray.200" p={2} rounded="lg" maxW={"250"}>
-        <Text wordBreak={"break-word"}>Hello!</Text>
-      </Box>
-    </Flex>
-  );
-};
-
-const Receiver = () => {
-  return (
-    <Flex align="center" justifyContent="flex-end" w="full">
-      <Box bg="blue.500" p={2} rounded="lg" maxW={"250"}>
-        <Text color="white">Hi there!</Text>
-      </Box>
-      <Avatar src="https://example.com/avatar2.png" ml={3} />
-    </Flex>
-  );
-};
-
 const MessagesPage = () => {
   const token = useSelector((state) => state.auth.token);
+  const { colorMode } = useColorMode();
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState("");
-  const { colorMode } = useColorMode();
+  const [selectedChat, setSelectedChat] = useState();
 
   const handleSendMessage = () => {
     // Logic to handle sending the message
@@ -64,30 +45,16 @@ const MessagesPage = () => {
           <Box flex={0.4} overflowY={"auto"} borderRight={"1px solid"} borderRightColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}>
             <VStack align="start" spacing={4}>
               {users.map((user) => (
-                <Flex
-                  key={user._id}
-                  align="center"
-                  w="full"
-                  _hover={{
-                    background: "gray.100",
-                  }}
-                  padding={3}
-                >
-                  <Avatar src={user.profilePicturePath} w={"10"} h={"10"} />
-                  <VStack align="start" spacing={0} ml={3}>
-                    <Text fontWeight="bold">{user.username}</Text>
-                    <Text color="gray.500">@{user.username}</Text>
-                  </VStack>
-                </Flex>
+                <ListUser user={user} />
               ))}
+              <button style={{ color: "green" }} onClick={getUsers}>
+                Get users
+              </button>
             </VStack>
           </Box>
           <Flex direction={"column"} px={3} py={3} flex={0.6}>
-            <VStack align="start" spacing={4} flex={1}>
               {/* Placeholder for chat messages */}
-              <Sender />
-              <Receiver />
-            </VStack>
+              <MessageList />
             <Flex mt={4} align="center">
               <Input
                 value={message}
@@ -114,7 +81,7 @@ const MessagesPage = () => {
                 disabled={message.trim().length === 0}
                 height={"full"}
               >
-                <BsSend />
+                <BsSend fontSize={24} />
               </Button>
             </Flex>
           </Flex>
