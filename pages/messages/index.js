@@ -7,21 +7,25 @@ import { BsSend } from "react-icons/bs";
 import { useSelector } from "react-redux";
 
 const Sender = () => {
-  return <Flex align="center" w='full'>
-    <Avatar src="https://example.com/avatar1.png" mr={3} />
-    <Box bg="gray.200" p={2} rounded="lg" maxW={"250"}>
-      <Text wordBreak={'break-word'}>Hello!</Text>
-    </Box>
-  </Flex>;
+  return (
+    <Flex align="center" w="full">
+      <Avatar src="https://example.com/avatar1.png" mr={3} />
+      <Box bg="gray.200" p={2} rounded="lg" maxW={"250"}>
+        <Text wordBreak={"break-word"}>Hello!</Text>
+      </Box>
+    </Flex>
+  );
 };
 
 const Receiver = () => {
-  return <Flex align="center" justifyContent="flex-end" w='full'>
-    <Box bg="blue.500" p={2} rounded="lg" maxW={"250"}>
-      <Text color="white">Hi there!</Text>
-    </Box>
-    <Avatar src="https://example.com/avatar2.png" ml={3} />
-  </Flex>;
+  return (
+    <Flex align="center" justifyContent="flex-end" w="full">
+      <Box bg="blue.500" p={2} rounded="lg" maxW={"250"}>
+        <Text color="white">Hi there!</Text>
+      </Box>
+      <Avatar src="https://example.com/avatar2.png" ml={3} />
+    </Flex>
+  );
 };
 
 const MessagesPage = () => {
@@ -56,8 +60,8 @@ const MessagesPage = () => {
         <title>Messages | DeFiTalks</title>
       </Head>
       <PageLayout title={"Messages"}>
-        <Flex maxH={'calc(100vh - 90px)'}>
-          <Box flex={0.4} overflow={'scroll'}>
+        <Flex minH={"calc(100vh - 60px)"}>
+          <Box flex={0.4} overflowY={"auto"} borderRight={"1px solid"} borderRightColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}>
             <VStack align="start" spacing={4}>
               {users.map((user) => (
                 <Flex
@@ -69,7 +73,7 @@ const MessagesPage = () => {
                   }}
                   padding={3}
                 >
-                  <Avatar src={user.profilePicturePath} w={'10'} h={'10'} />
+                  <Avatar src={user.profilePicturePath} w={"10"} h={"10"} />
                   <VStack align="start" spacing={0} ml={3}>
                     <Text fontWeight="bold">{user.username}</Text>
                     <Text color="gray.500">@{user.username}</Text>
@@ -78,14 +82,7 @@ const MessagesPage = () => {
               ))}
             </VStack>
           </Box>
-          <Flex
-            direction={"column"}
-            px="3"
-            pt='3'
-            flex={0.6}
-            borderLeft={"1px solid"}
-            borderLeftColor={colorMode === "dark" ? "whiteAlpha.300" : "gray.200"}
-          >
+          <Flex direction={"column"} px={3} py={3} flex={0.6}>
             <VStack align="start" spacing={4} flex={1}>
               {/* Placeholder for chat messages */}
               <Sender />
@@ -122,9 +119,6 @@ const MessagesPage = () => {
             </Flex>
           </Flex>
         </Flex>
-        <button style={{ color: "white" }} onClick={getUsers}>
-          Get users
-        </button>
       </PageLayout>
     </>
   );
